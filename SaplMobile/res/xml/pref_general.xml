@@ -1,0 +1,39 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="@string/pref_default_display_name"
+        android:inputType="textCapWords"
+        android:key="sapl_title"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_display_name" />
+
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    <EditTextPreference 
+        android:defaultValue="@string/pref_default_url_base"
+        android:inputType="textCapWords"
+        android:key="url_base"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_url_base" />
+    
+    <CheckBoxPreference
+            android:key="files_pre_download"
+            android:title="Baixar Arquivos Antecipadamente" />
+
+    <CheckBoxPreference
+            android:key="permitir_fechar_sistema"
+            android:title="Permitir encerramento pelo botão voltar"
+            android:defaultValue="true" />
+    
+    <CheckBoxPreference
+            android:key="mostrar_roteiro_sessao"
+            android:title="Mostrar roteiro de sessão plenária"
+            android:defaultValue="false" />
+    
+</PreferenceScreen>
