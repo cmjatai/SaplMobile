@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="10dp" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#9babd0" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+    
+    <TextView 
+        style="@style/baseTitulo2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="Data: "
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/materia_detalhes_tramitacao_data"
+        style="@style/baseTitulo2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="normal" 
+        android:textSize="16sp" />
+    </LinearLayout>    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+    
+    <TextView  
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="Origem: "
+        android:textStyle="bold"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/materia_detalhes_tramitacao_origem" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:textSize="16sp" />
+    </LinearLayout>    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+    
+    <TextView  
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="Destino: "
+        android:textStyle="bold"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/materia_detalhes_tramitacao_destino" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:textSize="16sp" />
+    </LinearLayout>    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+    
+    <TextView  
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="Situação: "
+        android:textStyle="bold"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/materia_detalhes_tramitacao_situacao" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:textSize="16sp" />
+    </LinearLayout>    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+    
+    <TextView  
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:text="Última Ação: "
+        android:textStyle="bold"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/materia_detalhes_tramitacao_ultima_acao" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:textSize="16sp" />
+    </LinearLayout>    
+    
+
+</LinearLayout>

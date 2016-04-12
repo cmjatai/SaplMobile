@@ -1,0 +1,132 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SaplActivity$DummySectionFragment" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#0f0" />
+
+        <LinearLayout
+            android:id="@+id/areaTop"
+            style="@style/SPMenuTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="#fff"
+                android:orientation="horizontal" >
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" 
+                android:gravity="end"  >
+                
+            <TextView
+                android:id="@+id/textInformaDownload"
+                style="@style/SPsubTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"  />
+            
+            <TextView
+                android:id="@+id/textInformaAtualizacao"
+                style="@style/SPsubTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"  />
+            
+ 
+                </LinearLayout>
+            
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <Spinner
+                        android:id="@+id/dataSessao"
+                        style="@style/SPMenuSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+            
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:background="#fff"
+            android:gravity="center"
+            android:orientation="vertical" > 
+             
+
+            <TextView
+                android:id="@+id/subTitleText"
+                style="@style/SPsubTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center" />
+            
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#bba" />
+ 
+            
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" >
+            
+
+            <br.leg.interlegis.saplmobile.sessao.view.ListaDeMateriasPorSessaoPlenaria
+                android:id="@+id/lm"
+                style="@style/ListaMaterias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </br.leg.interlegis.saplmobile.sessao.view.ListaDeMateriasPorSessaoPlenaria>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/status_net"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:visibility="invisible" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sem Internet..."
+                android:textColor="#f00"
+                android:textSize="30sp" />
+        </LinearLayout>
+        
+         
+    </LinearLayout>
+
+</RelativeLayout>

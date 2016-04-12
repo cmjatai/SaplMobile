@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="br.leg.interlegis.saplmobile"
+    android:versionCode="18"
+    android:versionName="1.018" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_OWNER_DATA" />
+    <uses-permission android:name="android.permission.READ_OWNER_DATA" />
+    <!-- uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" / -->
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="18" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/CMJCustomActionBarTheme" >
+        <activity
+            android:name="br.leg.interlegis.saplmobile.SaplActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="br.leg.interlegis.saplmobile.SaplSettingsActivity"
+            android:label="@string/title_activity_sapl_settings"
+            android:parentActivityName="br.leg.interlegis.saplmobile.SaplActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.leg.interlegis.saplmobile.SaplActivity" />
+        </activity>
+    <!-- receiver android:name="ReceiverBoot" >
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </receiver-->
+    
+    <service android:name="br.leg.interlegis.saplmobile.services.SaplSessaoPlenariaService"></service>
+    
+    </application>
+
+
+</manifest>
