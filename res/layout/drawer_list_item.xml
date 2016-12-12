@@ -40,5 +40,5 @@
 		    android:visibility="visible"
 		    android:background="@android:color/holo_orange_dark"
 		    android:layout_marginLeft="1dp"
-		    android:layout_marginRight="dp"/>
+		    android:layout_marginRight="1dp"/>
 	</LinearLayout>
