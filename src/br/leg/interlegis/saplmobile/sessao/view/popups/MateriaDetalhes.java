@@ -46,7 +46,7 @@ public class MateriaDetalhes extends LinearLayout {
 				String xmlMats = "";
 
 				try { 
-					xmlMats = Utils.executeHttpGet(SaplActivity.urlXmlBase+"consultas/materia/materia_mostrar_proc?cod_materia="+cod_materia);
+					xmlMats = Utils.executeHttpGet(SaplActivity.urlApiBase+"consultas/materia/materia_mostrar_proc?cod_materia="+cod_materia);
 
 					Document xmlDom = null;
 					try {

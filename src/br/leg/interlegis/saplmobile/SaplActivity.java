@@ -50,7 +50,7 @@ ActionBar.OnNavigationListener, MyDialogFragmentListener {
 	public static String urlBase = "";
 
 
-	public static String urlXmlBase = "";
+	public static String urlApiBase = "";
 	public static String urlDocsBase = "";
 
 	public static String uriFileBase = "";
@@ -188,7 +188,7 @@ ActionBar.OnNavigationListener, MyDialogFragmentListener {
 		if (!urlBase.endsWith("/"))
 			urlBase += "/";
 
-		urlXmlBase = urlBase+"xml/";
+		urlApiBase = urlBase+"api/";
 		urlDocsBase = urlBase+"sapl_documentos/";		
 
 

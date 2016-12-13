@@ -90,7 +90,7 @@ public class ListaDeMateriasEmTramitacao extends LinearLayout{
 
 						String xmlMats = "";
 
-						xmlMats = Utils.executeHttpGet(SaplActivity.urlXmlBase+"consultas/materia/materia_em_tramitacao_proc");
+						xmlMats = Utils.executeHttpGet(SaplActivity.urlApiBase+"consultas/materia/materia_em_tramitacao_proc");
 						xmlDom = Utils.loadXMLFromString(xmlMats);
 
 						Element elRaiz = xmlDom.getDocumentElement();

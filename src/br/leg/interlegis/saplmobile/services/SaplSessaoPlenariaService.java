@@ -155,7 +155,7 @@ public class SaplSessaoPlenariaService extends Service {
 						if (dataSelecionada == null || dataSelecionada.length() == 0) {
 							_servicoLivre = false;
 							Log.d("CMJ", "LS: inicio.");
-							Utils.downloadFileHttpGet(SaplActivity.urlXmlBase+"consultas/sessao_plenaria/sessao_plenaria_lista",SaplActivity.fileCacheListaSessoes);
+							Utils.downloadFileHttpGet(SaplActivity.urlApiBase+"consultas/sessao_plenaria/sessao_plenaria_lista",SaplActivity.fileCacheListaSessoes);
 							Log.d("CMJ", "LS: fim.");
 							_servicoLivre = true;
 						}
@@ -165,7 +165,7 @@ public class SaplSessaoPlenariaService extends Service {
 							_servicoLivre = false;
 
 							Log.d("CMJ", "LS: inicio.");
-							Utils.downloadFileHttpGet(SaplActivity.urlXmlBase+"consultas/sessao_plenaria/sessao_plenaria_lista?data="+dataSelecionada,SaplActivity.fileCacheListaSessoes);
+							Utils.downloadFileHttpGet(SaplActivity.urlApiBase+"consultas/sessao_plenaria/sessao_plenaria_lista?data="+dataSelecionada,SaplActivity.fileCacheListaSessoes);
 							Log.d("CMJ", "LS: fim.");
 							_servicoLivre = true;
 
@@ -198,7 +198,7 @@ public class SaplSessaoPlenariaService extends Service {
 						try { 
 							_servicoLivre = false;
 							Log.d("CMJ", "LM: Início.");
-							xmlMats = Utils.executeHttpGet(SaplActivity.urlXmlBase+"consultas/sessao_plenaria/sessao_plenaria_materias?cod_sessao_plen="+codSessaoPlenaria+"&crc32="+crc32);
+							xmlMats = Utils.executeHttpGet(SaplActivity.urlApiBase+"consultas/sessao_plenaria/sessao_plenaria_materias?cod_sessao_plen="+codSessaoPlenaria+"&crc32="+crc32);
 							Log.d("CMJ", "LM: fim.");
 							_servicoLivre = true;
 
