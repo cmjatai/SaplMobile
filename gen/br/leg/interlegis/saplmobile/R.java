@@ -56,6 +56,7 @@ public final class R {
         public static final int images=0x7f020013;
     }
     public static final class id {
+        public static final int action_saplwebsearch=0x7f0b0036;
         public static final int action_settings=0x7f0b0034;
         public static final int action_websearch=0x7f0b0035;
         public static final int areaTop=0x7f0b0007;
@@ -137,34 +138,35 @@ public final class R {
         public static final int message_update_lista=0x7f050000;
     }
     public static final class string {
+        public static final int action_saplwebsearch=0x7f070003;
         public static final int action_settings=0x7f070001;
         public static final int action_websearch=0x7f070002;
         public static final int app_name=0x7f070000;
-        public static final int app_not_available=0x7f070003;
-        public static final int drawer_close=0x7f070005;
-        public static final int drawer_open=0x7f070004;
-        public static final int pref_default_display_name=0x7f070009;
-        public static final int pref_default_url_base=0x7f07000b;
+        public static final int app_not_available=0x7f070004;
+        public static final int drawer_close=0x7f070006;
+        public static final int drawer_open=0x7f070005;
+        public static final int pref_default_display_name=0x7f07000a;
+        public static final int pref_default_url_base=0x7f07000c;
         /**  Example settings for Data & Sync 
          */
-        public static final int pref_header_data_sync=0x7f07000d;
+        public static final int pref_header_data_sync=0x7f07000e;
         /**  Strings related to Settings 
  Example General settings 
          */
-        public static final int pref_header_general=0x7f070007;
+        public static final int pref_header_general=0x7f070008;
         /**  Example settings for Notifications 
          */
-        public static final int pref_header_notifications=0x7f070010;
-        public static final int pref_ringtone_silent=0x7f070013;
-        public static final int pref_title_add_friends_to_messages=0x7f07000c;
-        public static final int pref_title_display_name=0x7f070008;
-        public static final int pref_title_new_message_notifications=0x7f070011;
-        public static final int pref_title_ringtone=0x7f070012;
-        public static final int pref_title_sync_frequency=0x7f07000e;
-        public static final int pref_title_system_sync_settings=0x7f07000f;
-        public static final int pref_title_url_base=0x7f07000a;
-        public static final int pref_title_vibrate=0x7f070014;
-        public static final int title_activity_sapl_settings=0x7f070006;
+        public static final int pref_header_notifications=0x7f070011;
+        public static final int pref_ringtone_silent=0x7f070014;
+        public static final int pref_title_add_friends_to_messages=0x7f07000d;
+        public static final int pref_title_display_name=0x7f070009;
+        public static final int pref_title_new_message_notifications=0x7f070012;
+        public static final int pref_title_ringtone=0x7f070013;
+        public static final int pref_title_sync_frequency=0x7f07000f;
+        public static final int pref_title_system_sync_settings=0x7f070010;
+        public static final int pref_title_url_base=0x7f07000b;
+        public static final int pref_title_vibrate=0x7f070015;
+        public static final int title_activity_sapl_settings=0x7f070007;
     }
     public static final class style {
         /** 

@@ -11,4 +11,9 @@
           android:showAsAction="ifRoom" />
     
 
+    <item android:id="@+id/action_saplwebsearch"
+          android:title="@string/action_saplwebsearch"
+          android:showAsAction="ifRoom" />
+    
+    
 </menu>

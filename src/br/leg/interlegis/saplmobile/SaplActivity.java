@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -357,6 +358,17 @@ ActionBar.OnNavigationListener, MyDialogFragmentListener {
 			Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
 			//intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
 			intent.putExtra(SearchManager.QUERY, settings.getString("sapl_title", ""));
+			// catch event that there's no activity to handle intent
+			if (intent.resolveActivity(getPackageManager()) != null) {
+				startActivity(intent);
+			} else {
+				Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
+			}
+			return true;
+		}
+		case R.id.action_saplwebsearch: {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse(settings.getString("url_base", "")));
 			// catch event that there's no activity to handle intent
 			if (intent.resolveActivity(getPackageManager()) != null) {
 				startActivity(intent);
