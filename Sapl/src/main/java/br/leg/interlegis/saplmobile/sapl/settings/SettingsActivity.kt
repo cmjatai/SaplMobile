@@ -138,7 +138,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("sync_frequency"))
+            //bindPreferenceSummaryToValue(findPreference("sync_offline_files"))
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
