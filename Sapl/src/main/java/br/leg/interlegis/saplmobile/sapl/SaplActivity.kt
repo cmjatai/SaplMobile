@@ -1,6 +1,8 @@
 package br.leg.interlegis.saplmobile.sapl
 
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -11,6 +13,10 @@ import android.view.MenuItem
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_sapl.*
 import kotlinx.android.synthetic.main.app_bar_sapl.*
+import kotlinx.android.synthetic.main.content_sapl.*
+import android.preference.PreferenceManager.getDefaultSharedPreferences
+import android.util.Log
+
 
 class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -30,6 +36,8 @@ class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+
     }
 
     override fun onBackPressed() {
@@ -65,7 +73,7 @@ class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_sessoes_plenarias -> {
-                // Handle the camera action
+                hello_word.text = SettingsActivity.getStringPreference(this, "domain_casa_legislativa")
             }
             R.id.nav_gallery -> {
 
@@ -87,4 +95,5 @@ class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+
 }

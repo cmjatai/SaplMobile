@@ -154,6 +154,11 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             return intent
         }
 
+        fun getStringPreference(context: Context, key: String): String {
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+            return sharedPreferences.getString(key, "")
+        }
+
 
         /**
          * A preference value change listener that updates the preference's summary
