@@ -5,7 +5,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_sessoes_plenarias"
             android:icon="@drawable/ic_menu_sessoes_plenarias"
             android:title="@string/action_sessoes_plenarias" />
         <item
