@@ -1,7 +1,10 @@
 package br.leg.interlegis.saplmobile.sapl
 
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Message
 import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
@@ -14,8 +17,12 @@ import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_sapl.*
 import kotlinx.android.synthetic.main.app_bar_sapl.*
 import kotlinx.android.synthetic.main.content_sapl.*
-import android.preference.PreferenceManager.getDefaultSharedPreferences
-import android.util.Log
+import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
+import br.leg.interlegis.saplmobile.sapl.db.entities.ChaveValor
+import br.leg.interlegis.saplmobile.sapl.services.SaplService
+import br.leg.interlegis.saplmobile.sapl.support.Log
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
 
 
 class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -36,6 +43,10 @@ class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        val intent = Intent(this, SaplService::class.java)
+        startService(intent)
+
 
 
     }
@@ -76,7 +87,6 @@ class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 hello_word.text = SettingsActivity.getStringPreference(this, "domain_casa_legislativa")
             }
             R.id.nav_gallery -> {
-
             }
             R.id.nav_slideshow -> {
 

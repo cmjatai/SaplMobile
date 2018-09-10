@@ -3,6 +3,7 @@ apply plugin: 'com.android.feature'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -30,4 +31,17 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+// Room components
+    implementation "android.arch.persistence.room:runtime:$rootProject.archRoomVersion"
+    kapt "android.arch.persistence.room:compiler:$rootProject.archRoomVersion"
+    androidTestImplementation "android.arch.persistence.room:testing:$rootProject.archRoomVersion"
+
+// Lifecycle components
+    implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
+    annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
+
+    implementation "org.jetbrains.anko:anko:$rootProject.anko_version"
+
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit_gson_version"
 }
