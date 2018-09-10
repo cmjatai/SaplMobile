@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.leg.interlegis.saplmobile.sapl">
 
-    <application>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application android:name=".SaplApplication">
         <activity
             android:name=".SaplActivity"
             android:label="@string/app_name"
@@ -40,6 +42,11 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".services.SaplService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
