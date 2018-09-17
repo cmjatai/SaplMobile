@@ -46,9 +46,23 @@ class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val intent = Intent(this, SaplService::class.java)
         startService(intent)
+    }
 
+    override fun onResume() {
+        super.onResume()
+        SaplApplication.activityResumed()
 
+        if (SaplService.instance != null) {
+            val message = Message()
+            message.arg1 = 1
+            message.arg2 = 2
+            SaplService.sendMessage(message)
+        }
+    }
 
+    override fun onPause() {
+        super.onPause()
+        SaplApplication.activityPaused()
     }
 
     override fun onBackPressed() {

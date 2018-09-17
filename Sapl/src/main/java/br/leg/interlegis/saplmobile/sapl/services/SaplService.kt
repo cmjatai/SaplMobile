@@ -1,5 +1,6 @@
 package br.leg.interlegis.saplmobile.sapl.services
 
+import android.app.ActivityManager
 import android.app.Service
 import android.arch.lifecycle.LiveData
 import android.content.Intent
@@ -18,6 +19,8 @@ import kotlin.collections.ArrayList
 import br.leg.interlegis.saplmobile.R
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoChaveValor
 
+
+
 class SaplService : Service() {
 
     private var mServiceLooper: Looper? = null
@@ -30,19 +33,17 @@ class SaplService : Service() {
     }
 
     private inner class ServiceHandler(looper: Looper) : Handler(looper) {
-        private// get date time in custom format
-        val dateTime: String
-            get() {
-                val sdf = SimpleDateFormat("[yyyy/MM/dd - HH:mm:ss]")
-                return sdf.format(Date())
-            }
-
         override fun handleMessage(msg: Message) {
-            // Normally we would do some work here, like download a file.
-            // For our sample, we just sleep for 5 seconds.
 
             try {
-                toast("teste")
+                mServiceHandler!!.post(object : Runnable {
+                    override fun run() {
+                        this@SaplService.execute()
+                        if (SaplApplication.isActivityVisible()) {
+                            mServiceHandler!!.postDelayed(this, this@SaplService.interval_update)
+                        }
+                    }
+                })
 
             } catch (e: InterruptedException) {
                 // Restore interrupt status.
@@ -67,22 +68,9 @@ class SaplService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         toast("Serviço iniciado!")
 
-        mServiceHandler!!.post(object : Runnable {
-
-            private// get date time in custom format
-            val dateTime: String
-                get() {
-                    val sdf = SimpleDateFormat("[yyyy/MM/dd - HH:mm:ss]")
-                    return sdf.format(Date())
-                }
-
-            override fun run() {
-                //toast(dateTime)
-                this@SaplService.execute()
-                mServiceHandler!!.postDelayed(this, this@SaplService.interval_update)
-            }
-        })
-
+        val msg = mServiceHandler!!.obtainMessage()
+        msg.arg1 = startId
+        mServiceHandler!!.sendMessage(msg)
         return START_STICKY
     }
 
@@ -103,7 +91,6 @@ class SaplService : Service() {
                 AppDataBase.getInstance(this@SaplService).DaoChaveValor().insertAll(list)
                 return false
             }
-
         }
         catch (e: Exception) {
             toast("Erro de Comunicação com o Servidor na Internet")
@@ -113,6 +100,7 @@ class SaplService : Service() {
     }
 
     private fun execute() {
+        Log.d("SAPL:", "TESTANDO...")
         if (!isUpdated()) {
             toast("Servidor foi atualizado!")
         }

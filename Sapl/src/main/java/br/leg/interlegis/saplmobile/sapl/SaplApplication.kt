@@ -6,6 +6,22 @@ import org.jetbrains.anko.doAsync
 
 class SaplApplication : Application() {
 
+    companion object {
+        var activityVisible: Boolean = false;
+        fun isActivityVisible(): Boolean {
+            return activityVisible
+        }
+
+        fun activityResumed() {
+            activityVisible = true
+        }
+
+        fun activityPaused() {
+            activityVisible = false
+        }
+    }
+
+
     override fun onCreate() {
         super.onCreate()
 
