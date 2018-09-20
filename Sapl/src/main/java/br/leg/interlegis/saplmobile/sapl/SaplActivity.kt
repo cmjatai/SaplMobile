@@ -52,7 +52,7 @@ class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onResume()
         SaplApplication.activityResumed()
 
-        if (SaplService.instance != null) {
+        if (SaplService.isRunning()) {
             val message = Message()
             message.arg1 = 1
             message.arg2 = 2
