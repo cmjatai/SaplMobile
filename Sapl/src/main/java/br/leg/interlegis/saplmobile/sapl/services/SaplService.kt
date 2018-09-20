@@ -26,10 +26,26 @@ class SaplService : Service() {
     private var mServiceLooper: Looper? = null
     private var mServiceHandler: ServiceHandler? = null
 
-    private var interval_update : Long = 5000
+    private var interval_update : Long = 7000
 
     override fun onBind(intent: Intent): IBinder? {
         return null
+    }
+
+    override fun onCreate() {
+        instance = this
+        val thread = HandlerThread("SaplThreadService", Process.THREAD_PRIORITY_BACKGROUND)
+        thread.start()
+        mServiceLooper = thread.getLooper()
+        mServiceHandler = ServiceHandler(mServiceLooper!!)
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        toast("Serviço iniciado!")
+        val msg = mServiceHandler!!.obtainMessage()
+        msg.arg1 = startId
+        mServiceHandler!!.sendMessage(msg)
+        return START_STICKY
     }
 
     private inner class ServiceHandler(looper: Looper) : Handler(looper) {
@@ -38,9 +54,18 @@ class SaplService : Service() {
             try {
                 mServiceHandler!!.post(object : Runnable {
                     override fun run() {
-                        this@SaplService.execute()
                         if (SaplApplication.isActivityVisible()) {
+                            if (!this@SaplService.running) {
+                                Log.d("SAPL:", "Timer: Iniciou serviço!")
+                                this@SaplService.execute()
+                            }
+                            else {
+                                Log.d("SAPL:", "Timer: Serviço já em execução!")
+                            }
                             mServiceHandler!!.postDelayed(this, this@SaplService.interval_update)
+                        }
+                        else {
+                            Log.d("SAPL:", "Minimizado, saindo e esperando sendMessage da interface sobre onResume!")
                         }
                     }
                 })
@@ -50,28 +75,6 @@ class SaplService : Service() {
                 Thread.currentThread().interrupt()
             }
         }
-
-    }
-
-    override fun onCreate() {
-
-        instance = this
-
-        val thread = HandlerThread("SaplThreadService",
-                Process.THREAD_PRIORITY_BACKGROUND)
-        thread.start()
-
-        mServiceLooper = thread.getLooper()
-        mServiceHandler = ServiceHandler(mServiceLooper!!)
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        toast("Serviço iniciado!")
-
-        val msg = mServiceHandler!!.obtainMessage()
-        msg.arg1 = startId
-        mServiceHandler!!.sendMessage(msg)
-        return START_STICKY
     }
 
     private fun isUpdated(): Boolean {
@@ -94,23 +97,35 @@ class SaplService : Service() {
         }
         catch (e: Exception) {
             toast("Erro de Comunicação com o Servidor na Internet")
-            return false
+            return true
         }
-
     }
 
     private fun execute() {
-        Log.d("SAPL:", "TESTANDO...")
-        if (!isUpdated()) {
-            toast("Servidor foi atualizado!")
+        this@SaplService.running = true
+        if (isUpdated()) {
+            Log.d("SAPL:", "SaplMobile está sincronizado com Servidor!")
+            this@SaplService.running = false
+            return
+        }
+        Log.d("SAPL:", "Servidor foi atualizado... sincronizando SaplMobile!")
+        doAsync {
+
+            Thread.sleep(25000)
+            this@SaplService.running = false // So tornar false quando ultima thread internas daqui terminarem
         }
     }
+
+    @Volatile private var running: Boolean = false
 
     companion object {
 
         var instance: SaplService? = null
             private set
 
+        fun isRunning(): Boolean {
+            return instance != null && !instance!!.running
+        }
         fun sendMessage(message: Message) {
             instance!!.mServiceHandler!!.sendMessage(message)
         }
