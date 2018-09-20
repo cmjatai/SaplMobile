@@ -119,10 +119,8 @@ class SaplService : Service() {
     @Volatile private var running: Boolean = false
 
     companion object {
-
         var instance: SaplService? = null
             private set
-
         fun isRunning(): Boolean {
             return instance != null && !instance!!.running
         }
@@ -130,5 +128,4 @@ class SaplService : Service() {
             instance!!.mServiceHandler!!.sendMessage(message)
         }
     }
-
 }
