@@ -81,8 +81,7 @@ class SaplService : Service() {
         try {
             val json = JsonApi(this@SaplService)
             val lgrt = json.get_last_global_refresh_time()
-
-            var cv = DaoChaveValor?.get_or_create(this@SaplService,"last_global_refresh_time", lgrt)
+            var cv = DaoChaveValor.get_or_create(this@SaplService,"last_global_refresh_time", lgrt)
 
             if (cv.valor == lgrt) {
                 return true
