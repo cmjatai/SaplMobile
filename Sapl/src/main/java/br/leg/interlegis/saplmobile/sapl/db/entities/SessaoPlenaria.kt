@@ -11,7 +11,6 @@ class SessaoPlenaria constructor(uid: Int, data_inicio: Date) {
 
     @PrimaryKey
     var uid: Int = uid
-
     var data_inicio: Date? = null
 }
 

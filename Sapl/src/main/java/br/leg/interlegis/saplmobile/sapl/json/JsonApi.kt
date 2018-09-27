@@ -1,6 +1,9 @@
 package br.leg.interlegis.saplmobile.sapl.json
 
 import android.content.Context
+import br.leg.interlegis.saplmobile.sapl.json.sessao_plenaria.SessaoPlenariaJsonApi
+import br.leg.interlegis.saplmobile.sapl.json.sessao_plenaria.SessaoPlenariaResponse
+import br.leg.interlegis.saplmobile.sapl.json.sessao_plenaria.SessaoPlenariaRetrofitService
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -45,6 +48,13 @@ class JsonApi {
             }
 
         })*/
+    }
+
+
+    fun sync() {
+        val sessao_plenaria: SessaoPlenariaJsonApi = SessaoPlenariaJsonApi()
+        sessao_plenaria.sync(retrofit)
+
 
     }
 }

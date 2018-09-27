@@ -56,16 +56,16 @@ class SaplService : Service() {
                     override fun run() {
                         if (SaplApplication.isActivityVisible()) {
                             if (!this@SaplService.running) {
-                                Log.d("SAPL:", "Timer: Iniciou serviço!")
+                                Log.d("SAPL", "Timer: Iniciou serviço!")
                                 this@SaplService.execute()
                             }
                             else {
-                                Log.d("SAPL:", "Timer: Serviço já em execução!")
+                                Log.d("SAPL", "Timer: Serviço já em execução!")
                             }
                             mServiceHandler!!.postDelayed(this, this@SaplService.interval_update)
                         }
                         else {
-                            Log.d("SAPL:", "Minimizado, saindo e esperando sendMessage da interface sobre onResume!")
+                            Log.d("SAPL", "Minimizado, saindo e esperando sendMessage da interface sobre onResume!")
                         }
                     }
                 })
@@ -81,7 +81,7 @@ class SaplService : Service() {
         try {
             val json = JsonApi(this@SaplService)
             val lgrt = json.get_last_global_refresh_time()
-            var cv = DaoChaveValor.get_or_create(this@SaplService,"last_global_refresh_time", lgrt)
+            var cv = DaoChaveValor?.get_or_create(this@SaplService,"last_global_refresh_time", lgrt)
 
             if (cv.valor == lgrt) {
                 return true
@@ -102,15 +102,20 @@ class SaplService : Service() {
 
     private fun execute() {
         this@SaplService.running = true
-        if (isUpdated()) {
-            Log.d("SAPL:", "SaplMobile está sincronizado com Servidor!")
+        /*if (isUpdated()) {
+            Log.d("SAPL", "SaplMobile está sincronizado com Servidor!")
             this@SaplService.running = false
             return
         }
-        Log.d("SAPL:", "Servidor foi atualizado... sincronizando SaplMobile!")
+        Log.d("SAPL", "Servidor foi atualizado... sincronizando SaplMobile!")*/
         doAsync {
 
-            Thread.sleep(25000)
+            Log.d("SAPL", "Sincronizando SaplMobile!")
+            val json = JsonApi(this@SaplService)
+            json.sync()
+            Log.d("SAPL", "Sincronizado!!!")
+
+            Thread.sleep(5000)
             this@SaplService.running = false // So tornar false quando ultima thread internas daqui terminarem
         }
     }
