@@ -1,24 +1,14 @@
 package br.leg.interlegis.saplmobile.sapl.services
 
-import android.app.ActivityManager
 import android.app.Service
-import android.arch.lifecycle.LiveData
 import android.content.Intent
 import android.os.*
 import br.leg.interlegis.saplmobile.sapl.SaplApplication
-import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
-import br.leg.interlegis.saplmobile.sapl.db.entities.ChaveValor
 import br.leg.interlegis.saplmobile.sapl.json.JsonApi
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-
-import br.leg.interlegis.saplmobile.R
-import br.leg.interlegis.saplmobile.sapl.db.daos.DaoChaveValor
-
 
 
 class SaplService : Service() {
@@ -26,7 +16,7 @@ class SaplService : Service() {
     private var mServiceLooper: Looper? = null
     private var mServiceHandler: ServiceHandler? = null
 
-    private var interval_update : Long = 7000
+    private var interval_update : Long = 10000
 
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -58,6 +48,7 @@ class SaplService : Service() {
                             if (!this@SaplService.running) {
                                 Log.d("SAPL", "Timer: Iniciou serviço!")
                                 this@SaplService.execute()
+
                             }
                             else {
                                 Log.d("SAPL", "Timer: Serviço já em execução!")
@@ -77,45 +68,29 @@ class SaplService : Service() {
         }
     }
 
-    private fun isUpdated(): Boolean {
-        try {
-            val json = JsonApi(this@SaplService)
-            val lgrt = json.get_last_global_refresh_time()
-            var cv = DaoChaveValor?.get_or_create(this@SaplService,"last_global_refresh_time", lgrt)
-
-            if (cv.valor == lgrt) {
-                return true
-            }
-            else {
-                cv.valor = lgrt
-                val list = ArrayList<ChaveValor>()
-                list.add(cv)
-                AppDataBase.getInstance(this@SaplService).DaoChaveValor().insertAll(list)
-                return false
-            }
-        }
-        catch (e: Exception) {
-            toast("Erro de Comunicação com o Servidor na Internet")
-            return true
-        }
-    }
 
     private fun execute() {
         this@SaplService.running = true
-        /*if (isUpdated()) {
-            Log.d("SAPL", "SaplMobile está sincronizado com Servidor!")
+        var syncModules: List<Pair<String, Date>>?
+        try {
+            syncModules = JsonApi(this@SaplService).sync_time_refresh()
+            if (syncModules.isEmpty()) {
+                //Log.d("SAPL", "SaplMobile está sincronizado com Servidor!")
+                this@SaplService.running = false
+                return
+            }
+        }
+        catch (e: java.lang.Exception) {
+            Log.d("SAPL", "Erro de Comunicação!")
             this@SaplService.running = false
             return
         }
-        Log.d("SAPL", "Servidor foi atualizado... sincronizando SaplMobile!")*/
-        doAsync {
 
+        doAsync {
             Log.d("SAPL", "Sincronizando SaplMobile!")
             val json = JsonApi(this@SaplService)
-            json.sync()
+            json.sync(syncModules)
             Log.d("SAPL", "Sincronizado!!!")
-
-            Thread.sleep(5000)
             this@SaplService.running = false // So tornar false quando ultima thread internas daqui terminarem
         }
     }
