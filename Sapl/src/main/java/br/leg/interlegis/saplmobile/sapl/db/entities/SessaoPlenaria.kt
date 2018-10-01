@@ -7,10 +7,25 @@ import android.support.annotation.NonNull
 import java.util.*
 
 @Entity(tableName = "sessao_plenaria")
-class SessaoPlenaria constructor(uid: Int, data_inicio: Date) {
+class SessaoPlenaria constructor(uid: Int,
+                                 legislatura: String,
+                                 sessao_legislativa: String,
+                                 tipo: String,
+                                 data_inicio: Date,
+                                 data_fim: Date,
+                                 hora_inicio: String,
+                                 hora_fim: String,
+                                 numero: Int) {
 
     @PrimaryKey
     var uid: Int = uid
-    var data_inicio: Date? = null
+    var legislatura: String = legislatura
+    var sessao_legislativa: String = sessao_legislativa
+    var tipo: String? = tipo
+    var data_inicio: Date = data_inicio
+    var data_fim: Date = data_fim
+    var hora_inicio = hora_inicio
+    var hora_fim = hora_fim
+    var numero = numero
 }
 
