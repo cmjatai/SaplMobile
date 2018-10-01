@@ -45,15 +45,15 @@ class SaplService : Service() {
             try {
                 mServiceHandler!!.post(object : Runnable {
                     override fun run() {
-                        if (SaplApplication.isActivityVisible()) {
+                        if (SaplApplication.isAnyActivityVisible()) {
                             if (!this@SaplService.running) {
                                 Log.d("SAPL", "Timer: Iniciou serviço!")
                                 this@SaplService.execute()
-
                             }
                             else {
                                 Log.d("SAPL", "Timer: Serviço já em execução!")
                             }
+                            delayed = true
                             mServiceHandler!!.postDelayed(this, this@SaplService.interval_update)
                         }
                         else {
@@ -103,11 +103,13 @@ class SaplService : Service() {
 
     @Volatile private var running: Boolean = false
 
+    @Volatile private var delayed: Boolean = false
+
     companion object {
         var instance: SaplService? = null
             private set
         fun isRunning(): Boolean {
-            return instance != null && !instance!!.running
+            return instance != null && !instance!!.running && !instance!!.delayed
         }
         fun sendMessage(message: Message) {
             instance!!.mServiceHandler!!.sendMessage(message)

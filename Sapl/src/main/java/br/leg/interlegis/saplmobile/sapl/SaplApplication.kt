@@ -1,23 +1,25 @@
 package br.leg.interlegis.saplmobile.sapl
 
 import android.app.Application
+import android.content.Context
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import org.jetbrains.anko.doAsync
 
 class SaplApplication : Application() {
 
     companion object {
-        var activityVisible: Boolean = false;
-        fun isActivityVisible(): Boolean {
-            return activityVisible
+        var activitiesVisibles: HashSet<Context> = HashSet<Context>()
+
+        fun isAnyActivityVisible(): Boolean {
+            return activitiesVisibles.isNotEmpty()
         }
 
-        fun activityResumed() {
-            activityVisible = true
+        fun activityResumed(context: Context) {
+            activitiesVisibles.add(context)
         }
 
-        fun activityPaused() {
-            activityVisible = false
+        fun activityPaused(context: Context) {
+            activitiesVisibles.remove(context)
         }
     }
 

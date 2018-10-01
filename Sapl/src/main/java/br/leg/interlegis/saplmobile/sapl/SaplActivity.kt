@@ -1,16 +1,11 @@
 package br.leg.interlegis.saplmobile.sapl
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Message
-import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import br.leg.interlegis.saplmobile.sapl.activities.SessaoPlenariaActivity
@@ -18,15 +13,10 @@ import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_sapl.*
 import kotlinx.android.synthetic.main.app_bar_sapl.*
 import kotlinx.android.synthetic.main.content_sapl.*
-import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
-import br.leg.interlegis.saplmobile.sapl.db.entities.ChaveValor
 import br.leg.interlegis.saplmobile.sapl.services.SaplService
-import br.leg.interlegis.saplmobile.sapl.support.Log
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
 
 
-class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class SaplActivity : SaplBaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,23 +37,6 @@ class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val intent = Intent(this, SaplService::class.java)
         startService(intent)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        SaplApplication.activityResumed()
-
-        if (SaplService.isRunning()) {
-            val message = Message()
-            message.arg1 = 1
-            message.arg2 = 2
-            SaplService.sendMessage(message)
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        SaplApplication.activityPaused()
     }
 
     override fun onBackPressed() {
