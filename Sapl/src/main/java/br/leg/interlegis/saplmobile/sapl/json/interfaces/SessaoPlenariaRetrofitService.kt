@@ -12,5 +12,7 @@ interface SessaoPlenariaRetrofitService {
     fun list(
             @Query("format") format: String,
             @Query("page") page: Int,
-            @Query("data") data: String ) : Call<SaplApiRestResponse>
+            @Query("tipo_update") tipo_update: String ,
+            @Query("data_min") data_min: String? ,
+            @Query("data_max") data_max: String? ) : Call<SaplApiRestResponse>
 }

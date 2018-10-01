@@ -17,9 +17,13 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
 
         while (response == null || response?.pagination!!.next_page != null) {
             val call = servico?.list(
-                    "json",
-                    if (response == null) 1 else response?.pagination!!.next_page!!,
-                    Converters.df.format(data)
+                    format = "json",
+                    page = if (response == null) 1 else response?.pagination!!.next_page!!,
+                    tipo_update = "1",
+                        // Tipo 1 = filtro com base nas datas de alteração
+                        // Tipo 2 = filtro com base nas datas da sessão plenária
+                    data_min = Converters.df.format(data),
+                    data_max = null
             )
             response = call?.execute()!!.body()!!
 
