@@ -10,20 +10,23 @@ import java.util.*
 
 class JsonApiSessaoPlenaria: JsonApiInterface {
 
-    override fun sync(retrofit: Retrofit?, data: Date) {
+    override fun sync(retrofit: Retrofit?, data: Pair<Date?, Date?>) {
 
         val servico = retrofit?.create(SessaoPlenariaRetrofitService::class.java)
         var response: SaplApiRestResponse? = null
 
         while (response == null || response?.pagination!!.next_page != null) {
+            val dmin = if (data.first != null) Converters.dtf.format(data.first) else null
+            val dmax = if (data.second != null) Converters.dtf.format(data.second) else null
+
             val call = servico?.list(
                     format = "json",
                     page = if (response == null) 1 else response?.pagination!!.next_page!!,
                     tipo_update = "1",
                         // Tipo 1 = filtro com base nas datas de alteração
                         // Tipo 2 = filtro com base nas datas da sessão plenária
-                    data_min = Converters.df.format(data),
-                    data_max = null
+                    data_min = dmin,
+                    data_max = dmax
             )
             response = call?.execute()!!.body()!!
 

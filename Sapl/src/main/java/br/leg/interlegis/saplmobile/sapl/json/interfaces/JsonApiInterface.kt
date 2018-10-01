@@ -5,5 +5,5 @@ import java.util.*
 
 interface JsonApiInterface {
 
-    fun sync(retrofit: Retrofit?, data: Date)
+    fun sync(retrofit: Retrofit?, data: Pair<Date?, Date?>)
 }

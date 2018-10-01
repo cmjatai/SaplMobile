@@ -18,6 +18,6 @@ class Converters {
     }
 
     companion object {
-        val df: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val dtf: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
     }
 }

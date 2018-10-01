@@ -41,7 +41,7 @@ class JsonApi {
 
     }
 
-    fun sync_time_refresh(): List<Pair<String, Date>> {
+    fun sync_time_refresh(): List<Pair<String, Pair<Date?, Date?>>> {
 
         val dao = AppDataBase.getInstance(this.context!!).DaoTimeRefresh()
 
@@ -49,20 +49,20 @@ class JsonApi {
         val call = trs?.sync_time_refresh("json")
         val timeJson: JsonObject = call?.execute()!!.body()!!
 
-        val syncResult : ArrayList<Pair<String, Date>> = ArrayList()
+        val syncResult : ArrayList<Pair<String, Pair<Date?, Date?>>> = ArrayList()
 
 
         for (item in timeJson.entrySet()) {
-            val data_item = Converters.df.parse(item.value.asString)
+            val data_item = Converters.dtf.parse(item.value.asString)
             val time = dao.loadValue(item.key)
             if (time == null) {
-                syncResult.add(item.key to data_item)
+                syncResult.add(Pair(item.key, Pair(data_item, null)))
                 val tr = TimeRefresh(item.key, data_item)
                 dao.insert(tr)
             }
             else {
                 if (data_item > time.data) {
-                    syncResult.add((time.chave to time.data) as Pair<String, Date>)
+                    syncResult.add(Pair(time.chave, Pair(time.data, null)))
                     time.data = data_item
                     dao.update(time)
                 }
@@ -80,7 +80,7 @@ class JsonApi {
         })*/
     }
 
-    fun sync(sync_modules: List<Pair<String, Date>>) {
+    fun sync(sync_modules: List<Pair<String, Pair<Date?, Date?>>>) {
         for (module in sync_modules) {
             val api_module= modules.get(module.first)
             api_module?.sync(retrofit, module.second)

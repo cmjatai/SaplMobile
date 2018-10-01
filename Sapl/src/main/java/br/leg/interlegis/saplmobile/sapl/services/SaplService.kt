@@ -8,6 +8,7 @@ import br.leg.interlegis.saplmobile.sapl.json.JsonApi
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
+import java.lang.Exception
 import java.util.*
 
 
@@ -71,7 +72,7 @@ class SaplService : Service() {
 
     private fun execute() {
         this@SaplService.running = true
-        var syncModules: List<Pair<String, Date>>?
+        var syncModules: List<Pair<String, Pair<Date?, Date?>>>?
         try {
             syncModules = JsonApi(this@SaplService).sync_time_refresh()
             if (syncModules.isEmpty()) {
@@ -80,18 +81,23 @@ class SaplService : Service() {
                 return
             }
         }
-        catch (e: java.lang.Exception) {
+        catch (e:  Exception) {
             Log.d("SAPL", "Erro de Comunicação!")
             this@SaplService.running = false
             return
         }
 
         doAsync {
-            Log.d("SAPL", "Sincronizando SaplMobile!")
-            val json = JsonApi(this@SaplService)
-            json.sync(syncModules)
-            Log.d("SAPL", "Sincronizado!!!")
-            this@SaplService.running = false // So tornar false quando ultima thread internas daqui terminarem
+            try {
+                Log.d("SAPL", "Sincronizando SaplMobile!")
+                val json = JsonApi(this@SaplService)
+                json.sync(syncModules)
+                Log.d("SAPL", "Sincronizado!!!")
+                this@SaplService.running = false // So tornar false quando ultima thread internas daqui terminarem
+            }
+            catch (e: Exception) {
+                this@SaplService.running = false
+            }
         }
     }
 
