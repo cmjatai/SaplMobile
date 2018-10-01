@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.leg.interlegis.saplmobile.sapl">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application android:name=".SaplApplication">
         <activity
@@ -46,7 +46,11 @@
         <service
             android:name=".services.SaplService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".activities.SessaoPlenariaActivity"
+            android:label="@string/title_activity_sessao_plenaria">
+        </activity>
     </application>
 
 </manifest>

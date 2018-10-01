@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import br.leg.interlegis.saplmobile.sapl.activities.SessaoPlenariaActivity
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import kotlinx.android.synthetic.main.activity_sapl.*
 import kotlinx.android.synthetic.main.app_bar_sapl.*
@@ -99,6 +100,8 @@ class SaplActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.nav_sessoes_plenarias -> {
                 hello_word.text = SettingsActivity.getStringPreference(this, "domain_casa_legislativa")
+                val intent = Intent(this, SessaoPlenariaActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_gallery -> {
             }
