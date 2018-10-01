@@ -1,9 +1,6 @@
 package br.leg.interlegis.saplmobile.sapl.db.daos
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import br.leg.interlegis.saplmobile.sapl.db.entities.SessaoPlenaria
 
 @Dao
@@ -17,6 +14,12 @@ interface DaoSessaoPlenaria {
 
     @Insert
     fun insertAll(providers: List<SessaoPlenaria>)
+
+    @Insert
+    fun insert(time: SessaoPlenaria)
+
+    @Update
+    fun update(time: SessaoPlenaria)
 
     @Delete
     fun delete(provider: SessaoPlenaria)
