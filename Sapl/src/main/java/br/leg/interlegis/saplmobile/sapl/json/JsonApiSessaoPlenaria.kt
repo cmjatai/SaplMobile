@@ -1,19 +1,26 @@
 package br.leg.interlegis.saplmobile.sapl.json
 
+import android.content.Context
+import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.Converters
+import br.leg.interlegis.saplmobile.sapl.db.entities.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.json.SaplApiRestResponse
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.SessaoPlenariaRetrofitService
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import retrofit2.Retrofit
 import java.util.*
+import kotlin.collections.ArrayList
 
 class JsonApiSessaoPlenaria: JsonApiInterface {
 
-    override fun sync(retrofit: Retrofit?, data: Pair<Date?, Date?>) {
+    override fun sync(context: Context, retrofit: Retrofit?, data: Pair<Date?, Date?>) {
 
         val servico = retrofit?.create(SessaoPlenariaRetrofitService::class.java)
         var response: SaplApiRestResponse? = null
+
+        val listSessao = ArrayList<SessaoPlenaria>()
+
 
         while (response == null || response?.pagination!!.next_page != null) {
             val dmin = if (data.first != null) Converters.dtf.format(data.first) else null
@@ -31,8 +38,22 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
             response = call?.execute()!!.body()!!
 
             for (item in response?.results!!) {
-                Log.d("SAPL", item.get("id").toString())
+                val sessao = SessaoPlenaria(
+                        item.get("id").asInt,
+                        item.get("sessao_legislativa").asString,
+                        item.get("legislatura").asString,
+                        item.get("tipo").asString,
+                        Converters.df.parse(item.get("data_inicio").asString),
+                        Converters.df.parse(item.get("data_fim").asString),
+                        item.get("hora_inicio").asString,
+                        item.get("hora_fim").asString,
+                        item.get("numero").asInt)
+                listSessao.add(sessao)
             }
+        }
+        if (listSessao.isNotEmpty()) {
+            val dao = AppDataBase.getInstance(context).DaoSessaoPlenaria()
+            dao.insertAll(listSessao)
         }
     }
 }

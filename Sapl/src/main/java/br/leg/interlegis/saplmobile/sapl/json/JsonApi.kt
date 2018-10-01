@@ -83,7 +83,7 @@ class JsonApi {
     fun sync(sync_modules: List<Pair<String, Pair<Date?, Date?>>>) {
         for (module in sync_modules) {
             val api_module= modules.get(module.first)
-            api_module?.sync(retrofit, module.second)
+            api_module?.sync(context!!, retrofit, module.second)
         }
     }
 }

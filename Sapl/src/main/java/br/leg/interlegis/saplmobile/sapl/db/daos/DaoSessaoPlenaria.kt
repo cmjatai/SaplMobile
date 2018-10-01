@@ -12,10 +12,10 @@ interface DaoSessaoPlenaria {
     @Query("SELECT * FROM sessao_plenaria WHERE uid IN (:sessaoIds)")
     fun loadAllByIds(sessaoIds: IntArray): List<SessaoPlenaria>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(providers: List<SessaoPlenaria>)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(time: SessaoPlenaria)
 
     @Update
