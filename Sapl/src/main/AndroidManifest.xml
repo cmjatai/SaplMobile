@@ -48,8 +48,18 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activities.SessaoPlenariaActivity"
+        <activity
+            android:name=".activities.SessaoPlenariaTestActivity"
             android:label="@string/title_activity_sessao_plenaria">
+        </activity>
+        <activity
+            android:name=".activities.SessaoPlenariaActivity"
+            android:label="@string/title_activity_sessao_plenaria"
+            android:parentActivityName=".SaplActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.leg.interlegis.saplmobile.sapl.SaplActivity" />
         </activity>
     </application>
 

@@ -41,7 +41,6 @@ class SaplService : Service() {
 
     private inner class ServiceHandler(looper: Looper) : Handler(looper) {
         override fun handleMessage(msg: Message) {
-
             try {
                 mServiceHandler!!.post(object : Runnable {
                     override fun run() {
@@ -57,6 +56,7 @@ class SaplService : Service() {
                             mServiceHandler!!.postDelayed(this, this@SaplService.interval_update)
                         }
                         else {
+                            delayed = false
                             Log.d("SAPL", "Minimizado, saindo e esperando sendMessage da interface sobre onResume!")
                         }
                     }

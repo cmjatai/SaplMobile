@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SaplMobile</string>
+    <string name="title_activity_sessao_plenaria">SessaoPlenariaActivity</string>
 </resources>

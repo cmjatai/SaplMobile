@@ -3,6 +3,8 @@ package br.leg.interlegis.saplmobile.sapl.db.entities
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.os.Parcel
+import android.os.Parcelable
 import android.support.annotation.NonNull
 import java.util.*
 
@@ -16,6 +18,7 @@ class SessaoPlenaria constructor(uid: Int,
                                  hora_inicio: String,
                                  hora_fim: String,
                                  numero: Int) {
+
 
     @PrimaryKey
     var uid: Int = uid
