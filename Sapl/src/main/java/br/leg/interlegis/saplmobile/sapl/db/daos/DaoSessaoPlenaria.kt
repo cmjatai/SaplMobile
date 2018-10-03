@@ -17,15 +17,15 @@ interface DaoSessaoPlenaria {
     fun loadAllByIds(sessaoIds: IntArray): List<SessaoPlenaria>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(providers: List<SessaoPlenaria>)
+    fun insertAll(sessoes: List<SessaoPlenaria>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(time: SessaoPlenaria)
+    fun insert(sessao: SessaoPlenaria)
 
     @Update
-    fun update(time: SessaoPlenaria)
+    fun update(sessao: SessaoPlenaria)
 
     @Delete
-    fun delete(provider: SessaoPlenaria)
+    fun delete(sessoes: List<SessaoPlenaria>)
 
 }

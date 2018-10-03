@@ -11,10 +11,11 @@ import br.leg.interlegis.saplmobile.sapl.support.Log
 import retrofit2.Retrofit
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class JsonApiSessaoPlenaria: JsonApiInterface {
 
-    override fun sync(context: Context, retrofit: Retrofit?, data: Pair<Date?, Date?>) {
+    override fun sync(context: Context, retrofit: Retrofit?, kwargs:Map<String, Any>) {
 
         val servico = retrofit?.create(SessaoPlenariaRetrofitService::class.java)
         var response: SaplApiRestResponse? = null
@@ -23,19 +24,25 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
 
 
         while (response == null || response?.pagination!!.next_page != null) {
-            val dmin = if (data.first != null) Converters.dtf.format(data.first) else null
-            val dmax = if (data.second != null) Converters.dtf.format(data.second) else null
+            val dmin = if (kwargs["data_inicio"] is Date) Converters.dtf.format(kwargs["data_inicio"] as Date) else null
+            val dmax = if (kwargs["data_fim"] is Date) Converters.dtf.format(kwargs["data_fim"] as Date) else null
+
+            var tipo_update = "sync"
+            if (kwargs["tipo_update"] is String) {
+                tipo_update = kwargs["tipo_update"].toString()
+            }
 
             val call = servico?.list(
                     format = "json",
                     page = if (response == null) 1 else response?.pagination!!.next_page!!,
-                    tipo_update = "1",
-                        // Tipo 1 = filtro com base nas datas de alteração
-                        // Tipo 2 = filtro com base nas datas da sessão plenária
+                    tipo_update = tipo_update,
+                        // Tipo sync = filtro com base nas datas de alteração
+                        // Tipo get = filtro com base nas datas da sessão plenária
                     data_min = dmin,
                     data_max = dmax
             )
             response = call?.execute()!!.body()!!
+
 
             for (item in response?.results!!) {
                 val sessao = SessaoPlenaria(
@@ -54,6 +61,10 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
         if (listSessao.isNotEmpty()) {
             val dao = AppDataBase.getInstance(context).DaoSessaoPlenaria()
             dao.insertAll(listSessao)
+
+            val apagar = dao.loadAllByIds(response?.deleted!!)
+            dao.delete(apagar)
+
         }
     }
 }

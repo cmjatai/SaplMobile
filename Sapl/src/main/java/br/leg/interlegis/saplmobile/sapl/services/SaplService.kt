@@ -72,7 +72,7 @@ class SaplService : Service() {
 
     private fun execute() {
         this@SaplService.running = true
-        var syncModules: List<Pair<String, Pair<Date?, Date?>>>?
+        var syncModules:  ArrayList<Pair<String, HashMap<String, Any>>>?
         try {
             syncModules = JsonApi(this@SaplService).sync_time_refresh()
             if (syncModules.isEmpty()) {

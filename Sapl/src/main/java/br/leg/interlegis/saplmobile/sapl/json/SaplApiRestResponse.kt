@@ -7,5 +7,6 @@ class SaplApiRestResponse {
 
     var pagination: Pagination? = null
     var results: List<JsonObject>? = null
+    var deleted: IntArray? = null
 
 }
