@@ -51,9 +51,9 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                 var item = this@SessaoPlenariaActivity
                 var sections = item.mSectionsPagerAdapter
 
-                Log.d("SAPL 2", "p0.....: " + p0.toString())
+                /*Log.d("SAPL 2", "p0.....: " + p0.toString())
                 Log.d("SAPL 2", "sessoes: " + sections!!.sessoes!!.size.toString())
-                Log.d("SAPL 2", "retroagir: " + JsonApi.retroagir)
+                Log.d("SAPL 2", "retroagir: " + JsonApi.retroagir)*/
 
                 if (sections!!.sessoes!!.size - p0 == 3) {
                     doAsync {

@@ -76,7 +76,7 @@ class JsonApi {
                     c.time = time.data
 
                     var map = HashMap<String, Any>()
-                    map.put("data_inicio", ultimaAtualizacao)
+                    map.put("data_inicio", time.data as Any)
                     map.put("data_fim", Any())
                     map.put("tipo_update", "sync")
 

@@ -58,13 +58,9 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
                 listSessao.add(sessao)
             }
         }
-        if (listSessao.isNotEmpty()) {
-            val dao = AppDataBase.getInstance(context).DaoSessaoPlenaria()
-            dao.insertAll(listSessao)
-
-            val apagar = dao.loadAllByIds(response?.deleted!!)
-            dao.delete(apagar)
-
-        }
+        val dao = AppDataBase.getInstance(context).DaoSessaoPlenaria()
+        val apagar = dao.loadAllByIds(response?.deleted!!)
+        dao.insertAll(listSessao)
+        dao.delete(apagar)
     }
 }
