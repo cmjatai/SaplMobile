@@ -24,13 +24,15 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
 
 
         while (response == null || response?.pagination!!.next_page != null) {
-            val dmin = if (kwargs["data_inicio"] is Date) Converters.dtf.format(kwargs["data_inicio"] as Date) else null
-            val dmax = if (kwargs["data_fim"] is Date) Converters.dtf.format(kwargs["data_fim"] as Date) else null
+            var dmin = if (kwargs["data_inicio"] is Date) Converters.dtf.format(kwargs["data_inicio"] as Date) else null
+            var dmax = if (kwargs["data_fim"] is Date) Converters.dtf.format(kwargs["data_fim"] as Date) else null
 
             var tipo_update = "sync"
-            if (kwargs["tipo_update"] is String) {
-                tipo_update = kwargs["tipo_update"].toString()
+            if (kwargs.get("tipo_update") is String) {
+                tipo_update = kwargs.get("tipo_update").toString()
             }
+            Log.d("SAPL ", tipo_update)
+
 
             val call = servico?.list(
                     format = "json",
@@ -46,15 +48,16 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
 
             for (item in response?.results!!) {
                 val sessao = SessaoPlenaria(
-                        item.get("id").asInt,
-                        item.get("sessao_legislativa").asString,
-                        item.get("legislatura").asString,
-                        item.get("tipo").asString,
-                        Converters.df.parse(item.get("data_inicio").asString),
-                        Converters.df.parse(item.get("data_fim").asString),
-                        item.get("hora_inicio").asString,
-                        item.get("hora_fim").asString,
-                        item.get("numero").asInt)
+                        uid = item.get("id").asInt,
+                        legislatura = item.get("sessao_legislativa").asString,
+                        sessao_legislativa = item.get("legislatura").asString,
+                        tipo = item.get("tipo").asString,
+                        hora_inicio = item.get("hora_inicio").asString,
+                        hora_fim = item.get("hora_fim").asString,
+                        numero = item.get("numero").asInt,
+                        data_inicio = if (item.get("data_inicio").isJsonNull) null else Converters.df.parse(item.get("data_inicio").asString),
+                        data_fim = if (item.get("data_fim").isJsonNull) Converters.df.parse(item.get("data_inicio").asString) else Converters.df.parse(item.get("data_fim").asString)
+                )
                 listSessao.add(sessao)
             }
         }

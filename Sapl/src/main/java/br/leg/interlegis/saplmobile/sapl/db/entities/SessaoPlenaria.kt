@@ -13,11 +13,11 @@ class SessaoPlenaria constructor(uid: Int,
                                  legislatura: String,
                                  sessao_legislativa: String,
                                  tipo: String,
-                                 data_inicio: Date,
-                                 data_fim: Date,
                                  hora_inicio: String,
                                  hora_fim: String,
-                                 numero: Int) {
+                                 numero: Int,
+                                 data_inicio: Date? = null,
+                                 data_fim: Date? = null) {
 
 
     @PrimaryKey
@@ -25,8 +25,8 @@ class SessaoPlenaria constructor(uid: Int,
     var legislatura: String = legislatura
     var sessao_legislativa: String = sessao_legislativa
     var tipo: String? = tipo
-    var data_inicio: Date = data_inicio
-    var data_fim: Date = data_fim
+    var data_inicio: Date? = data_inicio
+    var data_fim: Date? = data_fim
     var hora_inicio = hora_inicio
     var hora_fim = hora_fim
     var numero = numero

@@ -8,7 +8,7 @@ import java.util.*
 
 interface SessaoPlenariaRetrofitService {
 
-    @GET("api/sessao-plenaria/")
+    @GET("api/mobile/sessao-plenaria/")
     fun list(
             @Query("format") format: String,
             @Query("page") page: Int,

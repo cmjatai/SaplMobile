@@ -39,13 +39,6 @@ class SaplApplication : Application() {
             val db = AppDataBase.getInstance(context = this@SaplApplication)
             daoSessaoPlenaria = db.DaoSessaoPlenaria()
             sessoesPlenarias = daoSessaoPlenaria?.all
-
-            var teste = daoSessaoPlenaria?.all_test
-            Log.d("SAPL", teste!!.size.toString())
-
-
-
-
         }
     }
 }

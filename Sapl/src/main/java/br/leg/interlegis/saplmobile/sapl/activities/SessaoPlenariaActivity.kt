@@ -25,6 +25,8 @@ import kotlinx.android.synthetic.main.fragment_sessao_plenaria.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.onPageChangeListener
 import java.util.*
+import java.util.concurrent.ConcurrentSkipListMap
+import kotlin.collections.ArrayList
 
 
 class SessaoPlenariaActivity : SaplBaseActivity() {
@@ -60,11 +62,11 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                         val data_fim = sections!!.sessoes!![sections!!.sessoes!!.size-1].data_inicio
 
                         val c:Calendar = Calendar.getInstance()
-                        c.time = data_fim
+                        c.time = data_fim!!
                         c.add(Calendar.DAY_OF_MONTH, JsonApi.retroagir)
 
                         var json = JsonApi(this@SessaoPlenariaActivity)
-                        json.get_sessao_sessao_plenaria(c.time, data_fim)
+                        json.get_sessao_sessao_plenaria(c.time, data_fim!!)
                     }
                 }
             }
@@ -163,12 +165,33 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
     }
 
     inner class SectionsPagerAdapter(fm: FragmentManager): FragmentPagerAdapter(fm) {
+        var grid: ArrayList<ArrayList<SessaoPlenaria>> = ArrayList()
         var sessoes: List<SessaoPlenaria>? = null
+        set(value) {
+            grid.clear()
+            value?.forEach value@{ sessao ->
+                var flagInsert = false
+                grid.forEach grid@{
+                    if (it[0].data_inicio!!.year == sessao.data_inicio!!.year &&
+                            it[0].data_inicio!!.month == sessao.data_inicio!!.month) {
+                        it.add(sessao)
+                        flagInsert = true
+                        return@grid
+                    }
+                }
+                if (!flagInsert) {
+                    var lista = ArrayList<SessaoPlenaria>()
+                    lista.add(sessao)
+                    grid.add(lista)
+                }
+            }
+            field = value
+        }
         val mFragments: WeakHashMap<Int, Fragment> = WeakHashMap()
 
         override fun notifyDataSetChanged() {
             for (position in mFragments.keys) {
-                (mFragments[position] as PlaceholderFragment).sessaoPlenaria = sessoes!![position]
+                (mFragments[position] as PlaceholderFragment).sessoes = grid[position]
                 (mFragments[position] as PlaceholderFragment).update()
             }
             super.notifyDataSetChanged()
@@ -182,7 +205,8 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
         }
 
         override fun getItem(position: Int): Fragment {
-            var item = PlaceholderFragment.newInstance(sessoes!!.get(position))
+
+            var item = PlaceholderFragment.newInstance(grid[position])
             mFragments.put(position, item as Fragment)
             return item
         }
@@ -191,7 +215,7 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
             if (sessoes == null) {
                 return 0
             }
-            return sessoes!!.size
+            return grid.size
         }
     }
 
@@ -199,19 +223,22 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
      * A placeholder fragment containing a simple view.
      */
     class PlaceholderFragment : Fragment() {
-        var sessaoPlenaria: SessaoPlenaria? = null
+        var sessoes: ArrayList<SessaoPlenaria>? = null
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
             val rootView = inflater.inflate(R.layout.fragment_sessao_plenaria, container, false)
-            //rootView.section_label.text = sessaoPlenaria!!.legislatura + " " + sessaoPlenaria!!.data_inicio + " " + sessaoPlenaria!!.hora_inicio
             update(rootView)
             return rootView
         }
 
         fun update(rootView: View? = null) {
             var _view = if (view == null) rootView else view
-            _view!!.section_label.text = sessaoPlenaria!!.uid.toString() + " "+ sessaoPlenaria!!.legislatura + " " + sessaoPlenaria!!.data_inicio + " " + sessaoPlenaria!!.hora_inicio
+            var texto = ""
+            sessoes!!.forEach {
+                texto += " // "+ it.uid.toString() + " "+ it.legislatura + " " + it.data_inicio + " " + it.hora_inicio
+            }
+            _view!!.section_label.text = texto
         }
 
         companion object {
@@ -225,9 +252,9 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
              * Returns a new instance of this fragment for the given section
              * number.
              */
-            fun newInstance(sessao: SessaoPlenaria): PlaceholderFragment {
+            fun newInstance(sessoes: ArrayList<SessaoPlenaria>): PlaceholderFragment {
                 val fragment = PlaceholderFragment()
-                fragment.sessaoPlenaria = sessao
+                fragment.sessoes = sessoes
                 return fragment
             }
         }

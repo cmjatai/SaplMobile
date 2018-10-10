@@ -18,6 +18,9 @@ class JsonApi {
 
     val key_sessaoplenaria = "sessao:sessaoplenaria"
     val key_ordemdia = "sessao:ordemdia"
+    val key_expedientemateria = "sessao:expedientemateria"
+
+    val key_materialegislativa = "materia:materialegislativa"
 
     val modules = hashMapOf<String, JsonApiInterface>(
             key_sessaoplenaria to JsonApiSessaoPlenaria())
@@ -62,8 +65,8 @@ class JsonApi {
                 c.add(Calendar.DAY_OF_MONTH, retroagir )
 
                 var map = HashMap<String, Any>()
-                map.put("data_inicio", c.time)
-                map.put("data_fim", Any())
+                //map.put("data_inicio", c.time)
+                //map.put("data_fim", Any())
                 map.put("tipo_update", "get")
 
                 syncResult.add(Pair(item.key, map))
