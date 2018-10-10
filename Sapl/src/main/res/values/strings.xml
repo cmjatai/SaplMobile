@@ -2,7 +2,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-
     <string name="nav_header_title">SaplMobile</string>
     <string name="nav_header_subtitle">Sistema de Apoio ao Processo Legislativo</string>
     <string name="nav_header_desc">Navegação</string>
@@ -11,7 +10,7 @@
     <string name="action_sessoes_plenarias">Sessões Plenárias</string>
 
     <string name="title_activity_settings">Configurações</string>
-    <string name="title_activity_sessao_plenaria">Sessões Plenárias</string>
+    <string name="title_activity_sessao_plenaria">Sessões Plenárias: %1$s de %2$d</string>
 
     <string name="pref_header_casa_legislativa">Casa Legislativa</string>
     <string name="pref_header_notifications">Notificações</string>

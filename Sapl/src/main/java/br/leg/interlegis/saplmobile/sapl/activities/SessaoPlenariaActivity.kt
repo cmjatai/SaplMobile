@@ -39,23 +39,17 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
-        // Set up the ViewPager with the sections adapter.
         container.adapter = mSectionsPagerAdapter
         container.setPageTransformer(true, ZoomOutPageTransformer())
+
         container.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixel: Int) {}
             override fun onPageSelected(p0: Int) {
                 var item = this@SessaoPlenariaActivity
                 var sections = item.mSectionsPagerAdapter
-
-                /*Log.d("SAPL 2", "p0.....: " + p0.toString())
-                Log.d("SAPL 2", "sessoes: " + sections!!.sessoes!!.size.toString())
-                Log.d("SAPL 2", "retroagir: " + JsonApi.retroagir)*/
 
                 if (sections!!.sessoes!!.size - p0 == 3) {
                     doAsync {
@@ -188,6 +182,13 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
+            val cal = Calendar.getInstance()
+            cal.time = sessoes!![0].data_inicio
+            activity!!.toolbar.title = getString(
+                    R.string.title_activity_sessao_plenaria,
+                    cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
+                    cal.get(Calendar.YEAR))
+
             val rootView = inflater.inflate(R.layout.fragment_sessao_plenaria, container, false)
             update(rootView)
             return rootView
@@ -200,6 +201,8 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                 texto += " // "+ it.uid.toString() + " "+ it.legislatura + " " + it.data_inicio + " " + it.hora_inicio
             }
             _view!!.section_label.text = texto
+
+
         }
 
         companion object {
