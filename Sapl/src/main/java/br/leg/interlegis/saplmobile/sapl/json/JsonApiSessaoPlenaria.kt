@@ -49,8 +49,8 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
             for (item in response?.results!!) {
                 val sessao = SessaoPlenaria(
                         uid = item.get("id").asInt,
-                        legislatura = item.get("sessao_legislativa").asString,
-                        sessao_legislativa = item.get("legislatura").asString,
+                        legislatura = item.get("legislatura").asString,
+                        sessao_legislativa = item.get("sessao_legislativa").asString,
                         tipo = item.get("tipo").asString,
                         hora_inicio = item.get("hora_inicio").asString,
                         hora_fim = item.get("hora_fim").asString,

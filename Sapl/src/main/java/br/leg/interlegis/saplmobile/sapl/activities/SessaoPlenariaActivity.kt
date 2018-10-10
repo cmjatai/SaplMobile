@@ -8,10 +8,15 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
 import android.support.v4.view.ViewPager
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.PixelCopy
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
+import android.widget.AutoCompleteTextView
+import android.widget.TextView
 
 import br.leg.interlegis.saplmobile.sapl.R
 import br.leg.interlegis.saplmobile.sapl.SaplBaseActivity
@@ -20,9 +25,13 @@ import br.leg.interlegis.saplmobile.sapl.json.JsonApi
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import br.leg.interlegis.saplmobile.sapl.views.SessaoPlenariaViewModel
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_sessao_plenaria.*
+import kotlinx.android.synthetic.main.fragment_sessao_plenaria.*
 import kotlinx.android.synthetic.main.fragment_sessao_plenaria.view.*
+import kotlinx.android.synthetic.main.item_sessao_plenaria.view.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.support.v4.find
 import org.jetbrains.anko.support.v4.onPageChangeListener
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
@@ -53,14 +62,14 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
 
                 if (sections!!.sessoes!!.size - p0 == 3) {
                     doAsync {
-                        val data_fim = sections!!.sessoes!![sections!!.sessoes!!.size-1].data_inicio
+                        val data_fim = sections.sessoes!![sections.sessoes!!.size-1].data_inicio
 
                         val c:Calendar = Calendar.getInstance()
                         c.time = data_fim!!
                         c.add(Calendar.DAY_OF_MONTH, JsonApi.retroagir)
 
                         var json = JsonApi(this@SessaoPlenariaActivity)
-                        json.get_sessao_sessao_plenaria(c.time, data_fim!!)
+                        json.get_sessao_sessao_plenaria(c.time, data_fim)
                     }
                 }
             }
@@ -174,33 +183,63 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
+
     class PlaceholderFragment : Fragment() {
+
+        class SessaoPlenariaAdapter(private val sessoes: ArrayList<SessaoPlenaria>?):
+                RecyclerView.Adapter<SessaoPlenariaAdapter.SessaoPlenariaHolder>() {
+
+            class SessaoPlenariaHolder(val _view: View): RecyclerView.ViewHolder(_view)
+
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SessaoPlenariaHolder {
+                val _view = LayoutInflater.from(parent.context
+                    ).inflate(R.layout.item_sessao_plenaria, parent, false)
+
+                return SessaoPlenariaHolder(_view)
+            }
+
+            override fun onBindViewHolder(holder: SessaoPlenariaHolder, position: Int) {
+                holder._view.session_title.text = sessoes!![position].uid.toString()
+                holder._view.session_subtitle.text = sessoes[position].data_inicio.toString()
+            }
+
+            override fun getItemCount(): Int {
+                return sessoes!!.size
+            }
+
+        }
+
         var sessoes: ArrayList<SessaoPlenaria>? = null
+
+        private lateinit var recyclerView: RecyclerView
+        private lateinit var viewAdapter: RecyclerView.Adapter<*>
+        private lateinit var viewManager: RecyclerView.LayoutManager
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
-            val cal = Calendar.getInstance()
-            cal.time = sessoes!![0].data_inicio
-            activity!!.toolbar.title = getString(
-                    R.string.title_activity_sessao_plenaria,
-                    cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
-                    cal.get(Calendar.YEAR))
+            super.onCreateView(inflater, container, savedInstanceState)
 
             val rootView = inflater.inflate(R.layout.fragment_sessao_plenaria, container, false)
             update(rootView)
+
+            val cal = Calendar.getInstance()
+            cal.time = this.sessoes!![0].data_inicio
+            rootView.fragment_title.text = String.format("%s de %d",
+                    cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
+                    cal.get(Calendar.YEAR))
+
             return rootView
         }
 
         fun update(rootView: View? = null) {
-            var _view = if (view == null) rootView else view
-            var texto = ""
-            sessoes!!.forEach {
-                texto += " // "+ it.uid.toString() + " "+ it.legislatura + " " + it.data_inicio + " " + it.hora_inicio
-            }
-            _view!!.section_label.text = texto
+
+            viewManager = GridLayoutManager(context, 4)
+            viewAdapter = SessaoPlenariaAdapter(sessoes!!)
+
+            recyclerView = rootView!!.findViewById(R.id.view_lista_sessoes)
+            recyclerView.layoutManager = viewManager
+            recyclerView.adapter = viewAdapter
+
 
 
         }
