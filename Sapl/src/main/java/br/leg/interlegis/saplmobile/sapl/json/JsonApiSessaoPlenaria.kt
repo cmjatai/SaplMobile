@@ -15,7 +15,7 @@ import kotlin.collections.HashMap
 
 class JsonApiSessaoPlenaria: JsonApiInterface {
 
-    override fun sync(context: Context, retrofit: Retrofit?, kwargs:Map<String, Any>) {
+    override fun sync(context: Context, retrofit: Retrofit?, kwargs:Map<String, Any>): Int {
 
         val servico = retrofit?.create(SessaoPlenariaRetrofitService::class.java)
         var response: SaplApiRestResponse? = null
@@ -23,7 +23,7 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
         val listSessao = ArrayList<SessaoPlenaria>()
 
 
-        while (response == null || response?.pagination!!.next_page != null) {
+        while (response == null || response.pagination!!.next_page != null) {
             var dmin = if (kwargs["data_inicio"] is Date) Converters.dtf.format(kwargs["data_inicio"] as Date) else null
             var dmax = if (kwargs["data_fim"] is Date) Converters.dtf.format(kwargs["data_fim"] as Date) else null
 
@@ -31,26 +31,27 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
             if (kwargs.get("tipo_update") is String) {
                 tipo_update = kwargs.get("tipo_update").toString()
             }
-            Log.d("SAPL ", tipo_update)
-
 
             val call = servico?.list(
                     format = "json",
-                    page = if (response == null) 1 else response?.pagination!!.next_page!!,
+                    page = if (response == null) 1 else response.pagination!!.next_page!!,
                     tipo_update = tipo_update,
                         // Tipo sync = filtro com base nas datas de alteração
                         // Tipo get = filtro com base nas datas da sessão plenária
+                        // Tipo last_items = uma pagina só com os ultimos dados da listagem
+                        // Tipo first_items = uma página só com os primeiros dados da listagem
+                        // Tipo get_initial = uma página com os últimos dados do servidor
                     data_min = dmin,
                     data_max = dmax
             )
+
             response = call?.execute()!!.body()!!
 
-
-            for (item in response?.results!!) {
+            for (item in response.results!!) {
                 val sessao = SessaoPlenaria(
                         uid = item.get("id").asInt,
-                        legislatura = item.get("legislatura").asString,
-                        sessao_legislativa = item.get("sessao_legislativa").asString,
+                        legislatura = item.get("legislatura").asInt,
+                        sessao_legislativa = item.get("sessao_legislativa").asInt,
                         tipo = item.get("tipo").asString,
                         hora_inicio = item.get("hora_inicio").asString,
                         hora_fim = item.get("hora_fim").asString,
@@ -61,9 +62,12 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
                 listSessao.add(sessao)
             }
         }
+
         val dao = AppDataBase.getInstance(context).DaoSessaoPlenaria()
-        val apagar = dao.loadAllByIds(response?.deleted!!)
+        val apagar = dao.loadAllByIds(response.deleted!!)
         dao.insertAll(listSessao)
         dao.delete(apagar)
+
+        return listSessao.size
     }
 }

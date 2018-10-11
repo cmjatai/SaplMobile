@@ -159,6 +159,11 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             return sharedPreferences.getString(key, "")
         }
 
+        fun getBooleanPreference(context: Context, key: String): Boolean {
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+            return sharedPreferences.getBoolean(key, false)
+        }
+
 
         /**
          * A preference value change listener that updates the preference's summary

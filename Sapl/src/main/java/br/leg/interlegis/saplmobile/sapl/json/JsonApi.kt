@@ -102,7 +102,7 @@ class JsonApi {
         })*/
     }
 
-    fun get_sessao_sessao_plenaria(dataInicio:Date? = null, dataFim: Date? = null, tipoUpdate:String = "get") {
+    fun get_sessao_sessao_plenaria(dataInicio:Date? = null, dataFim: Date? = null, tipoUpdate:String = "get"): Int? {
         val kwargs = HashMap<String, Any>()
         kwargs["tipo_update"] = tipoUpdate
         if (dataInicio != null)
@@ -112,8 +112,7 @@ class JsonApi {
             kwargs["data_fim"] = dataFim
 
         val apiModule= modules[this.key_sessaoplenaria]
-        apiModule?.sync(context!!, retrofit, kwargs)
-
+        return apiModule?.sync(context!!, retrofit, kwargs)
     }
 
     fun sync(sync_modules:  ArrayList<Pair<String, HashMap<String, Any>>> ) {

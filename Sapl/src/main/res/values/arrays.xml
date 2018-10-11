@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="items_titles_tipo_listagem_sessao_plenaria">
+        <item>Mensal</item>
+        <item>Semestral</item>
+        <item>Anual</item>
+    </string-array>
+    <string-array name="items_values_tipo_listagem_sessao_plenaria">
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+    </string-array>
+</resources>

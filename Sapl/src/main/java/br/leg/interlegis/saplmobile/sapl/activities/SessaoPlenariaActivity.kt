@@ -20,10 +20,12 @@ import android.widget.AutoCompleteTextView
 import android.widget.TextView
 
 import br.leg.interlegis.saplmobile.sapl.R
+import br.leg.interlegis.saplmobile.sapl.SaplApplication
 import br.leg.interlegis.saplmobile.sapl.SaplBaseActivity
 import br.leg.interlegis.saplmobile.sapl.db.entities.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.json.JsonApi
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiSessaoPlenaria
+import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import br.leg.interlegis.saplmobile.sapl.views.SessaoPlenariaViewModel
 import kotlinx.android.synthetic.*
@@ -32,6 +34,7 @@ import kotlinx.android.synthetic.main.fragment_sessao_plenaria.*
 import kotlinx.android.synthetic.main.fragment_sessao_plenaria.view.*
 import kotlinx.android.synthetic.main.item_sessao_plenaria.view.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.support.v4.dimen
 import org.jetbrains.anko.support.v4.find
 import org.jetbrains.anko.support.v4.onPageChangeListener
 import java.util.*
@@ -43,9 +46,16 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
 
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
+    private var screen_list_sessao_plenaria: String = "10"
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sessao_plenaria)
+
+        screen_list_sessao_plenaria = SettingsActivity.getStringPreference(this, "screen_list_sessao_plenaria")
+
+
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -65,7 +75,7 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                     doAsync {
                         val dataFim = sections.sessoes!![sections.sessoes!!.size-1].data_inicio
                         val json = JsonApi(this@SessaoPlenariaActivity)
-                        json.get_sessao_sessao_plenaria(dataFim = dataFim, tipoUpdate = "first_items")
+                        json.get_sessao_sessao_plenaria(dataFim = dataFim)
                     }
                 }
             }
@@ -132,12 +142,35 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
             value?.forEach value@{ sessao ->
                 var flagInsert = false
                 grid.forEach grid@{
-                    if (it[0].data_inicio!!.year == sessao.data_inicio!!.year &&
-                            it[0].data_inicio!!.month == sessao.data_inicio!!.month) {
-                        it.add(sessao)
-                        flagInsert = true
-                        return@grid
+
+                    if (this@SessaoPlenariaActivity.screen_list_sessao_plenaria == "10") {
+                        if (it[0].data_inicio!!.year == sessao.data_inicio!!.year &&
+                                it[0].data_inicio!!.month == sessao.data_inicio!!.month) {
+                            it.add(sessao)
+                            flagInsert = true
+                            return@grid
+                        }
                     }
+                    else if (this@SessaoPlenariaActivity.screen_list_sessao_plenaria == "20") {
+                        if (it[0].data_inicio!!.year == sessao.data_inicio!!.year && it[0].data_inicio!!.month >= 6 && sessao.data_inicio!!.month >= 6) {
+                            it.add(sessao)
+                            flagInsert = true
+                            return@grid
+                        }
+                        else if (it[0].data_inicio!!.year == sessao.data_inicio!!.year && it[0].data_inicio!!.month < 6 && sessao.data_inicio!!.month < 6) {
+                            it.add(sessao)
+                            flagInsert = true
+                            return@grid
+                        }
+                    }
+                    else if (this@SessaoPlenariaActivity.screen_list_sessao_plenaria == "30") {
+                        if (it[0].data_inicio!!.year == sessao.data_inicio!!.year) {
+                            it.add(sessao)
+                            flagInsert = true
+                            return@grid
+                        }
+                    }
+
                 }
                 if (!flagInsert) {
                     var lista = ArrayList<SessaoPlenaria>()
@@ -194,15 +227,9 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
             super.onCreateView(inflater, container, savedInstanceState)
 
             rootView = inflater.inflate(R.layout.fragment_sessao_plenaria, container, false)
+            update_title()
 
-
-            val cal = Calendar.getInstance()
-            cal.time = this.sessoes!![0].data_inicio
-            rootView!!.fragment_title.text = String.format("%s de %d",
-                    cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
-                    cal.get(Calendar.YEAR))
-
-            viewManager = GridLayoutManager(context, 4)
+            viewManager = GridLayoutManager(context, getString(R.string.grid_column_sessao_plenaria).toInt())
             viewAdapter = SessaoPlenariaAdapter(sessoes!!)
 
             recyclerView = rootView!!.findViewById(R.id.view_lista_sessoes)
@@ -216,12 +243,26 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
 
             (viewAdapter as SessaoPlenariaAdapter).updateData(sessoes)
 
+            update_title()
+
+        }
+
+        private fun update_title() {
             val cal = Calendar.getInstance()
             cal.time = this.sessoes!![0].data_inicio
-            rootView!!.fragment_title.text = String.format("%s de %d",
-                    cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
-                    cal.get(Calendar.YEAR))
 
+            var tituloPagina = ""
+            var ac: SessaoPlenariaActivity = activity as SessaoPlenariaActivity
+            if (ac.screen_list_sessao_plenaria == "10") {
+                tituloPagina = String.format("%s de %d",
+                        cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
+                        cal.get(Calendar.YEAR))
+            } else if (ac.screen_list_sessao_plenaria == "20") {
+                tituloPagina = "Semestral"
+            } else if (ac.screen_list_sessao_plenaria == "30") {
+                tituloPagina = cal.get(Calendar.YEAR).toString()
+            }
+            rootView!!.fragment_title.text = tituloPagina
         }
 
         companion object {
@@ -251,9 +292,34 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
             }
 
             override fun onBindViewHolder(holder: SessaoPlenariaHolder, position: Int) {
-                holder._view.session_title.text = sessoes!![position].uid.toString()
-                holder._view.session_subtitle.text = sessoes[position].data_inicio.toString()
-                holder._view.session_hora_inicio.text = sessoes[position].hora_inicio
+                val quinzenal:Boolean = SettingsActivity.getBooleanPreference(holder.itemView.context, "divisao_quizenal_display")
+
+                val sessao = sessoes!![position]
+                if (!quinzenal) {
+                    holder._view.session_title.text = holder.itemView.context.getString(
+                        R.string.sessoes_default_title_extended,
+                        sessao.numero,
+                        sessao.tipo,
+                        sessao.sessao_legislativa,
+                        sessao.legislatura)
+                } else {
+                    val cal = Calendar.getInstance()
+                    cal.time = sessao.data_inicio
+
+                    val numero_quizena: Int = if (cal.get(Calendar.DAY_OF_MONTH) < 16) 1 else 2
+
+                    holder._view.session_title.text = holder.itemView.context.getString(
+                        R.string.sessoes_quinzenal_title_extended,
+                        sessao.numero,
+                        sessao.tipo,
+                        numero_quizena,
+                        cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
+                        cal.get(Calendar.YEAR))
+                }
+
+
+                //holder._view.session_subtitle.text = sessoes[position].data_inicio.toString()
+                //holder._view.session_hora_inicio.text = sessoes[position].hora_inicio
 
             }
 

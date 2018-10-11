@@ -14,7 +14,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.TimeRefresh
 
 @Database(entities = [(TimeRefresh::class),
                         (SessaoPlenaria::class),
-                        (ChaveValor::class)], version = 34, exportSchema = false)
+                        (ChaveValor::class)], version = 40, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
 

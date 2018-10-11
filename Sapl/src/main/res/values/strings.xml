@@ -7,10 +7,8 @@
     <string name="nav_header_desc">Navegação</string>
 
     <string name="action_settings">Configurações</string>
-    <string name="action_sessoes_plenarias">Sessões Plenárias</string>
 
     <string name="title_activity_settings">Configurações</string>
-    <string name="title_activity_sessao_plenaria">Sessões Plenárias</string>
 
     <string name="pref_header_casa_legislativa">Casa Legislativa</string>
     <string name="pref_header_notifications">Notificações</string>
@@ -25,12 +23,6 @@
     <string name="pref_sync_offline_title">Disponibilizar Arquivos Off-Line</string>
     <string name="pref_sync_offline_summary">O SaplMobile fará download de todos os arquivos constantes de uma lista de documentos sempre que tal lista for aberta no dispositivo.</string>
 
-    <string name="pref_sync_roteiro_title">Mostrar roteiro da Sessão Plenária</string>
-    <string name="pref_sync_roteiro_summary">Descrição detalhada de cada item presente na Sessão.</string>
-
-    <string name="pref_divisao_quinzenal_title">Incluir quinzena nos títulos das sessões</string>
-    <string name="pref_divisao_quinzenal">Ative essa opção se sua casa usa as expressões \'1ª Quinzena\' e \'2ª Quinzena\' nos títulos das Sessões</string>
-
     <string name="error_comunicacao_internet">Erro de Comunicação com o Servidor na Internet</string>
 
     <string name="pref_title_ringtone">Ringtone</string>
@@ -39,6 +31,23 @@
     <string name="pref_ringtone_silent">Silent</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="icone_sessao_plenaria">Icone Sessão Plenária</string>
+
+
+    <!-- Usado para Sessões Plenárias-->
+
+    <string name="pref_sync_roteiro_title">Mostrar roteiro da Sessão Plenária</string>
+    <string name="pref_sync_roteiro_summary">Descrição detalhada de cada item presente na Sessão.</string>
+    <string name="pref_divisao_quinzenal_title">Incluir quinzena nos títulos das sessões</string>
+    <string name="pref_divisao_quinzenal">Ative essa opção se sua casa usa as expressões \'1ª Quinzena\' e \'2ª Quinzena\' nos títulos das Sessões</string>
+    <string name="pref_title_periodo_listagem">Peridiocidade da Listagem de Sessões</string>
+
+    <string name="title_activity_sessao_plenaria">Sessões Plenárias</string>
+    <string name="action_sessoes_plenarias">Sessões Plenárias</string>
+
+    <string name="sessoes_default_title_extended">%1$dª Sessão da %1$dª %2$s da %3$dª Sessão Legislativa da %4$dª Legislatura</string>
+    <string name="sessoes_quinzenal_title_extended">%1$dª Sessão %2$s da %3$dª Quinzena do Mês de %4$s de %5$d</string>
+
+    <string name="grid_column_sessao_plenaria">5</string>
 
 
 </resources>

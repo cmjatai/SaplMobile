@@ -7,5 +7,5 @@ import kotlin.collections.HashMap
 
 interface JsonApiInterface {
 
-    fun sync(context: Context, retrofit: Retrofit?, kwargs:Map<String, Any>)
+    fun sync(context: Context, retrofit: Retrofit?, kwargs:Map<String, Any>): Int
 }

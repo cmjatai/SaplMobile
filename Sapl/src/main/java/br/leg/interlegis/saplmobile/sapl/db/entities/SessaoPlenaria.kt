@@ -10,8 +10,8 @@ import java.util.*
 
 @Entity(tableName = "sessao_plenaria")
 class SessaoPlenaria constructor(uid: Int,
-                                 legislatura: String,
-                                 sessao_legislativa: String,
+                                 legislatura: Int,
+                                 sessao_legislativa: Int,
                                  tipo: String,
                                  hora_inicio: String,
                                  hora_fim: String,
@@ -22,8 +22,8 @@ class SessaoPlenaria constructor(uid: Int,
 
     @PrimaryKey
     var uid: Int = uid
-    var legislatura: String = legislatura
-    var sessao_legislativa: String = sessao_legislativa
+    var legislatura: Int = legislatura
+    var sessao_legislativa: Int = sessao_legislativa
     var tipo: String? = tipo
     var data_inicio: Date? = data_inicio
     var data_fim: Date? = data_fim
