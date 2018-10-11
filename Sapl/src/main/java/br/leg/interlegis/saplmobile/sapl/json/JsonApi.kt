@@ -67,7 +67,7 @@ class JsonApi {
                 var map = HashMap<String, Any>()
                 //map.put("data_inicio", c.time)
                 //map.put("data_fim", Any())
-                map.put("tipo_update", "get")
+                map.put("tipo_update", "get_initial")
 
                 syncResult.add(Pair(item.key, map))
                 val tr = TimeRefresh(item.key, ultimaAtualizacao)
@@ -102,20 +102,24 @@ class JsonApi {
         })*/
     }
 
-    fun get_sessao_sessao_plenaria(data_inicio:Date, data_fim: Date) {
-        val api_module= modules.get(this.key_sessaoplenaria)
+    fun get_sessao_sessao_plenaria(dataInicio:Date? = null, dataFim: Date? = null, tipoUpdate:String = "get") {
         val kwargs = HashMap<String, Any>()
-        kwargs.put("data_inicio", data_inicio)
-        kwargs.put("data_fim", data_fim)
-        kwargs.put("tipo_update", "get")
-        api_module?.sync(context!!, retrofit, kwargs)
+        kwargs["tipo_update"] = tipoUpdate
+        if (dataInicio != null)
+            kwargs["data_inicio"] = dataInicio
+
+        if (dataFim != null)
+            kwargs["data_fim"] = dataFim
+
+        val apiModule= modules[this.key_sessaoplenaria]
+        apiModule?.sync(context!!, retrofit, kwargs)
 
     }
 
     fun sync(sync_modules:  ArrayList<Pair<String, HashMap<String, Any>>> ) {
         for (module in sync_modules) {
-            val api_module= modules.get(module.first)
-            api_module?.sync(context!!, retrofit, module.second)
+            val apiModule= modules.get(module.first)
+            apiModule?.sync(context!!, retrofit, module.second)
         }
     }
 }
