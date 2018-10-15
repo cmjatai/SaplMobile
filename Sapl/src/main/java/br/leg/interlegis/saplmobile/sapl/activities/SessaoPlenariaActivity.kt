@@ -299,6 +299,9 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                 val quinzenal:Boolean = SettingsActivity.getBooleanPreference(holder.itemView.context, "divisao_quizenal_display")
 
                 val sessao = sessoes!![position]
+                val cal = Calendar.getInstance()
+                cal.time = sessao.data_inicio
+
                 if (!quinzenal) {
                     holder._view.session_title.text = holder.itemView.context.getString(
                         R.string.sessoes_default_title_extended,
@@ -312,8 +315,6 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                             sessao.legislatura
                     )
                 } else {
-                    val cal = Calendar.getInstance()
-                    cal.time = sessao.data_inicio
                     val numeroQuizena: Int = if (cal.get(Calendar.DAY_OF_MONTH) < 16) 1 else 2
                     holder._view.session_title.text = holder.itemView.context.getString(
                         R.string.sessoes_quinzenal_title_extended,
@@ -328,6 +329,14 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                         sessao.legislatura
                     )
                 }
+
+                holder._view.session_date_extended.text = holder.itemView.context.getString(
+                    R.string.sessoes_date_extended,
+                        cal.get(Calendar.DAY_OF_MONTH),
+                        cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
+                        cal.get(Calendar.YEAR),
+                        sessao.hora_inicio)
+
 
 
                 //holder._view.session_subtitle.text = sessoes[position].data_inicio.toString()

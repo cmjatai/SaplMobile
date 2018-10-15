@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ListaSessoes">
+    </style>
+    <style name="ListaSessoes.Titulo">
+        <item name="android:textSize">23sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+    <style name="ListaSessoes.SubTitulo">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="ListaSessoes.Data">
+        <item name="android:textSize">20sp</item>
+    </style>
+</resources>

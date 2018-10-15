@@ -47,6 +47,7 @@
 
     <string name="sessoes_default_subtitle_extended">%1$dª Sessão Legislativa da %2$dª Legislativa</string>
     <string name="sessoes_quinzenal_subtitle_extended">%1$dª Sessão Legislativa da %2$dª Legislativa</string>
+    <string name="sessoes_date_extended">%1$d de %2$s de %3$d às %4$s</string>
 
     <string name="grid_column_sessao_plenaria">1</string>
 
