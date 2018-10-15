@@ -220,7 +220,6 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
 
         private lateinit var recyclerView: RecyclerView
         private lateinit var viewAdapter: RecyclerView.Adapter<*>
-        private lateinit var viewManager: RecyclerView.LayoutManager
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
@@ -229,22 +228,15 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
             rootView = inflater.inflate(R.layout.fragment_sessao_plenaria, container, false)
             update_title()
 
-            //viewManager = GridLayoutManager(context, getString(R.string.grid_column_sessao_plenaria).toInt())
             viewAdapter = SessaoPlenariaAdapter(sessoes!!)
-
             recyclerView = rootView!!.findViewById(R.id.view_lista_sessoes)
-            //recyclerView.layoutManager = viewManager
             recyclerView.adapter = viewAdapter
-
             return rootView
         }
 
         fun update() {
-
             (viewAdapter as SessaoPlenariaAdapter).updateData(sessoes)
-
             update_title()
-
         }
 
         private fun update_title() {
@@ -280,7 +272,18 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
         class SessaoPlenariaAdapter(private val sessoes: ArrayList<SessaoPlenaria>?):
                 RecyclerView.Adapter<SessaoPlenariaAdapter.SessaoPlenariaHolder>() {
 
-            class SessaoPlenariaHolder(val _view: View): RecyclerView.ViewHolder(_view)
+            inner class SessaoPlenariaHolder(val _view: View): RecyclerView.ViewHolder(_view) {
+                var sessao: SessaoPlenaria? = null
+
+                init {
+                    _view.setOnClickListener {
+                        Log.d("SAPL", String.format("Click: Clicou na sessão: %d - hora_inicio:%s",
+                                sessao!!.uid,
+                                sessao!!.hora_inicio
+                                ))
+                    }
+                }
+            }
 
             fun updateData(_sessoes: ArrayList<SessaoPlenaria>?) {
                 sessoes!!.clear()
@@ -297,6 +300,7 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
 
             override fun onBindViewHolder(holder: SessaoPlenariaHolder, position: Int) {
                 val quinzenal:Boolean = SettingsActivity.getBooleanPreference(holder.itemView.context, "divisao_quizenal_display")
+                holder.sessao = sessoes!![position]
 
                 val sessao = sessoes!![position]
                 val cal = Calendar.getInstance()
@@ -336,12 +340,6 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                         cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
                         cal.get(Calendar.YEAR),
                         sessao.hora_inicio)
-
-
-
-                //holder._view.session_subtitle.text = sessoes[position].data_inicio.toString()
-                //holder._view.session_hora_inicio.text = sessoes[position].hora_inicio
-
             }
 
             override fun getItemCount(): Int {
