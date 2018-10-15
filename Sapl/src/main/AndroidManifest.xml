@@ -53,7 +53,7 @@
             android:label="@string/title_activity_sessao_plenaria">
         </activity>
         <activity
-            android:name=".activities.SessaoPlenariaActivity"
+            android:name=".activities.SessaoPlenariaListActivity"
             android:label="@string/title_activity_sessao_plenaria"
             android:parentActivityName=".SaplActivity"
             android:theme="@style/AppTheme.NoActionBar">

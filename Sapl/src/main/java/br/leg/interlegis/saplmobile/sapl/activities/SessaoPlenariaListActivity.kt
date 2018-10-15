@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentSkipListMap
 import kotlin.collections.ArrayList
 
 
-class SessaoPlenariaActivity : SaplBaseActivity() {
+class SessaoPlenariaListActivity : SaplBaseActivity() {
 
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
@@ -69,12 +69,12 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixel: Int) {}
             override fun onPageSelected(p0: Int) {
 
-                var item = this@SessaoPlenariaActivity
+                var item = this@SessaoPlenariaListActivity
                 var sections = item.mSectionsPagerAdapter
                 if (sections!!.count - p0 == 1) {
                     doAsync {
                         val dataFim = sections.sessoes!![sections.sessoes!!.size-1].data_inicio
-                        val json = JsonApi(this@SessaoPlenariaActivity)
+                        val json = JsonApi(this@SessaoPlenariaListActivity)
                         json.get_sessao_sessao_plenaria(dataFim = dataFim)
                     }
                 }
@@ -143,7 +143,7 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                 var flagInsert = false
                 grid.forEach grid@{
 
-                    if (this@SessaoPlenariaActivity.screen_list_sessao_plenaria == "10") {
+                    if (this@SessaoPlenariaListActivity.screen_list_sessao_plenaria == "10") {
                         if (it[0].data_inicio!!.year == sessao.data_inicio!!.year &&
                                 it[0].data_inicio!!.month == sessao.data_inicio!!.month) {
                             it.add(sessao)
@@ -151,7 +151,7 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                             return@grid
                         }
                     }
-                    else if (this@SessaoPlenariaActivity.screen_list_sessao_plenaria == "20") {
+                    else if (this@SessaoPlenariaListActivity.screen_list_sessao_plenaria == "20") {
                         if (it[0].data_inicio!!.year == sessao.data_inicio!!.year && it[0].data_inicio!!.month >= 6 && sessao.data_inicio!!.month >= 6) {
                             it.add(sessao)
                             flagInsert = true
@@ -163,7 +163,7 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                             return@grid
                         }
                     }
-                    else if (this@SessaoPlenariaActivity.screen_list_sessao_plenaria == "30") {
+                    else if (this@SessaoPlenariaListActivity.screen_list_sessao_plenaria == "30") {
                         if (it[0].data_inicio!!.year == sessao.data_inicio!!.year) {
                             it.add(sessao)
                             flagInsert = true
@@ -244,7 +244,7 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
             cal.time = this.sessoes!![0].data_inicio
 
             var tituloPagina = ""
-            var ac: SessaoPlenariaActivity = activity as SessaoPlenariaActivity
+            var ac: SessaoPlenariaListActivity = activity as SessaoPlenariaListActivity
             when {
                 ac.screen_list_sessao_plenaria == "10" ->
                     tituloPagina = getString(R.string.title_grid_mensal_sessao_plenaria,
