@@ -32,7 +32,6 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="icone_sessao_plenaria">Icone Sessão Plenária</string>
 
-
     <!-- Usado para Sessões Plenárias-->
 
     <string name="pref_sync_roteiro_title">Mostrar roteiro da Sessão Plenária</string>
@@ -43,14 +42,17 @@
 
     <string name="title_activity_sessao_plenaria">Sessões Plenárias</string>
 
-    <string name="sessoes_default_title_extended">%1$dª Sessão da %1$dª %2$s da %3$dª Sessão Legislativa da %4$dª Legislatura</string>
+    <string name="sessoes_default_title_extended">%1$dª Sessão %2$s da %3$dª Sessão Legislativa da %4$dª Legislatura</string>
     <string name="sessoes_quinzenal_title_extended">%1$dª Sessão %2$s da %3$dª Quinzena do Mês de %4$s de %5$d</string>
+
+    <string name="sessoes_default_subtitle_extended">%1$dª Sessão Legislativa da %2$dª Legislativa</string>
+    <string name="sessoes_quinzenal_subtitle_extended">%1$dª Sessão Legislativa da %2$dª Legislativa</string>
 
     <string name="grid_column_sessao_plenaria">1</string>
 
     <string name="title_grid_mensal_sessao_plenaria">%1$s de %2$d</string>
     <string name="title_grid_semenstral_sessao_plenaria">%1$dº Semestre de %2$d</string>
-    <string name="title_grid_anual_sessao_plenaria">Sessões Plenárias do ano %1$d</string>
+    <string name="title_grid_anual_sessao_plenaria">Sessões Plenárias de %1$d</string>
 
 
 </resources>

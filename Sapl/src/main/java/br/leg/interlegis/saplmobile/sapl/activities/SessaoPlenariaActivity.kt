@@ -306,19 +306,27 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
                         sessao.tipo,
                         sessao.sessao_legislativa,
                         sessao.legislatura)
+                    holder._view.session_subtitle.text = holder.itemView.context.getString(
+                            R.string.sessoes_default_subtitle_extended,
+                            sessao.sessao_legislativa,
+                            sessao.legislatura
+                    )
                 } else {
                     val cal = Calendar.getInstance()
                     cal.time = sessao.data_inicio
-
-                    val numero_quizena: Int = if (cal.get(Calendar.DAY_OF_MONTH) < 16) 1 else 2
-
+                    val numeroQuizena: Int = if (cal.get(Calendar.DAY_OF_MONTH) < 16) 1 else 2
                     holder._view.session_title.text = holder.itemView.context.getString(
                         R.string.sessoes_quinzenal_title_extended,
                         sessao.numero,
                         sessao.tipo,
-                        numero_quizena,
+                        numeroQuizena,
                         cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
                         cal.get(Calendar.YEAR))
+                    holder._view.session_subtitle.text = holder.itemView.context.getString(
+                        R.string.sessoes_quinzenal_subtitle_extended,
+                        sessao.sessao_legislativa,
+                        sessao.legislatura
+                    )
                 }
 
 
