@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="ListaSessoes">
+        <item name="spanCount">1</item>
+        <item name="layoutManager">android.support.v7.widget.GridLayoutManager</item>
+        <item name="android:layout_margin">4dp</item>
     </style>
-    <style name="ListaSessoes.Titulo">
-        <item name="android:textSize">23sp</item>
+    <style name="ListaSessoes.CardSessao">
+        <item name="contentPadding">24dp</item>
+    </style>
+    <style name="ListaSessoes.CardSessao.Titulo">
+        <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
-    <style name="ListaSessoes.SubTitulo">
+    <style name="ListaSessoes.CardSessao.SubTitulo">
         <item name="android:textSize">18sp</item>
     </style>
-    <style name="ListaSessoes.Data">
+    <style name="ListaSessoes.CardSessao.Data">
         <item name="android:textSize">20sp</item>
     </style>
 </resources>

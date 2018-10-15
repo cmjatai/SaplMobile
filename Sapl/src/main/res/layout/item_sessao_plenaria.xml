@@ -2,15 +2,14 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/ListaSessoes"
+    style="@style/ListaSessoes.CardSessao"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
     app:cardBackgroundColor="@android:color/background_light"
 
     app:cardCornerRadius="1dp"
-    app:cardElevation="1dp"
-    app:contentPadding="24dp">
+    app:cardElevation="1dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,7 +17,7 @@
 
         <TextView
             android:id="@+id/session_title"
-            style="@style/ListaSessoes.Titulo"
+            style="@style/ListaSessoes.CardSessao.Titulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +26,7 @@
 
         <TextView
             android:id="@+id/session_subtitle"
-            style="@style/ListaSessoes.SubTitulo"
+            style="@style/ListaSessoes.CardSessao.SubTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +36,7 @@
 
         <TextView
             android:id="@+id/session_date_extended"
-            style="@style/ListaSessoes.Data"
+            style="@style/ListaSessoes.CardSessao.Data"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"

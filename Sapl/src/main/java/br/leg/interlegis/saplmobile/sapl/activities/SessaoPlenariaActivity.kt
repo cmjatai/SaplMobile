@@ -229,11 +229,11 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
             rootView = inflater.inflate(R.layout.fragment_sessao_plenaria, container, false)
             update_title()
 
-            viewManager = GridLayoutManager(context, getString(R.string.grid_column_sessao_plenaria).toInt())
+            //viewManager = GridLayoutManager(context, getString(R.string.grid_column_sessao_plenaria).toInt())
             viewAdapter = SessaoPlenariaAdapter(sessoes!!)
 
             recyclerView = rootView!!.findViewById(R.id.view_lista_sessoes)
-            recyclerView.layoutManager = viewManager
+            //recyclerView.layoutManager = viewManager
             recyclerView.adapter = viewAdapter
 
             return rootView
