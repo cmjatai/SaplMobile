@@ -16,6 +16,9 @@ interface DaoSessaoPlenaria {
     @Query("SELECT * FROM sessao_plenaria WHERE uid IN (:sessaoIds)")
     fun loadAllByIds(sessaoIds: IntArray): List<SessaoPlenaria>
 
+    @Query("SELECT * FROM sessao_plenaria WHERE uid = :sessaoId")
+    fun getLDSessao(sessaoId: Int): LiveData<SessaoPlenaria>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(sessoes: List<SessaoPlenaria>)
 

@@ -3,6 +3,7 @@ package br.leg.interlegis.saplmobile.sapl.activities
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -27,9 +28,9 @@ import br.leg.interlegis.saplmobile.sapl.json.JsonApi
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import br.leg.interlegis.saplmobile.sapl.support.Log
-import br.leg.interlegis.saplmobile.sapl.views.SessaoPlenariaViewModel
+import br.leg.interlegis.saplmobile.sapl.views.SessaoPlenariaListViewModel
 import kotlinx.android.synthetic.*
-import kotlinx.android.synthetic.main.activity_sessao_plenaria.*
+import kotlinx.android.synthetic.main.activity_sessao_plenaria_list.*
 import kotlinx.android.synthetic.main.fragment_sessao_plenaria.*
 import kotlinx.android.synthetic.main.fragment_sessao_plenaria.view.*
 import kotlinx.android.synthetic.main.item_sessao_plenaria.view.*
@@ -40,6 +41,7 @@ import org.jetbrains.anko.support.v4.onPageChangeListener
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class SessaoPlenariaListActivity : SaplBaseActivity() {
@@ -51,7 +53,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sessao_plenaria)
+        setContentView(R.layout.activity_sessao_plenaria_list)
 
         screen_list_sessao_plenaria = SettingsActivity.getStringPreference(this, "screen_list_sessao_plenaria")
 
@@ -82,7 +84,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
         })
 
         var sessaoModel = ViewModelProviders.of(
-                this).get(SessaoPlenariaViewModel::class.java)
+                this).get(SessaoPlenariaListViewModel::class.java)
 
         sessaoModel.sessoes?.observe(this,
             Observer<List<SessaoPlenaria>> {sessoes ->
@@ -277,6 +279,9 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
                 init {
                     _view.setOnClickListener {
+                        val intent = Intent(it.context, SessaoPlenariaActivity::class.java)
+                        intent.putExtra("uid", sessao!!.uid)
+                        it.context.startActivity(intent)
                         Log.d("SAPL", String.format("Click: Clicou na sessão: %d - hora_inicio:%s",
                                 sessao!!.uid,
                                 sessao!!.hora_inicio
@@ -299,47 +304,14 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
             }
 
             override fun onBindViewHolder(holder: SessaoPlenariaHolder, position: Int) {
-                val quinzenal:Boolean = SettingsActivity.getBooleanPreference(holder.itemView.context, "divisao_quizenal_display")
                 holder.sessao = sessoes!![position]
 
                 val sessao = sessoes!![position]
-                val cal = Calendar.getInstance()
-                cal.time = sessao.data_inicio
+                var titulos = titulo_sessao(holder._view.context, sessao)
 
-                if (!quinzenal) {
-                    holder._view.session_title.text = holder.itemView.context.getString(
-                        R.string.sessoes_default_title_extended,
-                        sessao.numero,
-                        sessao.tipo,
-                        sessao.sessao_legislativa,
-                        sessao.legislatura)
-                    holder._view.session_subtitle.text = holder.itemView.context.getString(
-                            R.string.sessoes_default_subtitle_extended,
-                            sessao.sessao_legislativa,
-                            sessao.legislatura
-                    )
-                } else {
-                    val numeroQuizena: Int = if (cal.get(Calendar.DAY_OF_MONTH) < 16) 1 else 2
-                    holder._view.session_title.text = holder.itemView.context.getString(
-                        R.string.sessoes_quinzenal_title_extended,
-                        sessao.numero,
-                        sessao.tipo,
-                        numeroQuizena,
-                        cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
-                        cal.get(Calendar.YEAR))
-                    holder._view.session_subtitle.text = holder.itemView.context.getString(
-                        R.string.sessoes_quinzenal_subtitle_extended,
-                        sessao.sessao_legislativa,
-                        sessao.legislatura
-                    )
-                }
-
-                holder._view.session_date_extended.text = holder.itemView.context.getString(
-                    R.string.sessoes_date_extended,
-                        cal.get(Calendar.DAY_OF_MONTH),
-                        cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
-                        cal.get(Calendar.YEAR),
-                        sessao.hora_inicio)
+                holder._view.session_title.text = titulos["session_title"]
+                holder._view.session_subtitle.text = titulos["session_subtitle"]
+                holder._view.session_date_extended.text = titulos["session_date_extended"]
             }
 
             override fun getItemCount(): Int {
@@ -348,5 +320,52 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
         }
 
+    }
+    companion object {
+        fun titulo_sessao(context: Context, sessaoPlenaria: SessaoPlenaria): HashMap<String, String> {
+            val quinzenal:Boolean = SettingsActivity.getBooleanPreference(context, "divisao_quizenal_display")
+
+            val cal = Calendar.getInstance()
+            cal.time = sessaoPlenaria.data_inicio
+
+            val titulos = HashMap<String, String>()
+
+            if (!quinzenal) {
+                titulos["session_title"] = context.getString(
+                    R.string.sessoes_default_title_extended,
+                    sessaoPlenaria.numero,
+                    sessaoPlenaria.tipo,
+                    sessaoPlenaria.sessao_legislativa,
+                    sessaoPlenaria.legislatura)
+
+                titulos["session_subtitle"] = context.getString(
+                    R.string.sessoes_default_subtitle_extended,
+                    sessaoPlenaria.sessao_legislativa,
+                    sessaoPlenaria.legislatura)
+            } else {
+                val numeroQuizena: Int = if (cal.get(Calendar.DAY_OF_MONTH) < 16) 1 else 2
+
+
+                titulos["session_title"] = context.getString(
+                    R.string.sessoes_quinzenal_title_extended,
+                    sessaoPlenaria.numero,
+                    sessaoPlenaria.tipo,
+                    numeroQuizena,
+                    cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
+                    cal.get(Calendar.YEAR))
+                titulos["session_subtitle"] = context.getString(
+                    R.string.sessoes_quinzenal_subtitle_extended,
+                    sessaoPlenaria.sessao_legislativa,
+                    sessaoPlenaria.legislatura)
+            }
+
+            titulos["session_date_extended"] = context.getString(
+                R.string.sessoes_date_extended,
+                cal.get(Calendar.DAY_OF_MONTH),
+                cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
+                cal.get(Calendar.YEAR),
+                sessaoPlenaria.hora_inicio)
+            return titulos
+        }
     }
 }
