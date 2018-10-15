@@ -253,14 +253,18 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
 
             var tituloPagina = ""
             var ac: SessaoPlenariaActivity = activity as SessaoPlenariaActivity
-            if (ac.screen_list_sessao_plenaria == "10") {
-                tituloPagina = String.format("%s de %d",
+            when {
+                ac.screen_list_sessao_plenaria == "10" ->
+                    tituloPagina = getString(R.string.title_grid_mensal_sessao_plenaria,
                         cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
                         cal.get(Calendar.YEAR))
-            } else if (ac.screen_list_sessao_plenaria == "20") {
-                tituloPagina = "Semestral"
-            } else if (ac.screen_list_sessao_plenaria == "30") {
-                tituloPagina = cal.get(Calendar.YEAR).toString()
+                ac.screen_list_sessao_plenaria == "20" ->
+                    tituloPagina = getString(R.string.title_grid_semenstral_sessao_plenaria,
+                        if (cal.get(Calendar.MONTH) <= 6) 1 else 2,
+                        cal.get(Calendar.YEAR))
+                ac.screen_list_sessao_plenaria == "30" ->
+                    tituloPagina = getString(R.string.title_grid_anual_sessao_plenaria,
+                        cal.get(Calendar.YEAR))
             }
             rootView!!.fragment_title.text = tituloPagina
         }

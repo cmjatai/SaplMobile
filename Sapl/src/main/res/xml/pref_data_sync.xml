@@ -7,7 +7,7 @@
 
     <PreferenceScreen
         android:key="ps_sessao_plenaria"
-        android:title="@string/action_sessoes_plenarias">
+        android:title="@string/title_activity_sessao_plenaria">
 
         <SwitchPreference
             android:defaultValue="false"
