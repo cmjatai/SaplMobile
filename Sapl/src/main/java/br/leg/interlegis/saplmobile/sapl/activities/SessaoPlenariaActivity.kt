@@ -34,7 +34,7 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
     fun update(sessao: SessaoPlenaria?) {
         sessaoPlenaria = sessao
         val titulos = SessaoPlenariaListActivity.titulo_sessao(this, sessao!!)
-        toolbar.title = String.format("%s (%s)",
+        toolbar.title = String.format("%s    (%s)",
                 titulos["session_title"],
                 titulos["session_date_extended"])
 
