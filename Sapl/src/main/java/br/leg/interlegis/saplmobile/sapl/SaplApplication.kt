@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.lifecycle.LiveData
 import android.content.Context
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
+import br.leg.interlegis.saplmobile.sapl.db.daos.DaoAutor
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.db.entities.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.support.Log

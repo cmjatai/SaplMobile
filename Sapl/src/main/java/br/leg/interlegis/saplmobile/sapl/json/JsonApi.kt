@@ -18,6 +18,7 @@ import kotlin.collections.HashMap
 class JsonApi {
 
     val modules = hashMapOf<String, JsonApiInterface>(
+            JsonApiAutor.chave to JsonApiAutor(),
             JsonApiSessaoPlenaria.chave to JsonApiSessaoPlenaria())
 
     var API_BASE_URL : String = ""
