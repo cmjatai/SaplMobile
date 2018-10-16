@@ -14,7 +14,10 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class JsonApiSessaoPlenaria: JsonApiInterface {
+    companion object {
 
+        val chave = "sessao:sessaoplenaria"
+    }
     override fun sync(context: Context, retrofit: Retrofit?, kwargs:Map<String, Any>): Int {
 
         val servico = retrofit?.create(SessaoPlenariaRetrofitService::class.java)

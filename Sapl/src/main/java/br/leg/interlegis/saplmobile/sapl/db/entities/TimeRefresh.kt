@@ -8,7 +8,7 @@ import android.support.annotation.NonNull
 import java.util.*
 
 @Entity(tableName = "time_refresh")
-class TimeRefresh constructor(chave: String, data: Date) {
+class TimeRefresh constructor(chave: String, data: Date? = null) {
 
     @PrimaryKey
     var chave: String = chave

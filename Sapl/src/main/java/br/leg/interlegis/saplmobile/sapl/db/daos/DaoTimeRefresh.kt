@@ -25,6 +25,9 @@ interface DaoTimeRefresh {
     @Query("SELECT * FROM time_refresh WHERE chave = :chave")
     fun loadValue(chave: String): TimeRefresh?
 
+    @Query("SELECT * FROM time_refresh ORDER BY data desc limit 1")
+    fun maxValue(): TimeRefresh?
+
     @Delete
     fun delete(provider: TimeRefresh)
 

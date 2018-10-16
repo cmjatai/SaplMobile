@@ -7,6 +7,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.TimeRefresh
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.TimeRefreshRetrofitService
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
+import br.leg.interlegis.saplmobile.sapl.support.Log
 import com.google.gson.JsonObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,18 +17,14 @@ import kotlin.collections.HashMap
 
 class JsonApi {
 
-    val key_sessaoplenaria = "sessao:sessaoplenaria"
-    val key_ordemdia = "sessao:ordemdia"
-    val key_expedientemateria = "sessao:expedientemateria"
-
-    val key_materialegislativa = "materia:materialegislativa"
-
     val modules = hashMapOf<String, JsonApiInterface>(
-            key_sessaoplenaria to JsonApiSessaoPlenaria())
+            JsonApiSessaoPlenaria.chave to JsonApiSessaoPlenaria())
 
     var API_BASE_URL : String = ""
     var context: Context? = null
     var retrofit: Retrofit? = null
+
+    var maximoGlobal: TimeRefresh? = null
     companion object {
         var retroagir = -60
 
@@ -47,16 +44,25 @@ class JsonApi {
 
     fun sync_time_refresh(): ArrayList<Pair<String, HashMap<String, Any>>> {
 
+        Log.d("SAPL", "========================")
         val dao = AppDataBase.getInstance(this.context!!).DaoTimeRefresh()
+        maximoGlobal = dao.maxValue()
+
+        if (maximoGlobal != null)
+            Log.d("SAPL",String.format("max key: %s - %s", maximoGlobal?.chave, maximoGlobal?.data))
 
         val trs = retrofit?.create(TimeRefreshRetrofitService::class.java)
-        val call = trs?.sync_time_refresh("json")
+        val call = trs?.sync_time_refresh(
+                format = "json",
+                date = if (maximoGlobal == null) null else Converters.dtf.format(maximoGlobal!!.data))
+
         val timeJson: JsonObject = call?.execute()!!.body()!!
 
         val syncResult : ArrayList<Pair<String, HashMap<String, Any>>> = ArrayList()
         val c:Calendar = Calendar.getInstance()
 
         for (item in timeJson.entrySet()) {
+
             var ultimaAtualizacao = Converters.dtf.parse(item.value.asString)
 
             val time = dao.loadValue(item.key)
@@ -76,6 +82,7 @@ class JsonApi {
             }
             else {
                 if (ultimaAtualizacao > time.data) {
+                    Log.d("SAPL", item.key)
                     c.time = time.data
 
                     var map = HashMap<String, Any>()
@@ -111,14 +118,15 @@ class JsonApi {
         if (dataFim != null)
             kwargs["data_fim"] = dataFim
 
-        val apiModule= modules[this.key_sessaoplenaria]
+        val apiModule= modules[JsonApiSessaoPlenaria.chave]
         return apiModule?.sync(context!!, retrofit, kwargs)
     }
 
     fun sync(sync_modules:  ArrayList<Pair<String, HashMap<String, Any>>> ) {
         for (module in sync_modules) {
-            val apiModule= modules.get(module.first)
+            val apiModule= modules[module.first]
             apiModule?.sync(context!!, retrofit, module.second)
         }
+
     }
 }
