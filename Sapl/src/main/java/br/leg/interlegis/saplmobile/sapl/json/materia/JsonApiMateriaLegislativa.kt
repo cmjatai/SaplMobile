@@ -1,4 +1,4 @@
-package br.leg.interlegis.saplmobile.sapl.json
+package br.leg.interlegis.saplmobile.sapl.json.materia
 
 import android.content.Context
 import android.os.Environment
@@ -6,6 +6,7 @@ import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.Converters
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
+import br.leg.interlegis.saplmobile.sapl.json.SaplApiRestResponse
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.AutorRetrofitService
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.support.Log

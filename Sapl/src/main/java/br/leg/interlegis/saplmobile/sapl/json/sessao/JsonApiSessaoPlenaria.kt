@@ -1,4 +1,4 @@
-package br.leg.interlegis.saplmobile.sapl.json
+package br.leg.interlegis.saplmobile.sapl.json.sessao
 
 import android.content.Context
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase

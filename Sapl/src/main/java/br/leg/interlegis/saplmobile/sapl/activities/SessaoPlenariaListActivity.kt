@@ -25,7 +25,7 @@ import br.leg.interlegis.saplmobile.sapl.SaplApplication
 import br.leg.interlegis.saplmobile.sapl.SaplBaseActivity
 import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.json.JsonApi
-import br.leg.interlegis.saplmobile.sapl.json.JsonApiSessaoPlenaria
+import br.leg.interlegis.saplmobile.sapl.json.sessao.JsonApiSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import br.leg.interlegis.saplmobile.sapl.views.SessaoPlenariaListViewModel

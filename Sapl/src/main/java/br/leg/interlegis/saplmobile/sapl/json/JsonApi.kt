@@ -7,6 +7,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.db.entities.TimeRefresh
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.TimeRefreshRetrofitService
+import br.leg.interlegis.saplmobile.sapl.json.sessao.JsonApiSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import com.google.gson.JsonObject
