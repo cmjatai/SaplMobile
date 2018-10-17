@@ -11,7 +11,7 @@ class MateriaLegislativa constructor(uid: Int,
                                      tipo_sigla: String,
                                      numero: Int,
                                      ano: Int,
-                                     numero_protocolo: String,
+                                     numero_protocolo: Int,
                                      data_apresentacao: Date,
                                      ementa: String,
                                      texto_original: String,
@@ -25,7 +25,7 @@ class MateriaLegislativa constructor(uid: Int,
     var tipo_sigla: String = tipo_sigla
     var numero: Int = numero
     var ano: Int = ano
-    var numero_protocolo: String = numero_protocolo
+    var numero_protocolo: Int = numero_protocolo
     var data_apresentacao: Date = data_apresentacao
     var ementa: String = ementa
     var texto_original: String = texto_original

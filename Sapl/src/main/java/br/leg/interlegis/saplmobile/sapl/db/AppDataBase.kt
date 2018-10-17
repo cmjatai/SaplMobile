@@ -9,6 +9,7 @@ import br.leg.interlegis.saplmobile.sapl.db.daos.base.DaoAutor
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoChaveValor
 import br.leg.interlegis.saplmobile.sapl.db.daos.sessao.DaoSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoTimeRefresh
+import br.leg.interlegis.saplmobile.sapl.db.daos.materia.DaoMateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.db.entities.*
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
@@ -28,6 +29,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun DaoChaveValor(): DaoChaveValor
     abstract fun DaoSessaoPlenaria(): DaoSessaoPlenaria
     abstract fun DaoTimeRefresh(): DaoTimeRefresh
+    abstract fun DaoMateriaLegislativa(): DaoMateriaLegislativa
 
     companion object {
         private var sInstance: AppDataBase? = null

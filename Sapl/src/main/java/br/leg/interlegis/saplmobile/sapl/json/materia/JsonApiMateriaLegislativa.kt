@@ -1,30 +1,22 @@
 package br.leg.interlegis.saplmobile.sapl.json.materia
 
 import android.content.Context
-import android.os.Environment
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.Converters
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
-import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
+import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
+import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.json.SaplApiRestResponse
-import br.leg.interlegis.saplmobile.sapl.json.interfaces.AutorRetrofitService
-import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
+import br.leg.interlegis.saplmobile.sapl.json.interfaces.MateriaLegislativaRetrofitService
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import br.leg.interlegis.saplmobile.sapl.support.Utils
-import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import okhttp3.ResponseBody
 
 
-
-class JsonApiMateriaLegislativa: JsonApiInterface {
-
-    var servico: AutorRetrofitService? = null
-    var context: Context? = null
+class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
 
     companion object {
         val chave = "materia:materialegislativa"
@@ -32,11 +24,11 @@ class JsonApiMateriaLegislativa: JsonApiInterface {
 
     override fun sync(_context: Context, retrofit: Retrofit?, kwargs:Map<String, Any>): Int {
 
-        servico = retrofit?.create(AutorRetrofitService::class.java)
+        servico = retrofit?.create(MateriaLegislativaRetrofitService::class.java)
         context = _context
         var response: SaplApiRestResponse? = null
 
-        val listAutor = ArrayList<Autor>()
+        val listMaterias = ArrayList<MateriaLegislativa>()
 
 
         while (response == null || response.pagination!!.next_page != null) {
@@ -48,7 +40,7 @@ class JsonApiMateriaLegislativa: JsonApiInterface {
                 tipo_update = kwargs.get("tipo_update").toString()
             }
 
-            val call = servico?.list(
+            val call = (servico as MateriaLegislativaRetrofitService?)?.list(
                     format = "json",
                     page = if (response == null) 1 else response.pagination!!.next_page!!,
                     tipo_update = tipo_update,
@@ -64,31 +56,36 @@ class JsonApiMateriaLegislativa: JsonApiInterface {
             response = call?.execute()!!.body()!!
 
             for (item in response.results!!) {
-                val autor = Autor(
+                val materia = MateriaLegislativa(
                         uid = item.get("id").asInt,
-                        nome = item.get("nome").asString,
-                        fotografia = item.get("fotografia").asString,
+                        tipo = item.get("tipo").asString,
+                        tipo_sigla = item.get("tipo_sigla").asString,
+                        numero = item.get("numero").asInt,
+                        ano = item.get("ano").asInt,
+                        numero_protocolo = item.get("numero_protocolo").asInt,
+                        data_apresentacao = Converters.df.parse(item.get("data_apresentacao").asString),
+                        ementa = item.get("ementa").asString,
+                        texto_original = item.get("texto_original").asString,
                         file_date_updated = if (item.get("file_date_updated").isJsonNull) null else Converters.df.parse(item.get("file_date_updated").asString)
                 )
-                listAutor.add(autor)
-                Log.d("SAPL", autor.nome)
+                listMaterias.add(materia)
             }
         }
 
-        val dao = AppDataBase.getInstance(context!!).DaoAutor()
+        val dao = AppDataBase.getInstance(context!!).DaoMateriaLegislativa()
         val apagar = dao.loadAllByIds(response.deleted!!)
-        dao.insertAll(listAutor)
+        dao.insertAll(listMaterias)
         dao.delete(apagar)
 
-        checkDownloadFiles(retrofit, listAutor)
+        checkDownloadFiles(retrofit, listMaterias)
 
 
-        return listAutor.size
+        return listMaterias.size
     }
-    fun deleteFiles( apagar: ArrayList<Autor>) {
+    fun deleteFiles( apagar: ArrayList<MateriaLegislativa>) {
 
     }
-    fun checkDownloadFiles(retrofit: Retrofit?, listAutor: ArrayList<Autor>) {
+    fun checkDownloadFiles(retrofit: Retrofit?, listAutor: ArrayList<MateriaLegislativa>) {
 
         if (!Utils.isExternalStorageWritable()) {
             return
@@ -97,11 +94,11 @@ class JsonApiMateriaLegislativa: JsonApiInterface {
         val fileDir = context?.filesDir
 
 
-        listAutor.forEach itAutor@ {
-            if (it.fotografia.equals(""))
-                return@itAutor
+        listAutor.forEach itMateria@ {
+            if (it.texto_original.equals(""))
+                return@itMateria
 
-            var pathname: String =String.format("%s/%s", fileDir?.absolutePath, it.fotografia)
+            var pathname: String =String.format("%s/%s", fileDir?.absolutePath, it.texto_original)
             val file = File(pathname)
             if (!file.exists())
                 Log.d("SAPL", pathname)

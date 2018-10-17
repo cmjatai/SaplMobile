@@ -12,7 +12,7 @@ interface DaoSessaoPlenaria: DaoBase<SessaoPlenaria> {
     val all: LiveData<List<SessaoPlenaria>>
 
     @Query("SELECT * FROM "+ SessaoPlenaria.TABLE_NAME+" WHERE uid IN (:sessaoIds)")
-    fun loadAllByIds(sessaoIds: IntArray, table_name:String): List<SessaoPlenaria>
+    fun loadAllByIds(sessaoIds: IntArray): List<SessaoPlenaria>
 
     @Query("SELECT * FROM "+ SessaoPlenaria.TABLE_NAME+" WHERE uid = :sessaoId")
     fun getLDSessao(sessaoId: Int): LiveData<SessaoPlenaria>

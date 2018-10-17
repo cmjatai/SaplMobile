@@ -4,6 +4,7 @@ import android.content.Context
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.Converters
 import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
+import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.json.SaplApiRestResponse
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.SessaoPlenariaRetrofitService
@@ -13,14 +14,14 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class JsonApiSessaoPlenaria: JsonApiInterface {
+class JsonApiSessaoPlenaria: JsonApiBaseAbstract() {
     companion object {
-
         val chave = "sessao:sessaoplenaria"
     }
+
     override fun sync(context: Context, retrofit: Retrofit?, kwargs:Map<String, Any>): Int {
 
-        val servico = retrofit?.create(SessaoPlenariaRetrofitService::class.java)
+        servico = retrofit?.create(SessaoPlenariaRetrofitService::class.java)
         var response: SaplApiRestResponse? = null
 
         val listSessao = ArrayList<SessaoPlenaria>()
@@ -35,15 +36,15 @@ class JsonApiSessaoPlenaria: JsonApiInterface {
                 tipo_update = kwargs.get("tipo_update").toString()
             }
 
-            val call = servico?.list(
+            val call = (servico as SessaoPlenariaRetrofitService)?.list(
                     format = "json",
                     page = if (response == null) 1 else response.pagination!!.next_page!!,
                     tipo_update = tipo_update,
-                        // Tipo sync = filtro com base nas datas de alteração
-                        // Tipo get = filtro com base nas datas da sessão plenária
-                        // Tipo last_items = uma pagina só com os ultimos dados da listagem
-                        // Tipo first_items = uma página só com os primeiros dados da listagem
-                        // Tipo get_initial = uma página com os últimos dados do servidor
+                    // Tipo sync = filtro com base nas datas de alteração
+                    // Tipo get = filtro com base nas datas da sessão plenária
+                    // Tipo last_items = uma pagina só com os ultimos dados da listagem
+                    // Tipo first_items = uma página só com os primeiros dados da listagem
+                    // Tipo get_initial = uma página com os últimos dados do servidor
                     data_min = dmin,
                     data_max = dmax
             )

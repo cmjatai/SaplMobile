@@ -7,6 +7,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.db.entities.TimeRefresh
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.TimeRefreshRetrofitService
+import br.leg.interlegis.saplmobile.sapl.json.materia.JsonApiMateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.sessao.JsonApiSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import br.leg.interlegis.saplmobile.sapl.support.Log
@@ -18,8 +19,8 @@ import kotlin.collections.HashMap
 
 
 class JsonApi {
-    //JsonApiMateriaLegislativa.chave to JsonApiMateriaLegislativa()
     val modules = hashMapOf<String, JsonApiInterface>(
+            JsonApiMateriaLegislativa.chave to JsonApiMateriaLegislativa(),
             JsonApiSessaoPlenaria.chave to JsonApiSessaoPlenaria())
 
     var API_BASE_URL : String = ""

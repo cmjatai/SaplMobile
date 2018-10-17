@@ -9,9 +9,9 @@ import okhttp3.ResponseBody
 
 
 
-interface AutorRetrofitService {
+interface MateriaLegislativaRetrofitService: SaplRetrofitService {
 
-    @GET("api/mobile/autor/")
+    @GET("api/mobile/materialegislativa/")
     fun list(
             @Query("format") format: String,
             @Query("page") page: Int,

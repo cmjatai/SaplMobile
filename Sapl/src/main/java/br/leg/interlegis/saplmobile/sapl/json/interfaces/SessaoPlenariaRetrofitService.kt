@@ -6,9 +6,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.*
 
-interface SessaoPlenariaRetrofitService {
+interface SessaoPlenariaRetrofitService : SaplRetrofitService {
 
-    @GET("api/mobile/sessao-plenaria/")
+    @GET("api/mobile/sessaoplenaria/")
     fun list(
             @Query("format") format: String,
             @Query("page") page: Int,
