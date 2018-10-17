@@ -29,6 +29,6 @@ interface DaoTimeRefresh {
     fun maxValue(): TimeRefresh?
 
     @Delete
-    fun delete(provider: TimeRefresh)
+    fun delete(time: TimeRefresh)
 
 }

@@ -9,17 +9,15 @@ import br.leg.interlegis.saplmobile.sapl.db.daos.DaoAutor
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoChaveValor
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoTimeRefresh
-import br.leg.interlegis.saplmobile.sapl.db.entities.Autor
-import br.leg.interlegis.saplmobile.sapl.db.entities.ChaveValor
-import br.leg.interlegis.saplmobile.sapl.db.entities.SessaoPlenaria
-import br.leg.interlegis.saplmobile.sapl.db.entities.TimeRefresh
+import br.leg.interlegis.saplmobile.sapl.db.entities.*
 
 @Database(entities = [
     (TimeRefresh::class),
     (SessaoPlenaria::class),
     (ChaveValor::class),
-    (Autor::class)],
-    version = 44, exportSchema = false)
+    (Autor::class),
+    (MateriaLegislativa::class)
+], version = 45, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
 

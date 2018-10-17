@@ -3,6 +3,7 @@ package br.leg.interlegis.saplmobile.sapl.json
 import android.content.Context
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.Converters
+import br.leg.interlegis.saplmobile.sapl.db.entities.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.db.entities.TimeRefresh
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.TimeRefreshRetrofitService
@@ -16,9 +17,8 @@ import kotlin.collections.HashMap
 
 
 class JsonApi {
-
+    //JsonApiMateriaLegislativa.chave to JsonApiMateriaLegislativa()
     val modules = hashMapOf<String, JsonApiInterface>(
-            JsonApiAutor.chave to JsonApiAutor(),
             JsonApiSessaoPlenaria.chave to JsonApiSessaoPlenaria())
 
     var API_BASE_URL : String = ""

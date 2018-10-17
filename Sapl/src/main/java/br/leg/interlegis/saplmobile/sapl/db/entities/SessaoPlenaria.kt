@@ -2,13 +2,14 @@ package br.leg.interlegis.saplmobile.sapl.db.entities
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.NonNull
 import java.util.*
 
-@Entity(tableName = "sessao_plenaria")
+@Entity(tableName = SessaoPlenaria.TABLE_NAME)
 class SessaoPlenaria constructor(uid: Int,
                                  legislatura: Int,
                                  sessao_legislativa: Int,
@@ -30,5 +31,10 @@ class SessaoPlenaria constructor(uid: Int,
     var hora_inicio = hora_inicio
     var hora_fim = hora_fim
     var numero = numero
+
+    companion object {
+        @Ignore
+        const val TABLE_NAME: String = "sessao_plenaria"
+    }
 }
 
