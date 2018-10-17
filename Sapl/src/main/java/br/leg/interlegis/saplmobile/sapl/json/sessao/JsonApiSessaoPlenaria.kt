@@ -15,8 +15,9 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class JsonApiSessaoPlenaria: JsonApiBaseAbstract() {
+    var servico: SessaoPlenariaRetrofitService? = null
     companion object {
-        val chave = "sessao:sessaoplenaria"
+        val chave = String.format("%s:%s", SessaoPlenaria.APP_LABEL, SessaoPlenaria.TABLE_NAME)
     }
 
     override fun sync(context: Context, retrofit: Retrofit?, kwargs:Map<String, Any>): Int {
@@ -36,7 +37,7 @@ class JsonApiSessaoPlenaria: JsonApiBaseAbstract() {
                 tipo_update = kwargs.get("tipo_update").toString()
             }
 
-            val call = (servico as SessaoPlenariaRetrofitService)?.list(
+            val call = servico?.list(
                     format = "json",
                     page = if (response == null) 1 else response.pagination!!.next_page!!,
                     tipo_update = tipo_update,

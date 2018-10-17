@@ -9,7 +9,7 @@ import okhttp3.ResponseBody
 
 
 
-interface MateriaLegislativaRetrofitService: SaplRetrofitService {
+interface MateriaLegislativaRetrofitService {
 
     @GET("api/mobile/materialegislativa/")
     fun list(
@@ -19,7 +19,5 @@ interface MateriaLegislativaRetrofitService: SaplRetrofitService {
             @Query("data_min") data_min: String?,
             @Query("data_max") data_max: String?) : Call<SaplApiRestResponse>
 
-    @GET
-    fun downloadFotografia(@Url fileUrl: String): Call<ResponseBody>
 
 }

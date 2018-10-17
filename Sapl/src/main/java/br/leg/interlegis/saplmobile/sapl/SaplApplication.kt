@@ -13,6 +13,8 @@ import org.jetbrains.anko.doAsync
 class SaplApplication : Application() {
 
     companion object {
+        val DEBUG = true
+
         var sessoesPlenarias: LiveData<List<SessaoPlenaria>>? = null
         var daoSessaoPlenaria: DaoSessaoPlenaria? = null
 
@@ -38,6 +40,15 @@ class SaplApplication : Application() {
 
         doAsync {
             val db = AppDataBase.getInstance(context = this@SaplApplication)
+
+            if (DEBUG) {
+                db.DaoAutor().delete(db.DaoAutor().all_direct)
+                db.DaoMateriaLegislativa().delete(db.DaoMateriaLegislativa().all_direct)
+                db.DaoSessaoPlenaria().delete(db.DaoSessaoPlenaria().all_direct)
+                db.DaoTimeRefresh().delete(db.DaoTimeRefresh().all)
+            }
+
+
             daoSessaoPlenaria = db.DaoSessaoPlenaria()
             sessoesPlenarias = daoSessaoPlenaria?.all
         }

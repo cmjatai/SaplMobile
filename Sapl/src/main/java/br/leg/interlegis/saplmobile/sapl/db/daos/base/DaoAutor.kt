@@ -11,6 +11,9 @@ interface DaoAutor: DaoBase<Autor> {
     @get:Query("SELECT * FROM "+ Autor.TABLE_NAME+" order by nome")
     val all: LiveData<List<Autor>>
 
+    @get:Query("SELECT * FROM "+ Autor.TABLE_NAME+" order by nome")
+    val all_direct: List<Autor>
+
     @Query("SELECT * FROM "+ Autor.TABLE_NAME+" WHERE uid IN (:autorIds)")
     fun loadAllByIds(autorIds: IntArray): List<Autor>
 

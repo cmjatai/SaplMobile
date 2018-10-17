@@ -15,7 +15,7 @@ class MateriaLegislativa constructor(uid: Int,
                                      data_apresentacao: Date,
                                      ementa: String,
                                      texto_original: String,
-                                     file_date_updated: Date?
+                                     file_date_updated: Date? = null
                                      ) {
 
 
@@ -32,6 +32,8 @@ class MateriaLegislativa constructor(uid: Int,
     var file_date_updated: Date? = file_date_updated
 
     companion object {
+        @Ignore
+        const val APP_LABEL: String = "materia"
         @Ignore
         const val TABLE_NAME: String = "materialegislativa"
     }

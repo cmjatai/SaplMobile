@@ -31,4 +31,7 @@ interface DaoTimeRefresh {
     @Delete
     fun delete(time: TimeRefresh)
 
+    @Delete
+    fun delete(items: List<TimeRefresh>)
+
 }

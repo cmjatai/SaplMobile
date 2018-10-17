@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.*
 
-interface SessaoPlenariaRetrofitService : SaplRetrofitService {
+interface SessaoPlenariaRetrofitService {
 
     @GET("api/mobile/sessaoplenaria/")
     fun list(

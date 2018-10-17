@@ -34,6 +34,8 @@ class SessaoPlenaria constructor(uid: Int,
 
     companion object {
         @Ignore
+        const val APP_LABEL: String = "sessao"
+        @Ignore
         const val TABLE_NAME: String = "sessaoplenaria"
     }
 }

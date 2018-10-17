@@ -21,7 +21,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
     (ChaveValor::class),
     (Autor::class),
     (MateriaLegislativa::class)
-], version = 45, exportSchema = false)
+], version = 54, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
 
@@ -40,7 +40,7 @@ abstract class AppDataBase : RoomDatabase() {
                 sInstance = Room
                         .databaseBuilder(
                                 context.applicationContext,
-                                AppDataBase::class.java, "SaplMobile1.db")
+                                AppDataBase::class.java, "SaplMobile.db")
                         .fallbackToDestructiveMigration()
                         .build()
 

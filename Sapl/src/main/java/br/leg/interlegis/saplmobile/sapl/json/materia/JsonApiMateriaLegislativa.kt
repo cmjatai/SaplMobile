@@ -8,27 +8,40 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.json.SaplApiRestResponse
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.MateriaLegislativaRetrofitService
+import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
+import br.leg.interlegis.saplmobile.sapl.json.interfaces.SessaoPlenariaRetrofitService
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import br.leg.interlegis.saplmobile.sapl.support.Utils
+import com.google.gson.JsonObject
+import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
-import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.*
 
 
 class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
 
+    var retrofit: Retrofit? = null
+
     companion object {
-        val chave = "materia:materialegislativa"
+        val chave = String.format("%s:%s", MateriaLegislativa.APP_LABEL, MateriaLegislativa.TABLE_NAME)
     }
 
-    override fun sync(_context: Context, retrofit: Retrofit?, kwargs:Map<String, Any>): Int {
-
-        servico = retrofit?.create(MateriaLegislativaRetrofitService::class.java)
+    override fun sync(_context: Context, _retrofit: Retrofit?, kwargs:Map<String, Any>): Int {
         context = _context
+        retrofit = _retrofit
+
+        var servico: MateriaLegislativaRetrofitService? = _retrofit?.create(MateriaLegislativaRetrofitService::class.java)
         var response: SaplApiRestResponse? = null
 
         val listMaterias = ArrayList<MateriaLegislativa>()
+        val mapAutores:HashMap<Int, Autor> = HashMap()
 
 
         while (response == null || response.pagination!!.next_page != null) {
@@ -40,7 +53,7 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
                 tipo_update = kwargs.get("tipo_update").toString()
             }
 
-            val call = (servico as MateriaLegislativaRetrofitService?)?.list(
+            val call = servico?.list(
                     format = "json",
                     page = if (response == null) 1 else response.pagination!!.next_page!!,
                     tipo_update = tipo_update,
@@ -55,20 +68,31 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
 
             response = call?.execute()!!.body()!!
 
-            for (item in response.results!!) {
+            response.results?.forEach {
                 val materia = MateriaLegislativa(
-                        uid = item.get("id").asInt,
-                        tipo = item.get("tipo").asString,
-                        tipo_sigla = item.get("tipo_sigla").asString,
-                        numero = item.get("numero").asInt,
-                        ano = item.get("ano").asInt,
-                        numero_protocolo = item.get("numero_protocolo").asInt,
-                        data_apresentacao = Converters.df.parse(item.get("data_apresentacao").asString),
-                        ementa = item.get("ementa").asString,
-                        texto_original = item.get("texto_original").asString,
-                        file_date_updated = if (item.get("file_date_updated").isJsonNull) null else Converters.df.parse(item.get("file_date_updated").asString)
+                    uid = it.get("id").asInt,
+                    tipo = it.get("tipo").asString,
+                    tipo_sigla = it.get("tipo_sigla").asString,
+                    numero = it.get("numero").asInt,
+                    ano = it.get("ano").asInt,
+                    numero_protocolo = it.get("numero_protocolo").asInt,
+                    data_apresentacao = Converters.df.parse(it.get("data_apresentacao").asString),
+                    ementa = it.get("ementa").asString,
+                    texto_original = it.get("texto_original").asString,
+                    file_date_updated = if (it.get("file_date_updated").isJsonNull) null else Converters.dtf.parse(it.get("file_date_updated").asString)
                 )
                 listMaterias.add(materia)
+
+                it.get("autores").asJsonArray.forEach { itAutor ->
+                    val i = itAutor as JsonObject
+                    val autor = Autor(
+                        uid = i.get("id").asInt,
+                        nome = i.get("nome").asString,
+                        fotografia = i.get("fotografia").asString,
+                        file_date_updated = if (i.get("file_date_updated").isJsonNull) null else Converters.dtf.parse(i.get("file_date_updated").asString)
+                    )
+                    mapAutores[autor.uid] = autor
+                }
             }
         }
 
@@ -77,7 +101,10 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
         dao.insertAll(listMaterias)
         dao.delete(apagar)
 
-        checkDownloadFiles(retrofit, listMaterias)
+        mapAutores.forEach {
+            if (it.value.fotografia.isNotEmpty())
+                checkDownloadFiles(retrofit, it.value.fotografia)
+        }
 
 
         return listMaterias.size
@@ -85,70 +112,50 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
     fun deleteFiles( apagar: ArrayList<MateriaLegislativa>) {
 
     }
-    fun checkDownloadFiles(retrofit: Retrofit?, listAutor: ArrayList<MateriaLegislativa>) {
+    fun checkDownloadFiles(retrofit: Retrofit?, relativeUrl: String) {
 
         if (!Utils.isExternalStorageWritable()) {
             return
         }
 
         val fileDir = context?.filesDir
+        val pathname: String =String.format("%s/%s", fileDir?.absolutePath, relativeUrl).replace("//","/")
 
+        val file = File(pathname)
 
-        listAutor.forEach itMateria@ {
-            if (it.texto_original.equals(""))
-                return@itMateria
-
-            var pathname: String =String.format("%s/%s", fileDir?.absolutePath, it.texto_original)
-            val file = File(pathname)
-            if (!file.exists())
-                Log.d("SAPL", pathname)
+        if (!file.exists()) {
+            file.parentFile.mkdirs()
+            Log.d("SAPL", pathname)
+        }
 
 
 
+        var servico: SaplRetrofitService = retrofit!!.create(SaplRetrofitService::class.java)
+
+        val call = servico.downloadFile(relativeUrl)
             // checar se o arquivo existe
             // se arquivo existe - checar data
             // se arquivo não existe - fazer download
 
+        val response: ResponseBody? = call.execute().body()
 
-            /*val call = downloadService.downloadFileWithDynamicUrlSync(fileUrl)
-
-            call.enqueue(object : Callback<ResponseBody>() {
-                fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    if (response.isSuccess()) {
-                        Log.d(TAG, "server contacted and has file")
-
-                        val writtenToDisk = writeResponseBodyToDisk(response.body())
-
-                        Log.d(TAG, "file download was a success? $writtenToDisk")
-                    } else {
-                        Log.d(TAG, "server contact failed")
-                    }
-                }
-
-                fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.e(TAG, "error")
-                }
-            })*/
-        }
+        writeResponseBodyToDisk(response, pathname)
 
     }
-/*
-    private fun writeResponseBodyToDisk(body: ResponseBody): Boolean {
-        try {
-            // todo change the file location/name according to your needs
-            val futureStudioIconFile = File(getExternalFilesDir(null) + File.separator + "Future Studio Icon.png")
 
+    private fun writeResponseBodyToDisk(body: ResponseBody?, pathname:String): Boolean {
+        try {
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null
 
             try {
                 val fileReader = ByteArray(4096)
 
-                val fileSize = body.contentLength()
+                val fileSize = body!!.contentLength()
                 var fileSizeDownloaded: Long = 0
 
                 inputStream = body.byteStream()
-                outputStream = FileOutputStream(futureStudioIconFile)
+                outputStream = FileOutputStream(pathname)
 
                 while (true) {
                     val read = inputStream!!.read(fileReader)
@@ -161,7 +168,7 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
 
                     fileSizeDownloaded += read.toLong()
 
-                    Log.d(TAG, "file download: $fileSizeDownloaded of $fileSize")
+                    Log.d("SAPL", "file download: $fileSizeDownloaded of $fileSize")
                 }
 
                 outputStream!!.flush()
@@ -182,5 +189,5 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
             return false
         }
 
-    }*/
+    }
 }
