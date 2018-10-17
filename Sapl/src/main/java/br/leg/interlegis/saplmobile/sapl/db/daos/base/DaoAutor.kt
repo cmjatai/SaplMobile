@@ -19,4 +19,7 @@ interface DaoAutor: DaoBase<Autor> {
 
     @Query("SELECT * FROM "+ Autor.TABLE_NAME+" WHERE uid = :autorId")
     fun getLDAutor(autorId: Int): LiveData<Autor>
+
+    @Query("SELECT * FROM "+ Autor.TABLE_NAME+" WHERE uid = :autorId")
+    fun getAutor(autorId: Int): Autor
 }

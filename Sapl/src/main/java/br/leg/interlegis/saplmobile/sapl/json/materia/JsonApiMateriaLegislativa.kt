@@ -8,20 +8,16 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.json.SaplApiRestResponse
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.MateriaLegislativaRetrofitService
-import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
-import br.leg.interlegis.saplmobile.sapl.json.interfaces.SessaoPlenariaRetrofitService
+import br.leg.interlegis.saplmobile.sapl.json.interfaces.DownloadService
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import br.leg.interlegis.saplmobile.sapl.support.Utils
 import com.google.gson.JsonObject
-import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import org.jetbrains.anko.doAsync
 import java.io.*
 
 
@@ -96,14 +92,29 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
             }
         }
 
-        val dao = AppDataBase.getInstance(context!!).DaoMateriaLegislativa()
-        val apagar = dao.loadAllByIds(response.deleted!!)
-        dao.insertAll(listMaterias)
-        dao.delete(apagar)
+        val db = AppDataBase.getInstance(context!!)
 
-        mapAutores.forEach {
-            if (it.value.fotografia.isNotEmpty())
-                checkDownloadFiles(retrofit, it.value.fotografia)
+        val daoMateria = db.DaoMateriaLegislativa()
+        val apagar = daoMateria.loadAllByIds(response.deleted!!)
+
+        daoMateria.insertAll(listMaterias)
+        daoMateria.delete(apagar)
+
+        val daoAutor = db.DaoAutor()
+        daoAutor.insertAll(ArrayList<Autor>(mapAutores.values))
+
+        doAsync {
+            mapAutores.forEach {
+                if (it.value.fotografia.isNotEmpty())
+                    Utils.DownloadAndWriteFiles.run(context!!, retrofit, it.value.fotografia, it.value.file_date_updated)
+            }
+
+            listMaterias.forEach {
+                if (it.texto_original.isNotEmpty())
+                    Utils.DownloadAndWriteFiles.run(context!!, retrofit, it.texto_original, it.file_date_updated)
+            }
+
+
         }
 
 
@@ -112,82 +123,6 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
     fun deleteFiles( apagar: ArrayList<MateriaLegislativa>) {
 
     }
-    fun checkDownloadFiles(retrofit: Retrofit?, relativeUrl: String) {
-
-        if (!Utils.isExternalStorageWritable()) {
-            return
-        }
-
-        val fileDir = context?.filesDir
-        val pathname: String =String.format("%s/%s", fileDir?.absolutePath, relativeUrl).replace("//","/")
-
-        val file = File(pathname)
-
-        if (!file.exists()) {
-            file.parentFile.mkdirs()
-            Log.d("SAPL", pathname)
-        }
 
 
-
-        var servico: SaplRetrofitService = retrofit!!.create(SaplRetrofitService::class.java)
-
-        val call = servico.downloadFile(relativeUrl)
-            // checar se o arquivo existe
-            // se arquivo existe - checar data
-            // se arquivo não existe - fazer download
-
-        val response: ResponseBody? = call.execute().body()
-
-        writeResponseBodyToDisk(response, pathname)
-
-    }
-
-    private fun writeResponseBodyToDisk(body: ResponseBody?, pathname:String): Boolean {
-        try {
-            var inputStream: InputStream? = null
-            var outputStream: OutputStream? = null
-
-            try {
-                val fileReader = ByteArray(4096)
-
-                val fileSize = body!!.contentLength()
-                var fileSizeDownloaded: Long = 0
-
-                inputStream = body.byteStream()
-                outputStream = FileOutputStream(pathname)
-
-                while (true) {
-                    val read = inputStream!!.read(fileReader)
-
-                    if (read == -1) {
-                        break
-                    }
-
-                    outputStream!!.write(fileReader, 0, read)
-
-                    fileSizeDownloaded += read.toLong()
-
-                    Log.d("SAPL", "file download: $fileSizeDownloaded of $fileSize")
-                }
-
-                outputStream!!.flush()
-
-                return true
-            } catch (e: IOException) {
-                return false
-            } finally {
-                if (inputStream != null) {
-                    inputStream!!.close()
-                }
-
-                if (outputStream != null) {
-                    outputStream!!.close()
-                }
-            }
-        } catch (e: IOException) {
-            return false
-        }
-
-    }
 }

@@ -7,9 +7,8 @@ import okhttp3.ResponseBody
 
 
 
-interface SaplRetrofitService {
+interface DownloadService {
 
     @GET
     fun downloadFile(@Url fileUrl: String): Call<ResponseBody>
-
 }

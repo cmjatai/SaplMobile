@@ -18,9 +18,6 @@ interface DaoMateriaLegislativa: DaoBase<MateriaLegislativa> {
     fun loadAllByIds(materiaIds: IntArray): List<MateriaLegislativa>
 
     @Query("SELECT * FROM "+ MateriaLegislativa.TABLE_NAME+" WHERE uid = :materiaId")
-    fun getLDAutor(materiaId: Int): LiveData<MateriaLegislativa>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(items: List<MateriaLegislativa>)
+    fun getLDMateria(materiaId: Int): LiveData<MateriaLegislativa>
 
 }

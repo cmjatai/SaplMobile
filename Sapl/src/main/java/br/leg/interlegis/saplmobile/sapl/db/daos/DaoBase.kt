@@ -6,6 +6,9 @@ import android.arch.persistence.room.*
 interface DaoBase<T> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(items: List<T>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(item: T)
 
     @Update

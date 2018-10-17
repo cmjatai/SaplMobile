@@ -20,6 +20,4 @@ interface DaoSessaoPlenaria: DaoBase<SessaoPlenaria> {
     @Query("SELECT * FROM "+ SessaoPlenaria.TABLE_NAME+" WHERE uid = :sessaoId")
     fun getLDSessao(sessaoId: Int): LiveData<SessaoPlenaria>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(items: List<SessaoPlenaria>)
 }
