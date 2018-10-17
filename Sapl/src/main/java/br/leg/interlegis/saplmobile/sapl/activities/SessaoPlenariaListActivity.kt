@@ -23,7 +23,7 @@ import android.widget.TextView
 import br.leg.interlegis.saplmobile.sapl.R
 import br.leg.interlegis.saplmobile.sapl.SaplApplication
 import br.leg.interlegis.saplmobile.sapl.SaplBaseActivity
-import br.leg.interlegis.saplmobile.sapl.db.entities.SessaoPlenaria
+import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.json.JsonApi
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
@@ -87,7 +87,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                 this).get(SessaoPlenariaListViewModel::class.java)
 
         sessaoModel.sessoes?.observe(this,
-            Observer<List<SessaoPlenaria>> {sessoes ->
+            Observer<List<SessaoPlenaria>> { sessoes ->
                 if (sessoes != null) {
                     mSectionsPagerAdapter?.sessoes = sessoes
                     mSectionsPagerAdapter?.notifyDataSetChanged()

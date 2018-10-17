@@ -1,4 +1,4 @@
-package br.leg.interlegis.saplmobile.sapl.db.entities
+package br.leg.interlegis.saplmobile.sapl.db.entities.sessao
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
@@ -34,7 +34,7 @@ class SessaoPlenaria constructor(uid: Int,
 
     companion object {
         @Ignore
-        const val TABLE_NAME: String = "sessao_plenaria"
+        const val TABLE_NAME: String = "sessaoplenaria"
     }
 }
 

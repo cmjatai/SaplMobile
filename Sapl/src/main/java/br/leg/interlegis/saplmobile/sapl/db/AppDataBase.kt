@@ -5,11 +5,14 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import android.content.Context
-import br.leg.interlegis.saplmobile.sapl.db.daos.DaoAutor
+import br.leg.interlegis.saplmobile.sapl.db.daos.base.DaoAutor
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoChaveValor
-import br.leg.interlegis.saplmobile.sapl.db.daos.DaoSessaoPlenaria
+import br.leg.interlegis.saplmobile.sapl.db.daos.sessao.DaoSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoTimeRefresh
 import br.leg.interlegis.saplmobile.sapl.db.entities.*
+import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
+import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
+import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 
 @Database(entities = [
     (TimeRefresh::class),

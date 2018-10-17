@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.Environment
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.Converters
-import br.leg.interlegis.saplmobile.sapl.db.entities.Autor
-import br.leg.interlegis.saplmobile.sapl.db.entities.SessaoPlenaria
+import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
+import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.AutorRetrofitService
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.support.Log
@@ -64,10 +64,10 @@ class JsonApiMateriaLegislativa: JsonApiInterface {
 
             for (item in response.results!!) {
                 val autor = Autor(
-                    uid = item.get("id").asInt,
-                    nome = item.get("nome").asString,
-                    fotografia = item.get("fotografia").asString,
-                    file_date_updated = if (item.get("file_date_updated").isJsonNull) null else Converters.df.parse(item.get("file_date_updated").asString)
+                        uid = item.get("id").asInt,
+                        nome = item.get("nome").asString,
+                        fotografia = item.get("fotografia").asString,
+                        file_date_updated = if (item.get("file_date_updated").isJsonNull) null else Converters.df.parse(item.get("file_date_updated").asString)
                 )
                 listAutor.add(autor)
                 Log.d("SAPL", autor.nome)

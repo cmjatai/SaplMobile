@@ -1,4 +1,4 @@
-package br.leg.interlegis.saplmobile.sapl.db.entities
+package br.leg.interlegis.saplmobile.sapl.db.entities.materia
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore

@@ -6,8 +6,8 @@ import android.os.Bundle
 import br.leg.interlegis.saplmobile.sapl.R
 import br.leg.interlegis.saplmobile.sapl.SaplApplication
 import br.leg.interlegis.saplmobile.sapl.SaplBaseActivity
-import br.leg.interlegis.saplmobile.sapl.db.daos.DaoSessaoPlenaria
-import br.leg.interlegis.saplmobile.sapl.db.entities.SessaoPlenaria
+import br.leg.interlegis.saplmobile.sapl.db.daos.sessao.DaoSessaoPlenaria
+import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import kotlinx.android.synthetic.main.activity_sessao_plenaria.*
 
