@@ -43,13 +43,8 @@ abstract class AppDataBase : RoomDatabase() {
                                 AppDataBase::class.java, "SaplMobile.db")
                         .fallbackToDestructiveMigration()
                         .build()
-
             }
             return sInstance!!
         }
-
-
-
-
     }
 }

@@ -7,23 +7,18 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.json.SaplApiRestResponse
-import br.leg.interlegis.saplmobile.sapl.json.interfaces.MateriaLegislativaRetrofitService
-import br.leg.interlegis.saplmobile.sapl.json.interfaces.DownloadService
-import br.leg.interlegis.saplmobile.sapl.support.Log
+import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
 import br.leg.interlegis.saplmobile.sapl.support.Utils
 import com.google.gson.JsonObject
 import retrofit2.Retrofit
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
-import java.io.*
 
 
 class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
 
-    var retrofit: Retrofit? = null
+    override val url = "api/mobile/materialegislativa/"
 
     companion object {
         val chave = String.format("%s:%s", MateriaLegislativa.APP_LABEL, MateriaLegislativa.TABLE_NAME)
@@ -32,37 +27,16 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
     override fun sync(_context: Context, _retrofit: Retrofit?, kwargs:Map<String, Any>): Int {
         context = _context
         retrofit = _retrofit
-
-        var servico: MateriaLegislativaRetrofitService? = _retrofit?.create(MateriaLegislativaRetrofitService::class.java)
-        var response: SaplApiRestResponse? = null
+        servico = _retrofit?.create(SaplRetrofitService::class.java)
 
         val listMaterias = ArrayList<MateriaLegislativa>()
         val mapAutores:HashMap<Int, Autor> = HashMap()
 
 
+        var response: SaplApiRestResponse? = null
         while (response == null || response.pagination!!.next_page != null) {
-            var dmin = if (kwargs["data_inicio"] is Date) Converters.dtf.format(kwargs["data_inicio"] as Date) else null
-            var dmax = if (kwargs["data_fim"] is Date) Converters.dtf.format(kwargs["data_fim"] as Date) else null
 
-            var tipo_update = "sync"
-            if (kwargs.get("tipo_update") is String) {
-                tipo_update = kwargs.get("tipo_update").toString()
-            }
-
-            val call = servico?.list(
-                    format = "json",
-                    page = if (response == null) 1 else response.pagination!!.next_page!!,
-                    tipo_update = tipo_update,
-                        // Tipo sync = filtro com base nas datas de alteração
-                        // Tipo get = filtro com base nas datas da sessão plenária
-                        // Tipo last_items = uma pagina só com os ultimos dados da listagem
-                        // Tipo first_items = uma página só com os primeiros dados da listagem
-                        // Tipo get_initial = uma página com os últimos dados do servidor
-                    data_min = dmin,
-                    data_max = dmax
-            )
-
-            response = call?.execute()!!.body()!!
+            response = call(response, kwargs)
 
             response.results?.forEach {
                 val materia = MateriaLegislativa(
@@ -106,12 +80,12 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
         doAsync {
             mapAutores.forEach {
                 if (it.value.fotografia.isNotEmpty())
-                    Utils.DownloadAndWriteFiles.run(context!!, retrofit, it.value.fotografia, it.value.file_date_updated)
+                    Utils.DownloadAndWriteFiles.run(context!!, servico, it.value.fotografia, it.value.file_date_updated)
             }
 
             listMaterias.forEach {
                 if (it.texto_original.isNotEmpty())
-                    Utils.DownloadAndWriteFiles.run(context!!, retrofit, it.texto_original, it.file_date_updated)
+                    Utils.DownloadAndWriteFiles.run(context!!, servico, it.texto_original, it.file_date_updated)
             }
 
 

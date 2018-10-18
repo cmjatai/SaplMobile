@@ -3,7 +3,7 @@ package br.leg.interlegis.saplmobile.sapl.support
 import android.content.Context
 import android.os.Environment
 import android.os.Environment.MEDIA_MOUNTED
-import br.leg.interlegis.saplmobile.sapl.json.interfaces.DownloadService
+import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
 import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
@@ -31,17 +31,17 @@ class Utils {
 
         companion object {
 
-            fun run(context: Context?, retrofit: Retrofit?, relativeUrl: String, data:Date?, async: Boolean = false) {
+            fun run(context: Context?, servico: SaplRetrofitService?, relativeUrl: String, data:Date?, async: Boolean = false) {
 
                 if (!async)
-                    _run(context, retrofit, relativeUrl, data)
+                    _run(context, servico, relativeUrl, data)
                 else
                     doAsync {
-                        _run(context, retrofit, relativeUrl, data)
+                        _run(context, servico, relativeUrl, data)
                     }
             }
 
-            private fun _run(context: Context?,retrofit: Retrofit?, relativeUrl: String, data:Date?) {
+            private fun _run(context: Context?, servico: SaplRetrofitService?, relativeUrl: String, data:Date?) {
                 val fileDir = context?.filesDir
                 val pathname: String = pathname(fileDir!!.absolutePath, relativeUrl)
                 val file = File(pathname)
@@ -65,9 +65,8 @@ class Utils {
                 }
 
                 try {
-                    val servico: DownloadService = retrofit!!.create(DownloadService::class.java)
-                    val call = servico.downloadFile(relativeUrl)
-                    val response: ResponseBody? = call.execute().body()
+                    val call = servico?.downloadFile(relativeUrl)
+                    val response: ResponseBody? = call?.execute()!!.body()
 
                     writeResponseBodyToDisk(response, pathname)
 
