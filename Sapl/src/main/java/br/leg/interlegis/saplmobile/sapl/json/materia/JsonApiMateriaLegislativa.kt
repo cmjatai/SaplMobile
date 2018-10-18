@@ -16,7 +16,7 @@ import kotlin.collections.HashMap
 import org.jetbrains.anko.doAsync
 
 
-class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
+class JsonApiMateriaLegislativa: JsonApiBaseAbstract<MateriaLegislativa>() {
 
     override val url = "api/mobile/materialegislativa/"
 
@@ -32,37 +32,15 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract() {
         val listMaterias = ArrayList<MateriaLegislativa>()
         val mapAutores:HashMap<Int, Autor> = HashMap()
 
-
         var response: SaplApiRestResponse? = null
         while (response == null || response.pagination!!.next_page != null) {
 
             response = call(response, kwargs)
-
             response.results?.forEach {
-                val materia = MateriaLegislativa(
-                    uid = it.get("id").asInt,
-                    tipo = it.get("tipo").asString,
-                    tipo_sigla = it.get("tipo_sigla").asString,
-                    numero = it.get("numero").asInt,
-                    ano = it.get("ano").asInt,
-                    numero_protocolo = it.get("numero_protocolo").asInt,
-                    data_apresentacao = Converters.df.parse(it.get("data_apresentacao").asString),
-                    ementa = it.get("ementa").asString,
-                    texto_original = it.get("texto_original").asString,
-                    file_date_updated = if (it.get("file_date_updated").isJsonNull) null else Converters.dtf.parse(it.get("file_date_updated").asString)
-                )
-                listMaterias.add(materia)
 
-                it.get("autores").asJsonArray.forEach { itAutor ->
-                    val i = itAutor as JsonObject
-                    val autor = Autor(
-                        uid = i.get("id").asInt,
-                        nome = i.get("nome").asString,
-                        fotografia = i.get("fotografia").asString,
-                        file_date_updated = if (i.get("file_date_updated").isJsonNull) null else Converters.dtf.parse(i.get("file_date_updated").asString)
-                    )
-                    mapAutores[autor.uid] = autor
-                }
+                listMaterias.add(MateriaLegislativa.parse(it))
+                mapAutores.putAll(Autor.parseList(it.get("autores").asJsonArray))
+
             }
         }
 

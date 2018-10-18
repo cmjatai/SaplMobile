@@ -7,6 +7,8 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.NonNull
+import br.leg.interlegis.saplmobile.sapl.db.Converters
+import com.google.gson.JsonObject
 import java.util.*
 
 @Entity(tableName = SessaoPlenaria.TABLE_NAME)
@@ -37,6 +39,18 @@ class SessaoPlenaria constructor(uid: Int,
         const val APP_LABEL: String = "sessao"
         @Ignore
         const val TABLE_NAME: String = "sessaoplenaria"
+
+        fun parse(item: JsonObject): SessaoPlenaria = SessaoPlenaria(
+            uid = item.get("id").asInt,
+            legislatura = item.get("legislatura").asInt,
+            sessao_legislativa = item.get("sessao_legislativa").asInt,
+            tipo = item.get("tipo").asString,
+            hora_inicio = item.get("hora_inicio").asString,
+            hora_fim = item.get("hora_fim").asString,
+            numero = item.get("numero").asInt,
+            data_inicio = if (item.get("data_inicio").isJsonNull) null else Converters.df.parse(item.get("data_inicio").asString),
+            data_fim = if (item.get("data_fim").isJsonNull) Converters.df.parse(item.get("data_inicio").asString) else Converters.df.parse(item.get("data_fim").asString)
+        )
     }
 }
 

@@ -10,13 +10,14 @@ import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
 
-class JsonApiSessaoPlenaria: JsonApiBaseAbstract() {
+class JsonApiSessaoPlenaria: JsonApiBaseAbstract<SessaoPlenaria>() {
 
     override val url = "api/mobile/sessaoplenaria/"
 
     companion object {
         val chave = String.format("%s:%s", SessaoPlenaria.APP_LABEL, SessaoPlenaria.TABLE_NAME)
     }
+
 
     override fun sync(_context: Context, _retrofit: Retrofit?, kwargs:Map<String, Any>): Int {
         context = _context
@@ -27,22 +28,10 @@ class JsonApiSessaoPlenaria: JsonApiBaseAbstract() {
 
         var response: SaplApiRestResponse? = null
         while (response == null || response.pagination!!.next_page != null) {
-
             response = call(response, kwargs)
 
             for (item in response.results!!) {
-                val sessao = SessaoPlenaria(
-                        uid = item.get("id").asInt,
-                        legislatura = item.get("legislatura").asInt,
-                        sessao_legislativa = item.get("sessao_legislativa").asInt,
-                        tipo = item.get("tipo").asString,
-                        hora_inicio = item.get("hora_inicio").asString,
-                        hora_fim = item.get("hora_fim").asString,
-                        numero = item.get("numero").asInt,
-                        data_inicio = if (item.get("data_inicio").isJsonNull) null else Converters.df.parse(item.get("data_inicio").asString),
-                        data_fim = if (item.get("data_fim").isJsonNull) Converters.df.parse(item.get("data_inicio").asString) else Converters.df.parse(item.get("data_fim").asString)
-                )
-                listSessao.add(sessao)
+                listSessao.add(SessaoPlenaria.parse(item))
             }
         }
 

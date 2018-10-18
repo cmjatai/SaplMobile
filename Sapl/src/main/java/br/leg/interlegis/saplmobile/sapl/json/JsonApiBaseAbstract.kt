@@ -8,7 +8,7 @@ import br.leg.interlegis.saplmobile.sapl.json.materia.JsonApiMateriaLegislativa
 import retrofit2.Retrofit
 import java.util.*
 
-abstract class JsonApiBaseAbstract: JsonApiInterface {
+abstract class JsonApiBaseAbstract<T>: JsonApiInterface {
 
     abstract val url: String
 
@@ -39,7 +39,9 @@ abstract class JsonApiBaseAbstract: JsonApiInterface {
             data_min = dmin,
             data_max = dmax
         )
+
         return call?.execute()!!.body()!!
     }
+
 
 }
