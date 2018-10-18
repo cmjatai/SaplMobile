@@ -16,7 +16,7 @@ import kotlin.collections.HashMap
 import org.jetbrains.anko.doAsync
 
 
-class JsonApiMateriaLegislativa: JsonApiBaseAbstract<MateriaLegislativa>() {
+class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
 
     override val url = "api/mobile/materialegislativa/"
 
@@ -24,10 +24,8 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract<MateriaLegislativa>() {
         val chave = String.format("%s:%s", MateriaLegislativa.APP_LABEL, MateriaLegislativa.TABLE_NAME)
     }
 
-    override fun sync(_context: Context, _retrofit: Retrofit?, kwargs:Map<String, Any>): Int {
-        context = _context
-        retrofit = _retrofit
-        servico = _retrofit?.create(SaplRetrofitService::class.java)
+    override fun sync(kwargs:Map<String, Any>): Int {
+        servico = retrofit.create(SaplRetrofitService::class.java)
 
         val listMaterias = ArrayList<MateriaLegislativa>()
         val mapAutores:HashMap<Int, Autor> = HashMap()
@@ -37,10 +35,8 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract<MateriaLegislativa>() {
 
             response = call(response, kwargs)
             response.results?.forEach {
-
                 listMaterias.add(MateriaLegislativa.parse(it))
                 mapAutores.putAll(Autor.parseList(it.get("autores").asJsonArray))
-
             }
         }
 
@@ -58,15 +54,13 @@ class JsonApiMateriaLegislativa: JsonApiBaseAbstract<MateriaLegislativa>() {
         doAsync {
             mapAutores.forEach {
                 if (it.value.fotografia.isNotEmpty())
-                    Utils.DownloadAndWriteFiles.run(context!!, servico, it.value.fotografia, it.value.file_date_updated)
+                    Utils.DownloadAndWriteFiles.run(context, servico, it.value.fotografia, it.value.file_date_updated)
             }
 
             listMaterias.forEach {
                 if (it.texto_original.isNotEmpty())
-                    Utils.DownloadAndWriteFiles.run(context!!, servico, it.texto_original, it.file_date_updated)
+                    Utils.DownloadAndWriteFiles.run(context, servico, it.texto_original, it.file_date_updated)
             }
-
-
         }
 
 

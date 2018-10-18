@@ -10,7 +10,7 @@ import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
 
-class JsonApiSessaoPlenaria: JsonApiBaseAbstract<SessaoPlenaria>() {
+class JsonApiSessaoPlenaria(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
 
     override val url = "api/mobile/sessaoplenaria/"
 
@@ -19,10 +19,8 @@ class JsonApiSessaoPlenaria: JsonApiBaseAbstract<SessaoPlenaria>() {
     }
 
 
-    override fun sync(_context: Context, _retrofit: Retrofit?, kwargs:Map<String, Any>): Int {
-        context = _context
-        retrofit = _retrofit
-        servico = retrofit?.create(SaplRetrofitService::class.java)
+    override fun sync(kwargs:Map<String, Any>): Int {
+        servico = retrofit.create(SaplRetrofitService::class.java)
 
         val listSessao = ArrayList<SessaoPlenaria>()
 
@@ -35,7 +33,7 @@ class JsonApiSessaoPlenaria: JsonApiBaseAbstract<SessaoPlenaria>() {
             }
         }
 
-        val dao = AppDataBase.getInstance(context!!).DaoSessaoPlenaria()
+        val dao = AppDataBase.getInstance(context).DaoSessaoPlenaria()
         val apagar = dao.loadAllByIds(response.deleted!!)
         dao.insertAll(listSessao)
         dao.delete(apagar)

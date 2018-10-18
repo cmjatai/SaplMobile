@@ -18,37 +18,31 @@ import java.util.*
 import kotlin.collections.HashMap
 
 
-class JsonApi {
-    val modules = hashMapOf<String, JsonApiInterface>(
-            JsonApiMateriaLegislativa.chave to JsonApiMateriaLegislativa(),
-            JsonApiSessaoPlenaria.chave to JsonApiSessaoPlenaria())
+class JsonApi(_context: Context) {
 
-    var API_BASE_URL : String = ""
-    var context: Context? = null
-    var retrofit: Retrofit? = null
+    val context: Context = _context
+    val retrofit: Retrofit = Retrofit
+            .Builder()
+            .baseUrl(SettingsActivity.getStringPreference(context, "domain_casa_legislativa"))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+    val modules = hashMapOf<String, JsonApiInterface>(
+            JsonApiMateriaLegislativa.chave to JsonApiMateriaLegislativa(context, retrofit),
+            JsonApiSessaoPlenaria.chave to JsonApiSessaoPlenaria(context, retrofit)
+    )
 
     var maximoGlobal: TimeRefresh? = null
+
     companion object {
         var retroagir = -60
-
-    }
-
-    constructor(context: Context) {
-        this.context = context
-        API_BASE_URL = SettingsActivity.getStringPreference(context, "domain_casa_legislativa")
-
-        retrofit = Retrofit
-                .Builder()
-                .baseUrl(API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
 
     }
 
     fun sync_time_refresh(): ArrayList<Pair<String, HashMap<String, Any>>> {
 
         Log.d("SAPL", "========================")
-        val dao = AppDataBase.getInstance(this.context!!).DaoTimeRefresh()
+        val dao = AppDataBase.getInstance(context).DaoTimeRefresh()
         maximoGlobal = dao.maxValue()
 
         if (maximoGlobal != null)
@@ -102,14 +96,6 @@ class JsonApi {
         }
         return syncResult
 
-        /*call?.enqueue(object: Callback<TimeRefreshResponse?> {
-            override fun onResponse(call: Call<TimeRefreshResponse?>, response: Response<TimeRefreshResponse?>) {
-                Log.v("JSON-API", response.toString())
-            }
-            override fun onFailure(call: Call<TimeRefreshResponse?>, t: Throwable) {
-                //To change body of created functions use File | Settings | File Templates.
-            }
-        })*/
     }
 
     fun get_sessao_sessao_plenaria(dataInicio:Date? = null, dataFim: Date? = null, tipoUpdate:String = "get"): Int? {
@@ -122,13 +108,13 @@ class JsonApi {
             kwargs["data_fim"] = dataFim
 
         val apiModule= modules[JsonApiSessaoPlenaria.chave]
-        return apiModule?.sync(context!!, retrofit, kwargs)
+        return apiModule?.sync(kwargs)
     }
 
     fun sync(sync_modules:  ArrayList<Pair<String, HashMap<String, Any>>> ) {
         for (module in sync_modules) {
             val apiModule= modules[module.first]
-            apiModule?.sync(context!!, retrofit, module.second)
+            apiModule?.sync(module.second)
         }
 
     }

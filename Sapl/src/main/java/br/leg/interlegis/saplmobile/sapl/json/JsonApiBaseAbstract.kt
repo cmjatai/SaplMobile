@@ -8,12 +8,13 @@ import br.leg.interlegis.saplmobile.sapl.json.materia.JsonApiMateriaLegislativa
 import retrofit2.Retrofit
 import java.util.*
 
-abstract class JsonApiBaseAbstract<T>: JsonApiInterface {
+abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApiInterface{
+
 
     abstract val url: String
 
-    var context: Context? = null
-    var retrofit: Retrofit? = null
+    var context: Context = context
+    var retrofit: Retrofit = retrofit
     var servico: SaplRetrofitService? = null
 
     fun call(old_response: SaplApiRestResponse?, kwargs:Map<String, Any>): SaplApiRestResponse {
