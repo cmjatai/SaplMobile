@@ -1,5 +1,7 @@
 package br.leg.interlegis.saplmobile.sapl
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -14,6 +16,10 @@ import kotlinx.android.synthetic.main.activity_sapl.*
 import kotlinx.android.synthetic.main.app_bar_sapl.*
 import kotlinx.android.synthetic.main.content_sapl.*
 import br.leg.interlegis.saplmobile.sapl.services.SaplService
+import android.content.Context.ACTIVITY_SERVICE
+import android.support.v4.content.ContextCompat.getSystemService
+
+
 
 
 class SaplActivity : SaplBaseActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -35,9 +41,21 @@ class SaplActivity : SaplBaseActivity(), NavigationView.OnNavigationItemSelected
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        val intent = Intent(this, SaplService::class.java)
-        startService(intent)
+        if (!SaplService.isInstanceCreated()) {
+            val intent = Intent(this, SaplService::class.java)
+            startService(intent)
+        }
     }
+
+    /*private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.name == service.service.getClassName()) {
+                return true
+            }
+        }
+        return false
+    }*/
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {

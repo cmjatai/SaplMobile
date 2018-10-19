@@ -33,7 +33,7 @@ import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_sessao_plenaria_list.*
 import kotlinx.android.synthetic.main.fragment_sessao_plenaria.*
 import kotlinx.android.synthetic.main.fragment_sessao_plenaria.view.*
-import kotlinx.android.synthetic.main.item_sessao_plenaria.view.*
+import kotlinx.android.synthetic.main.item_sessao_plenaria_list.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.dimen
 import org.jetbrains.anko.support.v4.find
@@ -298,7 +298,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SessaoPlenariaHolder {
                 val _view = LayoutInflater.from(parent.context
-                ).inflate(R.layout.item_sessao_plenaria, parent, false)
+                ).inflate(R.layout.item_sessao_plenaria_list, parent, false)
 
                 return SessaoPlenariaHolder(_view)
             }

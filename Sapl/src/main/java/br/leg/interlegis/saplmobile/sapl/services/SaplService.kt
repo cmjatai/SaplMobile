@@ -31,6 +31,11 @@ class SaplService : Service() {
         mServiceHandler = ServiceHandler(mServiceLooper!!)
     }
 
+    override fun onDestroy() {
+        instance = null
+        super.onDestroy()
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         toast("Serviço iniciado!")
         val msg = mServiceHandler!!.obtainMessage()
@@ -110,6 +115,9 @@ class SaplService : Service() {
             private set
         fun isRunning(): Boolean {
             return instance != null && !instance!!.running && !instance!!.delayed
+        }
+        fun isInstanceCreated(): Boolean {
+            return instance != null
         }
         fun sendMessage(message: Message) {
             instance!!.mServiceHandler!!.sendMessage(message)
