@@ -5,6 +5,7 @@ import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.Converters
 import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.db.entities.TimeRefresh
+import br.leg.interlegis.saplmobile.sapl.json.base.JsonApiAutorParlamentar
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.TimeRefreshRetrofitService
 import br.leg.interlegis.saplmobile.sapl.json.materia.JsonApiMateriaLegislativa
@@ -27,9 +28,10 @@ class JsonApi(_context: Context) {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-    val modules = hashMapOf<String, JsonApiInterface>(
-            JsonApiMateriaLegislativa.chave to JsonApiMateriaLegislativa(context, retrofit),
-            JsonApiSessaoPlenaria.chave to JsonApiSessaoPlenaria(context, retrofit)
+    val modules = arrayListOf(
+            JsonApiMateriaLegislativa.chave to arrayListOf(JsonApiMateriaLegislativa(context, retrofit) as JsonApiInterface),
+            JsonApiSessaoPlenaria.chave to arrayListOf(JsonApiSessaoPlenaria(context, retrofit) as JsonApiInterface),
+            JsonApiAutorParlamentar.chave to arrayListOf(JsonApiAutorParlamentar(context, retrofit) as JsonApiInterface)
     )
 
     var maximoGlobal: TimeRefresh? = null
@@ -98,7 +100,7 @@ class JsonApi(_context: Context) {
 
     }
 
-    fun get_sessao_sessao_plenaria(dataInicio:Date? = null, dataFim: Date? = null, tipoUpdate:String = "get"): Int? {
+    fun get_sessao_sessao_plenaria(dataInicio:Date? = null, dataFim: Date? = null, tipoUpdate:String = "get"){
         val kwargs = HashMap<String, Any>()
         kwargs["tipo_update"] = tipoUpdate
         if (dataInicio != null)
@@ -107,15 +109,23 @@ class JsonApi(_context: Context) {
         if (dataFim != null)
             kwargs["data_fim"] = dataFim
 
-        val apiModule= modules[JsonApiSessaoPlenaria.chave]
-        return apiModule?.sync(kwargs)
+        modules.forEach {
+            if (it.first == JsonApiSessaoPlenaria.chave)
+                it.second.forEach {itApi ->
+                    itApi.sync(kwargs)
+                }
+        }
+
     }
 
     fun sync(sync_modules:  ArrayList<Pair<String, HashMap<String, Any>>> ) {
         for (module in sync_modules) {
-            val apiModule= modules[module.first]
-            apiModule?.sync(module.second)
+            modules.forEach {
+                if (it.first == module.first)
+                    it.second.forEach{itApi ->
+                        itApi.sync(module.second)
+                    }
+            }
         }
-
     }
 }
