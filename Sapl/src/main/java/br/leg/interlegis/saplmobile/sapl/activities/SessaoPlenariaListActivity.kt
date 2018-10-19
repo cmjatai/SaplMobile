@@ -71,7 +71,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixel: Int) {}
             override fun onPageSelected(p0: Int) {
 
-                /*var item = this@SessaoPlenariaListActivity
+                var item = this@SessaoPlenariaListActivity
                 var sections = item.mSectionsPagerAdapter
                 if (sections!!.count - p0 == 1) {
                     doAsync {
@@ -79,7 +79,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                         val json = JsonApi(this@SessaoPlenariaListActivity)
                         json.get_sessao_sessao_plenaria(dataFim = dataFim)
                     }
-                }*/
+                }
             }
         })
 
