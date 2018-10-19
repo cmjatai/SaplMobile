@@ -3,6 +3,8 @@ package br.leg.interlegis.saplmobile.sapl.json.materia
 import android.content.Context
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.Converters
+import br.leg.interlegis.saplmobile.sapl.db.daos.materia.DaoMateriaLegislativa
+import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntity
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
@@ -18,32 +20,28 @@ import org.jetbrains.anko.doAsync
 
 class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
 
-    override val url = "api/mobile/materialegislativa/"
+    override val url = String.format("api/mobile/%s/%s/", MateriaLegislativa.APP_LABEL, MateriaLegislativa.TABLE_NAME)
+
 
     companion object {
         val chave = String.format("%s:%s", MateriaLegislativa.APP_LABEL, MateriaLegislativa.TABLE_NAME)
     }
 
     override fun sync(kwargs:Map<String, Any>): Int {
-        servico = retrofit.create(SaplRetrofitService::class.java)
+        val result = super.get(kwargs)
 
         val listMaterias = ArrayList<MateriaLegislativa>()
         val mapAutores:HashMap<Int, Autor> = HashMap()
 
-        var response: SaplApiRestResponse? = null
-        while (response == null || response.pagination!!.next_page != null) {
-
-            response = call(response, kwargs)
-            response.results?.forEach {
-                listMaterias.add(MateriaLegislativa.parse(it))
-                mapAutores.putAll(Autor.parseList(it.get("autores").asJsonArray))
-            }
+        (result["list"] as ArrayList<JsonObject>).forEach {
+                listMaterias.add(MateriaLegislativa.importJsonObject(it) as MateriaLegislativa)
+                mapAutores.putAll(Autor.importJsonArray(it.get("autores").asJsonArray) as HashMap<Int, Autor>)
         }
 
         val db = AppDataBase.getInstance(context!!)
 
         val daoMateria = db.DaoMateriaLegislativa()
-        val apagar = daoMateria.loadAllByIds(response.deleted!!)
+        val apagar = daoMateria.loadAllByIds(result["deleted"] as IntArray)
 
         daoMateria.insertAll(listMaterias)
         daoMateria.delete(apagar)

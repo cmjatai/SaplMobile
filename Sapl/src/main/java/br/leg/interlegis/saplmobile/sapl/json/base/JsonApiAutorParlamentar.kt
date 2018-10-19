@@ -9,13 +9,14 @@ import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.json.SaplApiRestResponse
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
 import br.leg.interlegis.saplmobile.sapl.support.Utils
+import com.google.gson.JsonObject
 import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
 
 class JsonApiAutorParlamentar(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
 
-    override val url = "api/mobile/autor/parlamentar/"
+    override val url = String.format("api/mobile/%s/%s/parlamentar/", Autor.APP_LABEL, Autor.TABLE_NAME)
 
     companion object {
         val chave = "parlamentares:parlamentar"
@@ -23,21 +24,16 @@ class JsonApiAutorParlamentar(context:Context, retrofit: Retrofit): JsonApiBaseA
 
 
     override fun sync(kwargs:Map<String, Any>): Int {
-        servico = retrofit.create(SaplRetrofitService::class.java)
+        val result = super.get(kwargs)
 
         val listAutor = ArrayList<Autor>()
 
-        var response: SaplApiRestResponse? = null
-        while (response == null || response.pagination!!.next_page != null) {
-            response = call(response, kwargs)
-
-            for (item in response.results!!) {
-                listAutor.add(Autor.parse(item))
-            }
+        (result["list"] as ArrayList<JsonObject>).forEach {
+            listAutor.add(Autor.importJsonObject(it))
         }
 
         val dao = AppDataBase.getInstance(context).DaoAutor()
-        val apagar = dao.loadAllByIds(response.deleted!!)
+        val apagar = dao.loadAllByIds(result["deleted"] as IntArray)
         dao.insertAll(listAutor)
         dao.delete(apagar)
 

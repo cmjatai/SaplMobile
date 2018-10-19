@@ -1,15 +1,20 @@
 package br.leg.interlegis.saplmobile.sapl.json
 
 import android.content.Context
+import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.Converters
+import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntity
+import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityCompanion
+import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
-import br.leg.interlegis.saplmobile.sapl.json.materia.JsonApiMateriaLegislativa
+import com.google.gson.JsonObject
 import retrofit2.Retrofit
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApiInterface{
-
 
     abstract val url: String
 
@@ -44,5 +49,29 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApi
         return call?.execute()!!.body()!!
     }
 
+
+    override fun get(kwargs:Map<String, Any>): HashMap<String, Any> {
+        servico = retrofit.create(SaplRetrofitService::class.java)
+
+        val result = HashMap<String, Any>()
+        val list = ArrayList<JsonObject>()
+
+        var response: SaplApiRestResponse? = null
+
+        while (response == null || response.pagination?.next_page != null) {
+
+            response = call(response, kwargs)
+
+            if (response.pagination?.page == 1) result["deleted"] = response.deleted as Any
+
+            response.results?.let {
+                list.addAll(it)
+            }
+        }
+        result["list"] = list
+        return result
+
+
+    }
 
 }

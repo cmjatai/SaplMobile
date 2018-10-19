@@ -8,7 +8,10 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.NonNull
 import br.leg.interlegis.saplmobile.sapl.db.Converters
+import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntity
+import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityCompanion
 import com.google.gson.JsonObject
+import java.io.Serializable
 import java.util.*
 
 @Entity(tableName = SessaoPlenaria.TABLE_NAME)
@@ -20,7 +23,7 @@ class SessaoPlenaria constructor(uid: Int,
                                  hora_fim: String,
                                  numero: Int,
                                  data_inicio: Date? = null,
-                                 data_fim: Date? = null) {
+                                 data_fim: Date? = null): Serializable, SaplEntity{
 
 
     @PrimaryKey
@@ -34,13 +37,14 @@ class SessaoPlenaria constructor(uid: Int,
     var hora_fim = hora_fim
     var numero = numero
 
-    companion object {
+    companion object:SaplEntityCompanion() {
+
         @Ignore
         const val APP_LABEL: String = "sessao"
         @Ignore
         const val TABLE_NAME: String = "sessaoplenaria"
 
-        fun parse(item: JsonObject): SessaoPlenaria = SessaoPlenaria(
+        override fun importJsonObject(item: JsonObject): SessaoPlenaria = SessaoPlenaria(
             uid = item.get("id").asInt,
             legislatura = item.get("legislatura").asInt,
             sessao_legislativa = item.get("sessao_legislativa").asInt,
