@@ -1,6 +1,8 @@
 package br.leg.interlegis.saplmobile.sapl.db.entities.materia
 
-import android.arch.persistence.room.*
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
+import android.arch.persistence.room.PrimaryKey
 import br.leg.interlegis.saplmobile.sapl.db.Converters
 import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntity
 import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityCompanion
@@ -8,41 +10,38 @@ import com.google.gson.JsonObject
 import java.io.Serializable
 import java.util.*
 
-@Entity(tableName = Anexada.TABLE_NAME,
-        foreignKeys = arrayOf(
-            ForeignKey(entity = MateriaLegislativa::class,
-                    parentColumns = arrayOf("uid"),
-                    childColumns = arrayOf("materia_principal"),
-                    onDelete = ForeignKey.CASCADE
-            ),
-            ForeignKey(entity = MateriaLegislativa::class,
-                    parentColumns = arrayOf("uid"),
-                    childColumns = arrayOf("materia_anexada"),
-                    onDelete = ForeignKey.CASCADE
-            )
-        )
-)
-class Anexada constructor(uid: Int,
-                          materia_principal: Int,
-                          materia_anexada: Int,
-                          data_anexacao: Date,
-                          data_desanexacao: Date? = null
+@Entity(tableName = MateriaLegislativa.TABLE_NAME)
+class MateriaLegislativa constructor(uid: Int,
+                                     tipo: String,
+                                     tipo_sigla: String,
+                                     numero: Int,
+                                     ano: Int,
+                                     numero_protocolo: Int,
+                                     data_apresentacao: Date,
+                                     ementa: String,
+                                     texto_original: String,
+                                     file_date_updated: Date? = null
                                      ): Serializable, SaplEntity {
 
 
     @PrimaryKey
     var uid: Int = uid
-    var materia_principal: Int = materia_principal
-    var materia_anexada: Int = materia_anexada
-    var data_anexacao: Date = data_anexacao
-    var data_desanexacao: Date? = data_desanexacao
+    var tipo: String = tipo
+    var tipo_sigla: String = tipo_sigla
+    var numero: Int = numero
+    var ano: Int = ano
+    var numero_protocolo: Int = numero_protocolo
+    var data_apresentacao: Date = data_apresentacao
+    var ementa: String = ementa
+    var texto_original: String = texto_original
+    var file_date_updated: Date? = file_date_updated
 
     companion object: SaplEntityCompanion() {
 
         @Ignore
         const val APP_LABEL: String = "materia"
         @Ignore
-        const val TABLE_NAME: String = "anexada"
+        const val TABLE_NAME: String = "materialegislativa"
 
 
         override fun importJsonObject(it: JsonObject): MateriaLegislativa = MateriaLegislativa(
