@@ -23,7 +23,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
     (Autor::class),
     (MateriaLegislativa::class),
     (Anexada::class)
-], version = 57, exportSchema = false)
+], version = 58, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
 
