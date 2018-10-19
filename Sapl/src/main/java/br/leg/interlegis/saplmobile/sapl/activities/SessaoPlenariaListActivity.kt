@@ -71,7 +71,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixel: Int) {}
             override fun onPageSelected(p0: Int) {
 
-                var item = this@SessaoPlenariaListActivity
+                /*var item = this@SessaoPlenariaListActivity
                 var sections = item.mSectionsPagerAdapter
                 if (sections!!.count - p0 == 1) {
                     doAsync {
@@ -79,7 +79,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                         val json = JsonApi(this@SessaoPlenariaListActivity)
                         json.get_sessao_sessao_plenaria(dataFim = dataFim)
                     }
-                }
+                }*/
             }
         })
 
@@ -93,6 +93,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                     mSectionsPagerAdapter?.notifyDataSetChanged()
                 }
             })
+
     }
     class ZoomOutPageTransformer : ViewPager.PageTransformer {
 
@@ -180,6 +181,14 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                     grid.add(lista)
                 }
             }
+
+            if (grid.size <= 1) {
+                doAsync {
+                    val json = JsonApi(this@SessaoPlenariaListActivity)
+                    json.get_sessao_sessao_plenaria()
+                }
+            }
+
             field = value
         }
         val mFragments: WeakHashMap<Int, Fragment> = WeakHashMap()
@@ -207,9 +216,11 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
         }
 
         override fun getCount(): Int {
+
             if (sessoes == null) {
                 return 0
             }
+
             return grid.size
         }
     }
