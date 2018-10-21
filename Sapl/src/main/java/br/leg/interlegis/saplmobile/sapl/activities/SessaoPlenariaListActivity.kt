@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
+import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -23,6 +25,7 @@ import android.widget.TextView
 import br.leg.interlegis.saplmobile.sapl.R
 import br.leg.interlegis.saplmobile.sapl.SaplApplication
 import br.leg.interlegis.saplmobile.sapl.SaplBaseActivity
+import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.json.JsonApi
 import br.leg.interlegis.saplmobile.sapl.json.sessao.JsonApiSessaoPlenaria
@@ -49,7 +52,66 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
     private var screen_list_sessao_plenaria: String = "10"
+    val grid = ArrayList<ArrayList<SessaoPlenaria>>()
 
+    fun populate(elements: List<SessaoPlenaria>) {
+        grid.clear()
+        elements.forEach value@{ sessao ->
+
+            Log.d("SAPL", "13. chegou aqui...")
+            var flagInsert = false
+            grid.forEach grid@{
+
+                if (this@SessaoPlenariaListActivity.screen_list_sessao_plenaria == "10") {
+                    if (it[0].data_inicio!!.year == sessao.data_inicio!!.year &&
+                            it[0].data_inicio!!.month == sessao.data_inicio!!.month) {
+                        it.add(sessao)
+                        flagInsert = true
+                        return@grid
+                    }
+                }
+                else if (this@SessaoPlenariaListActivity.screen_list_sessao_plenaria == "20") {
+                    if (it[0].data_inicio!!.year == sessao.data_inicio!!.year && it[0].data_inicio!!.month >= 6 && sessao.data_inicio!!.month >= 6) {
+                        it.add(sessao)
+                        flagInsert = true
+                        return@grid
+                    }
+                    else if (it[0].data_inicio!!.year == sessao.data_inicio!!.year && it[0].data_inicio!!.month < 6 && sessao.data_inicio!!.month < 6) {
+                        it.add(sessao)
+                        flagInsert = true
+                        return@grid
+                    }
+                }
+                else if (this@SessaoPlenariaListActivity.screen_list_sessao_plenaria == "30") {
+                    if (it[0].data_inicio!!.year == sessao.data_inicio!!.year) {
+                        it.add(sessao)
+                        flagInsert = true
+                        return@grid
+                    }
+                }
+
+            }
+            if (!flagInsert) {
+                var lista = ArrayList<SessaoPlenaria>()
+                lista.add(sessao)
+                grid.add(lista)
+            }
+        }
+
+        if (elements.isNotEmpty() && grid.size <= 1) {
+            doAsync {
+
+                Log.d("SAPL", "14. chegou aqui...")
+                val json = JsonApi(this@SessaoPlenariaListActivity)
+                json.get_sessao_sessao_plenaria()
+
+                Log.d("SAPL", "15. chegou aqui...")
+            }
+        }
+
+        Log.d("SAPL", "13. Saiu")
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,14 +120,14 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
         screen_list_sessao_plenaria = SettingsActivity.getStringPreference(this, "screen_list_sessao_plenaria")
 
 
-
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         container.adapter = mSectionsPagerAdapter
         container.setPageTransformer(true, ZoomOutPageTransformer())
-
         container.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixel: Int) {}
@@ -75,7 +137,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                 var sections = item.mSectionsPagerAdapter
                 if (sections!!.count - p0 == 1) {
                     doAsync {
-                        val dataFim = sections.sessoes!![sections.sessoes!!.size-1].data_inicio
+                        val dataFim = grid.last().last().data_inicio
                         val json = JsonApi(this@SessaoPlenariaListActivity)
                         json.get_sessao_sessao_plenaria(dataFim = dataFim)
                     }
@@ -86,13 +148,40 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
         var sessaoModel = ViewModelProviders.of(
                 this).get(SessaoPlenariaListViewModel::class.java)
 
-        sessaoModel.sessoes?.observe(this,
-            Observer<List<SessaoPlenaria>> { sessoes ->
-                if (sessoes != null) {
-                    mSectionsPagerAdapter?.sessoes = sessoes
-                    mSectionsPagerAdapter?.notifyDataSetChanged()
-                }
-            })
+        if (savedInstanceState != null) {
+            doAsync {
+
+                this@SessaoPlenariaListActivity.grid.clear()
+                mSectionsPagerAdapter!!.notifyDataSetChanged()
+                sessaoModel.sessoes?.observe(this@SessaoPlenariaListActivity,
+                    Observer<List<SessaoPlenaria>> { sessoes ->
+                        if (sessoes != null) {
+                            this@SessaoPlenariaListActivity.populate(sessoes)
+                            mSectionsPagerAdapter!!.notifyDataSetChanged()
+                        }
+                    })
+            }
+
+
+        }
+        else {
+
+            sessaoModel.sessoes?.observe(this@SessaoPlenariaListActivity,
+                Observer<List<SessaoPlenaria>> { sessoes ->
+                    if (sessoes != null) {
+                        this@SessaoPlenariaListActivity.populate(sessoes)
+                        mSectionsPagerAdapter!!.notifyDataSetChanged()
+                    }
+                })
+
+        }
+
+
+
+
+
+            Log.d("SAPL", "12. chegou aqui...")
+
 
     }
     class ZoomOutPageTransformer : ViewPager.PageTransformer {
@@ -138,67 +227,15 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
     }
 
     inner class SectionsPagerAdapter(fm: FragmentManager): FragmentPagerAdapter(fm) {
-        var grid: ArrayList<ArrayList<SessaoPlenaria>> = ArrayList()
-        var sessoes: List<SessaoPlenaria>? = null
-        set(value) {
-            grid.clear()
-            value?.forEach value@{ sessao ->
-                var flagInsert = false
-                grid.forEach grid@{
-
-                    if (this@SessaoPlenariaListActivity.screen_list_sessao_plenaria == "10") {
-                        if (it[0].data_inicio!!.year == sessao.data_inicio!!.year &&
-                                it[0].data_inicio!!.month == sessao.data_inicio!!.month) {
-                            it.add(sessao)
-                            flagInsert = true
-                            return@grid
-                        }
-                    }
-                    else if (this@SessaoPlenariaListActivity.screen_list_sessao_plenaria == "20") {
-                        if (it[0].data_inicio!!.year == sessao.data_inicio!!.year && it[0].data_inicio!!.month >= 6 && sessao.data_inicio!!.month >= 6) {
-                            it.add(sessao)
-                            flagInsert = true
-                            return@grid
-                        }
-                        else if (it[0].data_inicio!!.year == sessao.data_inicio!!.year && it[0].data_inicio!!.month < 6 && sessao.data_inicio!!.month < 6) {
-                            it.add(sessao)
-                            flagInsert = true
-                            return@grid
-                        }
-                    }
-                    else if (this@SessaoPlenariaListActivity.screen_list_sessao_plenaria == "30") {
-                        if (it[0].data_inicio!!.year == sessao.data_inicio!!.year) {
-                            it.add(sessao)
-                            flagInsert = true
-                            return@grid
-                        }
-                    }
-
-                }
-                if (!flagInsert) {
-                    var lista = ArrayList<SessaoPlenaria>()
-                    lista.add(sessao)
-                    grid.add(lista)
-                }
-            }
-
-            if (grid.size <= 1) {
-                doAsync {
-                    val json = JsonApi(this@SessaoPlenariaListActivity)
-                    json.get_sessao_sessao_plenaria()
-                }
-            }
-
-            field = value
-        }
         val mFragments: WeakHashMap<Int, Fragment> = WeakHashMap()
 
+
         override fun notifyDataSetChanged() {
+            super.notifyDataSetChanged()
             for (position in mFragments.keys) {
                 (mFragments[position] as PlaceholderFragment).sessoes = grid[position]
                 (mFragments[position] as PlaceholderFragment).update()
             }
-            super.notifyDataSetChanged()
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
@@ -208,19 +245,30 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
             }
         }
 
+        override fun instantiateItem(container: ViewGroup, position: Int): Any {
+            val item =  super.instantiateItem(container, position) as PlaceholderFragment
+            item.sessoes = grid[position]
+            item.update()
+
+            mFragments.put(position, item as Fragment)
+            return item
+        }
+
+        override fun getItemPosition(`object`: Any): Int {
+            val item = `object` as PlaceholderFragment
+            val itemValue = item.arguments!!["position"] as Int
+            return itemValue
+
+        }
+
         override fun getItem(position: Int): Fragment {
 
-            var item = PlaceholderFragment.newInstance(grid[position])
+            var item = PlaceholderFragment.newInstance(position, grid[position])
             mFragments.put(position, item as Fragment)
             return item
         }
 
         override fun getCount(): Int {
-
-            if (sessoes == null) {
-                return 0
-            }
-
             return grid.size
         }
     }
@@ -228,61 +276,82 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
     class PlaceholderFragment : Fragment() {
 
-        var sessoes: ArrayList<SessaoPlenaria>? = null
+        var sessoes = ArrayList<SessaoPlenaria>()
         var rootView: View? = null
 
         private lateinit var recyclerView: RecyclerView
-        private lateinit var viewAdapter: RecyclerView.Adapter<*>
+        private var viewAdapter: SessaoPlenariaAdapter? = null
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
             super.onCreateView(inflater, container, savedInstanceState)
 
             rootView = inflater.inflate(R.layout.fragment_sessao_plenaria, container, false)
-            update_title()
 
-            viewAdapter = SessaoPlenariaAdapter(sessoes!!)
+
+            viewAdapter = SessaoPlenariaAdapter(sessoes)
             recyclerView = rootView!!.findViewById(R.id.view_lista_sessoes)
             recyclerView.adapter = viewAdapter
+            update_title()
             return rootView
         }
 
         fun update() {
-            (viewAdapter as SessaoPlenariaAdapter).updateData(sessoes)
             update_title()
+            viewAdapter?.updateData(sessoes)
         }
 
         private fun update_title() {
+
+            if (sessoes.isEmpty()) {
+
+                if ((activity as SessaoPlenariaListActivity).grid.isNotEmpty()) {
+                    sessoes = (activity as SessaoPlenariaListActivity).grid[arguments!!["position"] as Int]
+                }
+                else
+                   return
+            }
+            viewAdapter?.updateData(sessoes)
+
             val cal = Calendar.getInstance()
-            cal.time = this.sessoes!![0].data_inicio
+            cal.time = sessoes[0].data_inicio
 
             var tituloPagina = ""
-            var ac: SessaoPlenariaListActivity = activity as SessaoPlenariaListActivity
-            when {
-                ac.screen_list_sessao_plenaria == "10" ->
-                    tituloPagina = getString(R.string.title_grid_mensal_sessao_plenaria,
-                        cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
-                        cal.get(Calendar.YEAR))
-                ac.screen_list_sessao_plenaria == "20" ->
-                    tituloPagina = getString(R.string.title_grid_semenstral_sessao_plenaria,
-                        if (cal.get(Calendar.MONTH) <= 6) 1 else 2,
-                        cal.get(Calendar.YEAR))
-                ac.screen_list_sessao_plenaria == "30" ->
-                    tituloPagina = getString(R.string.title_grid_anual_sessao_plenaria,
-                        cal.get(Calendar.YEAR))
+            if (activity != null) {
+                var ac: SessaoPlenariaListActivity = activity as SessaoPlenariaListActivity
+                when {
+                    ac.screen_list_sessao_plenaria == "10" ->
+                        tituloPagina = getString(R.string.title_grid_mensal_sessao_plenaria,
+                                cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).capitalize(),
+                                cal.get(Calendar.YEAR))
+                    ac.screen_list_sessao_plenaria == "20" ->
+                        tituloPagina = getString(R.string.title_grid_semenstral_sessao_plenaria,
+                                if (cal.get(Calendar.MONTH) <= 6) 1 else 2,
+                                cal.get(Calendar.YEAR))
+                    ac.screen_list_sessao_plenaria == "30" ->
+                        tituloPagina = getString(R.string.title_grid_anual_sessao_plenaria,
+                                cal.get(Calendar.YEAR))
+                }
+                rootView?.fragment_title?.text = tituloPagina
             }
-            rootView!!.fragment_title.text = tituloPagina
         }
 
+
+
         companion object {
-            fun newInstance(sessoes: ArrayList<SessaoPlenaria>): PlaceholderFragment {
+            fun newInstance(position: Int, sessoes: ArrayList<SessaoPlenaria>): PlaceholderFragment {
+                val args = Bundle()
+                args.putInt("position", position)
+
                 val fragment = PlaceholderFragment()
                 fragment.sessoes = sessoes
+                fragment.arguments = args
+
                 return fragment
             }
         }
 
-        class SessaoPlenariaAdapter(private val sessoes: ArrayList<SessaoPlenaria>?):
+        class SessaoPlenariaAdapter(private val sessoes: ArrayList<SessaoPlenaria>):
                 RecyclerView.Adapter<SessaoPlenariaAdapter.SessaoPlenariaHolder>() {
 
             inner class SessaoPlenariaHolder(val _view: View): RecyclerView.ViewHolder(_view) {
@@ -302,8 +371,10 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
             }
 
             fun updateData(_sessoes: ArrayList<SessaoPlenaria>?) {
-                sessoes!!.clear()
-                sessoes.addAll(_sessoes!!)
+                if (!sessoes.equals(_sessoes)) {
+                    sessoes.clear()
+                    sessoes.addAll(_sessoes!!)
+                }
                 notifyDataSetChanged()
             }
 
@@ -315,9 +386,9 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
             }
 
             override fun onBindViewHolder(holder: SessaoPlenariaHolder, position: Int) {
-                holder.sessao = sessoes!![position]
+                holder.sessao = sessoes[position]
 
-                val sessao = sessoes!![position]
+                val sessao = sessoes[position]
                 var titulos = titulo_sessao(holder._view.context, sessao)
 
                 holder._view.session_title.text = titulos["session_title"]
@@ -326,7 +397,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
             }
 
             override fun getItemCount(): Int {
-                return sessoes!!.size
+                return sessoes.size
             }
 
         }

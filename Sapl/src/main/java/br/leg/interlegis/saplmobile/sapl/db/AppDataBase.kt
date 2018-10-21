@@ -9,6 +9,7 @@ import br.leg.interlegis.saplmobile.sapl.db.daos.base.DaoAutor
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoChaveValor
 import br.leg.interlegis.saplmobile.sapl.db.daos.sessao.DaoSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoTimeRefresh
+import br.leg.interlegis.saplmobile.sapl.db.daos.materia.DaoAnexada
 import br.leg.interlegis.saplmobile.sapl.db.daos.materia.DaoMateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.db.entities.*
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
@@ -23,10 +24,11 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
     (Autor::class),
     (MateriaLegislativa::class),
     (Anexada::class)
-], version = 58, exportSchema = false)
+], version = 59, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
 
+    abstract fun DaoAnexada(): DaoAnexada
     abstract fun DaoAutor(): DaoAutor
     abstract fun DaoChaveValor(): DaoChaveValor
     abstract fun DaoSessaoPlenaria(): DaoSessaoPlenaria

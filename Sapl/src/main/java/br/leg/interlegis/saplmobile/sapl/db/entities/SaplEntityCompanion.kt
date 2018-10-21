@@ -11,12 +11,12 @@ abstract class SaplEntityCompanion: SaplEntityInterface {
     }
 
     override fun importJsonArray(jsonArray: JsonArray): Map<Int, SaplEntity> {
-        val mapAutores:HashMap<Int, SaplEntity> = HashMap()
+        val mapItens:HashMap<Int, SaplEntity> = HashMap()
         jsonArray.forEach {
             val i = it as JsonObject
-            mapAutores[it.get("id").asInt] = this.importJsonObject(i)
+            mapItens[it.get("id").asInt] = this.importJsonObject(i)
         }
-        return mapAutores
+        return mapItens
     }
 
 }

@@ -10,10 +10,10 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 interface DaoAnexada: DaoBase<Anexada> {
 
     @get:Query("SELECT * FROM "+ Anexada.TABLE_NAME+" order by data_anexacao asc")
-    val all: LiveData<List<MateriaLegislativa>>
+    val all: LiveData<List<Anexada>>
 
     @get:Query("SELECT * FROM "+ Anexada.TABLE_NAME+" order by data_anexacao asc")
-    val all_direct: List<MateriaLegislativa>
+    val all_direct: List<Anexada>
 
     @Query("SELECT * FROM "+ Anexada.TABLE_NAME+" WHERE uid IN (:anexadaIds)")
     fun loadAllByIds(anexadaIds: IntArray): List<Anexada>

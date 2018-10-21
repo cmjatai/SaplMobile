@@ -1,12 +1,10 @@
 package br.leg.interlegis.saplmobile.sapl.db.entities.materia
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import br.leg.interlegis.saplmobile.sapl.db.Converters
 import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntity
 import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityCompanion
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import java.io.Serializable
 import java.util.*
@@ -23,7 +21,9 @@ import java.util.*
                         childColumns = arrayOf("materia_anexada"),
                         onDelete = ForeignKey.CASCADE
                 )
-        )
+        ),
+        indices = arrayOf(
+                Index(value= arrayOf("materia_principal", "materia_anexada"), unique = true))
 )
 class Anexada constructor(uid: Int,
                           materia_principal: Int,
@@ -54,6 +54,36 @@ class Anexada constructor(uid: Int,
                 data_anexacao = Converters.df.parse(it.get("data_anexacao").asString),
                 data_desanexacao = if (it.get("data_desanexacao").isJsonNull) null else Converters.dtf.parse(it.get("data_desanexacao").asString)
         )
+
+        fun importAnexadasJsonArray(jsonArray: JsonArray): Map<Int, SaplEntity> {
+            val mapItens:HashMap<Int, SaplEntity> = HashMap()
+            jsonArray.forEach {
+                val i = it as JsonObject
+                mapItens[i.get("id").asInt] =  Anexada(
+                        uid = i.get("id").asInt,
+                        materia_principal = i.get("materia_principal").asInt,
+                        materia_anexada = i.get("materia_anexada").asJsonObject.get("id").asInt,
+                        data_anexacao = Converters.df.parse(it.get("data_anexacao").asString),
+                        data_desanexacao = if (i.get("data_desanexacao").isJsonNull) null else Converters.dtf.parse(i.get("data_desanexacao").asString))
+
+            }
+            return mapItens
+        }
+        fun importPrincipaisDeJsonArray(jsonArray: JsonArray): Map<Int, SaplEntity> {
+            val mapItens:HashMap<Int, SaplEntity> = HashMap()
+            jsonArray.forEach {
+                val i = it as JsonObject
+                mapItens[i.get("id").asInt] =  Anexada(
+                        uid = i.get("id").asInt,
+                        materia_principal = i.get("materia_principal").asJsonObject.get("id").asInt,
+                        materia_anexada = i.get("materia_anexada").asJsonObject.get("id").asInt,
+                        data_anexacao = Converters.df.parse(it.get("data_anexacao").asString),
+                        data_desanexacao = if (i.get("data_desanexacao").isJsonNull) null else Converters.dtf.parse(i.get("data_desanexacao").asString))
+
+            }
+            return mapItens
+        }
+
     }
 }
 

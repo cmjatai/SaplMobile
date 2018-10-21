@@ -29,7 +29,7 @@ class SessaoPlenariaActivity : SaplBaseActivity() {
 
         val uid = intent.getIntExtra("uid", 0)
 
-        sessaoLiveData = SaplApplication.daoSessaoPlenaria!!.getLDSessao(uid)
+        sessaoLiveData = SaplApplication.daoSessaoPlenaria?.getLDSessao(uid)
 
         sessaoLiveData!!.observe( this,
             Observer<SessaoPlenaria> {
