@@ -113,6 +113,11 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putInt("CURRENT_POSITION", currentPosition)
+        super.onSaveInstanceState(outState)
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sessao_plenaria_list)
@@ -128,10 +133,14 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
         container.adapter = mSectionsPagerAdapter
         container.setPageTransformer(true, ZoomOutPageTransformer())
+
+        container.postDelayed( { container.setCurrentItem(currentPosition) }, 1)
         container.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixel: Int) {}
             override fun onPageSelected(p0: Int) {
+                currentPosition = p0
+
 
                 var item = this@SessaoPlenariaListActivity
                 var sections = item.mSectionsPagerAdapter
@@ -165,7 +174,6 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
         }
         else {
-
             sessaoModel.sessoes?.observe(this@SessaoPlenariaListActivity,
                 Observer<List<SessaoPlenaria>> { sessoes ->
                     if (sessoes != null) {
@@ -173,7 +181,6 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                         mSectionsPagerAdapter!!.notifyDataSetChanged()
                     }
                 })
-
         }
 
 
@@ -404,6 +411,9 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
     }
     companion object {
+
+        var currentPosition: Int = 0
+
         fun titulo_sessao(context: Context, sessaoPlenaria: SessaoPlenaria): HashMap<String, String> {
             val quinzenal:Boolean = SettingsActivity.getBooleanPreference(context, "divisao_quizenal_display")
 
@@ -416,9 +426,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                 titulos["session_title"] = context.getString(
                     R.string.sessoes_default_title_extended,
                     sessaoPlenaria.numero,
-                    sessaoPlenaria.tipo,
-                    sessaoPlenaria.sessao_legislativa,
-                    sessaoPlenaria.legislatura)
+                    sessaoPlenaria.tipo)
 
                 titulos["session_subtitle"] = context.getString(
                     R.string.sessoes_default_subtitle_extended,

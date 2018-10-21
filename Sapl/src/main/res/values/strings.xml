@@ -42,7 +42,7 @@
 
     <string name="title_activity_sessao_plenaria">Sessões Plenárias</string>
 
-    <string name="sessoes_default_title_extended">%1$dª Sessão %2$s da %3$dª Sessão Legislativa da %4$dª Legislatura</string>
+    <string name="sessoes_default_title_extended">%1$dª Sessão %2$s</string>
     <string name="sessoes_quinzenal_title_extended">%1$dª Sessão %2$s da %3$dª Quinzena do Mês de %4$s de %5$d</string>
 
     <string name="sessoes_default_subtitle_extended">%1$dª Sessão Legislativa da %2$dª Legislativa</string>

@@ -5,13 +5,10 @@
     style="@style/ListaSessoes.CardSessao"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="0dp"
     app:cardBackgroundColor="@android:color/background_light"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="1dp"
-    app:cardElevation="1dp">
+    android:foreground="?android:attr/selectableItemBackground">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -20,11 +17,13 @@
         <TextView
             android:id="@+id/session_title"
             style="@style/ListaSessoes.CardSessao.Titulo"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center_horizontal"
+            />
 
         <TextView
             android:id="@+id/session_subtitle"

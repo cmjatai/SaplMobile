@@ -3,33 +3,35 @@
     <style name="FragmentListSessao">
     </style>
     <style name="FragmentListSessao.Titulo">
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:textSize">40sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">24sp</item>
     </style>
     <style name="FragmentListSessao.Icone">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">48dp</item>
 
     </style>
     <style name="ListaSessoes">
         <item name="spanCount">1</item>
         <item name="layoutManager">android.support.v7.widget.GridLayoutManager</item>
-        <item name="android:layout_margin">4dp</item>
+        <item name="android:layout_margin">0dp</item>
     </style>
     <style name="ListaSessoes.CardSessao">
-        <item name="contentPadding">24dp</item>
+        <item name="contentPadding">8dp</item>
+        <item name="android:layout_margin">0.5dp</item>
         <item name="cardCornerRadius">1dp</item>
         <item name="cardElevation">2dp</item>
     </style>
     <style name="ListaSessoes.CardSessao.Titulo">
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorPrimary</item>
 
     </style>
     <style name="ListaSessoes.CardSessao.SubTitulo">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
     <style name="ListaSessoes.CardSessao.Data">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 </resources>
+

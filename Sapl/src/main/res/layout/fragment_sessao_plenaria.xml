@@ -5,28 +5,26 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SessaoPlenariaListActivity$PlaceholderFragment">
+    tools:context=".activities.SessaoPlenariaListActivity$PlaceholderFragment"
+    style="@style/FragmentListSessao">
 
     <TextView
         android:id="@+id/fragment_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:textSize="40sp"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        tools:layout_constraintTop_creator="1"
+
+        style="@style/FragmentListSessao.Titulo"/>
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
+        style="@style/FragmentListSessao.Icone"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
         android:contentDescription="@string/icone_sessao_plenaria"
         android:src="@drawable/ic_menu_sessoes_plenarias"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +35,7 @@
         style="@style/ListaSessoes"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipToPadding="false"
         android:scrollbars="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
