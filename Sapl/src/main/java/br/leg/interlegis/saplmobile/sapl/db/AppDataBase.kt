@@ -14,6 +14,7 @@ import br.leg.interlegis.saplmobile.sapl.db.daos.materia.DaoMateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.db.entities.*
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Anexada
+import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 
@@ -23,8 +24,9 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
     (ChaveValor::class),
     (Autor::class),
     (MateriaLegislativa::class),
-    (Anexada::class)
-], version = 59, exportSchema = false)
+    (Anexada::class),
+    (Autoria::class)
+], version = 60, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
 
