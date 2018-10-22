@@ -8,6 +8,8 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityCompanion
 import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import retrofit2.Retrofit
 import java.util.*
@@ -54,7 +56,7 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApi
         servico = retrofit.create(SaplRetrofitService::class.java)
 
         val result = HashMap<String, Any>()
-        val list = ArrayList<JsonObject>()
+        val list = JsonArray()
 
         var response: SaplApiRestResponse? = null
 
@@ -64,8 +66,9 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApi
 
             if (response.pagination?.page == 1) result["deleted"] = response.deleted as Any
 
-            response.results?.let {
-                list.addAll(it)
+
+            response.results?.forEach {
+                list.add(it)
             }
         }
         result["list"] = list

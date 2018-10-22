@@ -55,28 +55,14 @@ class Anexada constructor(uid: Int,
                 data_desanexacao = if (it.get("data_desanexacao").isJsonNull) null else Converters.dtf.parse(it.get("data_desanexacao").asString)
         )
 
-        fun importAnexadasJsonArray(jsonArray: JsonArray): Map<Int, SaplEntity> {
+        fun importDeJsonArray(jsonArray: JsonArray): Map<Int, SaplEntity> {
             val mapItens:HashMap<Int, SaplEntity> = HashMap()
             jsonArray.forEach {
                 val i = it as JsonObject
                 mapItens[i.get("id").asInt] =  Anexada(
                         uid = i.get("id").asInt,
-                        materia_principal = i.get("materia_principal").asInt,
-                        materia_anexada = i.get("materia_anexada").asJsonObject.get("id").asInt,
-                        data_anexacao = Converters.df.parse(it.get("data_anexacao").asString),
-                        data_desanexacao = if (i.get("data_desanexacao").isJsonNull) null else Converters.dtf.parse(i.get("data_desanexacao").asString))
-
-            }
-            return mapItens
-        }
-        fun importPrincipaisDeJsonArray(jsonArray: JsonArray): Map<Int, SaplEntity> {
-            val mapItens:HashMap<Int, SaplEntity> = HashMap()
-            jsonArray.forEach {
-                val i = it as JsonObject
-                mapItens[i.get("id").asInt] =  Anexada(
-                        uid = i.get("id").asInt,
-                        materia_principal = i.get("materia_principal").asJsonObject.get("id").asInt,
-                        materia_anexada = i.get("materia_anexada").asJsonObject.get("id").asInt,
+                        materia_principal = if (i.get("materia_principal").isJsonObject) i.get("materia_principal").asJsonObject.get("id").asInt else i.get("materia_principal").asInt,
+                        materia_anexada = if (i.get("materia_anexada").isJsonObject) i.get("materia_anexada").asJsonObject.get("id").asInt else i.get("materia_anexada").asInt,
                         data_anexacao = Converters.df.parse(it.get("data_anexacao").asString),
                         data_desanexacao = if (i.get("data_desanexacao").isJsonNull) null else Converters.dtf.parse(i.get("data_desanexacao").asString))
 

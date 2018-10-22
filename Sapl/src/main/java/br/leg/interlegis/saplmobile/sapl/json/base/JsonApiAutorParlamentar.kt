@@ -9,6 +9,7 @@ import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.json.SaplApiRestResponse
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
 import br.leg.interlegis.saplmobile.sapl.support.Utils
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
@@ -28,8 +29,8 @@ class JsonApiAutorParlamentar(context:Context, retrofit: Retrofit): JsonApiBaseA
 
         val listAutor = ArrayList<Autor>()
 
-        (result["list"] as ArrayList<JsonObject>).forEach {
-            listAutor.add(Autor.importJsonObject(it))
+        (result["list"] as JsonArray).forEach {
+            listAutor.add(Autor.importJsonObject(it.asJsonObject))
         }
 
         val dao = AppDataBase.getInstance(context).DaoAutor()

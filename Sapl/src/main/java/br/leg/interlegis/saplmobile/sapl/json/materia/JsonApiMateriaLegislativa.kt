@@ -2,11 +2,14 @@ package br.leg.interlegis.saplmobile.sapl.json.materia
 
 import android.content.Context
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
+import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntity
+import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityCompanion
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Anexada
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.support.Utils
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
@@ -32,52 +35,26 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
 
         val mapAnexada:HashMap<Int, Anexada> = HashMap()
 
-        (result["list"] as ArrayList<JsonObject>).forEach {
-            // Importar matéria
-            val mat = MateriaLegislativa.importJsonObject(it)
+        fun syncMateria(obj: JsonObject) {
+            val mat = MateriaLegislativa.importJsonObject(obj)
             mapMaterias[mat.uid] = mat
+            mapAutores.putAll(Autor.importJsonArray(obj.get("autores").asJsonArray) as HashMap<Int, Autor>)
+        }
 
-            // Importar Autores -
-            // TODO: criar entity Autoria e associar autores às materias.
+        (result["list"] as JsonArray).forEach array@{ itMat ->
 
-            mapAutores.putAll(Autor.importJsonArray(it.get("autores").asJsonArray) as HashMap<Int, Autor>)
+            syncMateria(itMat.asJsonObject)
 
-            // Importar referencias entre matérias sendo "val mat" a principal
-            mapAnexada.putAll(Anexada.importAnexadasJsonArray(it.get("anexadas").asJsonArray) as HashMap<Int, Anexada>)
+            arrayOf("anexadas" to "materia_anexada", "anexo_de" to "materia_principal").forEach {
+                if (itMat.asJsonObject.has(it.first)) {
 
-            // Cataloga as matérias anexadas para já adicionar caso ainda não tenha cido inserida no DB
-            it.get("anexadas").asJsonArray.forEach { itAnexadaElement ->
-                var itMatAnexada = itAnexadaElement as JsonObject
+                    mapAnexada.putAll(Anexada.importDeJsonArray(itMat.asJsonObject.get(it.first).asJsonArray) as HashMap<Int, Anexada>)
+                    itMat.asJsonObject.getAsJsonArray(it.first).forEach { itAnexadas ->
+                        syncMateria(itAnexadas.asJsonObject.getAsJsonObject(it.second))
+                    }
 
-                val matAnexada = MateriaLegislativa.importJsonObject(
-                        itMatAnexada.get("materia_anexada").asJsonObject)
-                mapMaterias[matAnexada.uid] = matAnexada
-
-                // das matérias anexadas, mapear os autores
-                // TODO: associar autores às suas matérias Anexadas
-                val autoresMatAnexada:HashMap<Int, Autor> = HashMap()
-                autoresMatAnexada.putAll(Autor.importJsonArray(itMatAnexada.get("materia_anexada").asJsonObject.get("autores").asJsonArray) as HashMap<Int, Autor>)
-
-                mapAutores.putAll(autoresMatAnexada)
+                }
             }
-
-            // Importar referencias entre matérias sendo "val mat" a secundaria
-            // TODO: buscar meio de isolar o processamento de uma matéria... seja ela de qual das tres fontes for
-            // listagem principal, anexadas, anexo_de
-            mapAnexada.putAll(Anexada.importPrincipaisDeJsonArray(it.get("anexo_de").asJsonArray) as HashMap<Int, Anexada>)
-
-            // Cataloga as matérias anexadoras para já adicionar caso ainda não tenha cido inserida no DB
-            it.get("anexo_de").asJsonArray.forEach { itPrincipalElement ->
-                var itMatPrincipal = itPrincipalElement as JsonObject
-
-                val matPrincipal = MateriaLegislativa.importJsonObject(
-                        itMatPrincipal.get("materia_principal").asJsonObject)
-                mapMaterias[matPrincipal.uid] = matPrincipal
-
-                // das matérias anexadas, mapear os autores
-                mapAutores.putAll(Autor.importJsonArray(itMatPrincipal.get("materia_principal").asJsonObject.get("autores").asJsonArray) as HashMap<Int, Autor>)
-            }
-
         }
 
         val db = AppDataBase.getInstance(context)
@@ -106,13 +83,6 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
             }
         }
 
-
         return mapMaterias.size
     }
-
-    fun deleteFiles( apagar: ArrayList<MateriaLegislativa>) {
-
-    }
-
-
 }

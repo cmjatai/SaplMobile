@@ -8,6 +8,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.json.SaplApiRestResponse
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
@@ -26,8 +27,8 @@ class JsonApiSessaoPlenaria(context:Context, retrofit: Retrofit): JsonApiBaseAbs
 
         val listaSessao = ArrayList<SessaoPlenaria>()
 
-        (result["list"] as ArrayList<JsonObject>).forEach {
-            listaSessao.add(SessaoPlenaria.importJsonObject(it))
+        (result["list"] as JsonArray).forEach {
+            listaSessao.add(SessaoPlenaria.importJsonObject(it.asJsonObject))
         }
 
         val dao = AppDataBase.getInstance(context).DaoSessaoPlenaria()
