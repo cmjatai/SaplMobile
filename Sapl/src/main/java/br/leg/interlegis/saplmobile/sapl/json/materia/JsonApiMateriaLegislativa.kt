@@ -6,6 +6,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntity
 import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityCompanion
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Anexada
+import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.support.Utils
@@ -30,15 +31,17 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
         val result = super.get(kwargs)
 
         val mapMaterias:HashMap<Int, MateriaLegislativa> = HashMap()
+        val mapAnexada:HashMap<Int, Anexada> = HashMap()
 
         val mapAutores:HashMap<Int, Autor> = HashMap()
-
-        val mapAnexada:HashMap<Int, Anexada> = HashMap()
+        val mapAutoria:HashMap<Int, Autoria> = HashMap()
 
         fun syncMateria(obj: JsonObject) {
             val mat = MateriaLegislativa.importJsonObject(obj)
             mapMaterias[mat.uid] = mat
-            mapAutores.putAll(Autor.importJsonArray(obj.get("autores").asJsonArray) as HashMap<Int, Autor>)
+
+            mapAutores.putAll(Autor.importJsonArray(obj.get("autoria").asJsonArray, foreignKey = "autor") as HashMap<Int, Autor>)
+            mapAutoria.putAll(Autoria.importJsonArray(obj.get("autoria").asJsonArray) as HashMap<Int, Autoria>)
         }
 
         (result["list"] as JsonArray).forEach array@{ itMat ->
@@ -62,12 +65,15 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
         val daoMateria = db.DaoMateriaLegislativa()
         val daoAnexada = db.DaoAnexada()
         val daoAutor = db.DaoAutor()
+        val daoAutoria = db.DaoAutoria()
 
         val apagar = daoMateria.loadAllByIds(result["deleted"] as IntArray)
 
         daoMateria.insertAll(ArrayList<MateriaLegislativa>(mapMaterias.values))
         daoAnexada.insertAll(ArrayList<Anexada>(mapAnexada.values))
+
         daoAutor.insertAll(ArrayList<Autor>(mapAutores.values))
+        daoAutoria.insertAll(ArrayList<Autoria>(mapAutoria.values))
 
         daoMateria.delete(apagar)
 

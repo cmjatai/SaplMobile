@@ -23,7 +23,10 @@ import java.util.*
                 )
         ),
         indices = arrayOf(
-                Index(value= arrayOf("materia_principal", "materia_anexada"), unique = true))
+                Index(value= arrayOf("materia_principal")),
+                Index(value= arrayOf("materia_anexada")),
+                Index(value= arrayOf("materia_principal", "materia_anexada"), unique = true)
+                )
 )
 class Anexada constructor(uid: Int,
                           materia_principal: Int,

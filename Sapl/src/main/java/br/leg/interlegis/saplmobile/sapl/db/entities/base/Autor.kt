@@ -6,6 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import br.leg.interlegis.saplmobile.sapl.db.Converters
 import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntity
 import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityCompanion
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import java.io.Serializable
 import java.util.*
@@ -35,6 +36,15 @@ class Autor constructor(uid: Int,
             nome = i.get("nome").asString,
             fotografia = i.get("fotografia").asString,
             file_date_updated = if (i.get("file_date_updated").isJsonNull) null else Converters.dtf.parse(i.get("file_date_updated").asString))
+
+        fun importJsonArrayFromAutoria(jsonArray: JsonArray): Map<Int, SaplEntity>  {
+            val mapItens:HashMap<Int, SaplEntity> = HashMap()
+            jsonArray.forEach {
+                val i = it as JsonObject
+                mapItens[it.get("id").asInt] = this.importJsonObject(i.get("autor").asJsonObject)
+            }
+            return mapItens
+        }
     }
 }
 

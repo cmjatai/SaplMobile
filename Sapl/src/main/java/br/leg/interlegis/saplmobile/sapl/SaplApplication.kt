@@ -42,12 +42,11 @@ class SaplApplication : Application() {
             val db = AppDataBase.getInstance(context = this@SaplApplication)
 
             if (DEBUG) {
-                db.DaoAutor().delete(db.DaoAutor().all_direct)
-                db.DaoMateriaLegislativa().delete(db.DaoMateriaLegislativa().all_direct)
+                db.DaoAutor().delete(db.DaoAutor().all_direct) // Apaga Autoria em Cascata
+                db.DaoMateriaLegislativa().delete(db.DaoMateriaLegislativa().all_direct) // Apaga Anexada em Cascata
                 db.DaoSessaoPlenaria().delete(db.DaoSessaoPlenaria().all_direct)
                 db.DaoTimeRefresh().delete(db.DaoTimeRefresh().all)
             }
-
 
             daoSessaoPlenaria = db.DaoSessaoPlenaria()
             sessoesPlenarias = daoSessaoPlenaria?.all
