@@ -37,6 +37,9 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
             val mat = MateriaLegislativa.importJsonObject(it)
             mapMaterias[mat.uid] = mat
 
+            // Importar Autores -
+            // TODO: criar entity Autoria e associar autores às materias.
+
             mapAutores.putAll(Autor.importJsonArray(it.get("autores").asJsonArray) as HashMap<Int, Autor>)
 
             // Importar referencias entre matérias sendo "val mat" a principal
@@ -48,10 +51,10 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
 
                 val matAnexada = MateriaLegislativa.importJsonObject(
                         itMatAnexada.get("materia_anexada").asJsonObject)
-                mapMaterias[matAnexada.uid] = mat
-
+                mapMaterias[matAnexada.uid] = matAnexada
 
                 // das matérias anexadas, mapear os autores
+                // TODO: associar autores às suas matérias Anexadas
                 val autoresMatAnexada:HashMap<Int, Autor> = HashMap()
                 autoresMatAnexada.putAll(Autor.importJsonArray(itMatAnexada.get("materia_anexada").asJsonObject.get("autores").asJsonArray) as HashMap<Int, Autor>)
 
@@ -59,15 +62,17 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
             }
 
             // Importar referencias entre matérias sendo "val mat" a secundaria
+            // TODO: buscar meio de isolar o processamento de uma matéria... seja ela de qual das tres fontes for
+            // listagem principal, anexadas, anexo_de
             mapAnexada.putAll(Anexada.importPrincipaisDeJsonArray(it.get("anexo_de").asJsonArray) as HashMap<Int, Anexada>)
 
             // Cataloga as matérias anexadoras para já adicionar caso ainda não tenha cido inserida no DB
             it.get("anexo_de").asJsonArray.forEach { itPrincipalElement ->
                 var itMatPrincipal = itPrincipalElement as JsonObject
 
-                val matAnexada = MateriaLegislativa.importJsonObject(
+                val matPrincipal = MateriaLegislativa.importJsonObject(
                         itMatPrincipal.get("materia_principal").asJsonObject)
-                mapMaterias[matAnexada.uid] = mat
+                mapMaterias[matPrincipal.uid] = matPrincipal
 
                 // das matérias anexadas, mapear os autores
                 mapAutores.putAll(Autor.importJsonArray(itMatPrincipal.get("materia_principal").asJsonObject.get("autores").asJsonArray) as HashMap<Int, Autor>)
