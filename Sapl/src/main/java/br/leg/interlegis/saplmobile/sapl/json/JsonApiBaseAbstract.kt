@@ -11,6 +11,7 @@ import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import retrofit2.Response
 import retrofit2.Retrofit
 import java.util.*
 import kotlin.collections.ArrayList
@@ -35,24 +36,39 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApi
         }
 
         val call = servico?.api(
-            url = url,
-            format = "json",
-            page = if (old_response == null) 1 else old_response.pagination!!.next_page!!,
-            tipo_update = tipo_update,
-            // Tipo sync = filtro com base nas datas de alteração
-            // Tipo get = filtro com base nas datas da sessão plenária
-            // Tipo last_items = uma pagina só com os ultimos dados da listagem
-            // Tipo first_items = uma página só com os primeiros dados da listagem
-            // Tipo get_initial = uma página com os últimos dados do servidor
-            data_min = dmin,
-            data_max = dmax
+                url = String.format("%s%s", url, if (kwargs.containsKey("uid")) kwargs["uid"] as String else ""),
+                format = "json",
+                page = if (old_response == null) 1 else old_response.pagination!!.next_page!!,
+                tipo_update = tipo_update,
+                // Tipo sync = filtro com base nas datas de alteração
+                // Tipo getList = filtro com base nas datas da sessão plenária
+                // Tipo last_items = uma pagina só com os ultimos dados da listagem
+                // Tipo first_items = uma página só com os primeiros dados da listagem
+                // Tipo get_initial = uma página com os últimos dados do servidor
+                data_min = dmin,
+                data_max = dmax
         )
 
         return call?.execute()!!.body()!!
     }
 
+    fun callUid(uid: Int): JsonObject? {
 
-    override fun get(kwargs:Map<String, Any>): HashMap<String, Any> {
+        val call = servico?.uid(
+                url = String.format("%s%s/", url, uid),
+                format = "json")
+
+
+        val response = call?.execute()!!.body()!!
+        return response
+    }
+
+
+    override fun getObject(uid: Int): JsonObject {
+        servico = retrofit.create(SaplRetrofitService::class.java)
+        return callUid(uid) as JsonObject
+    }
+    override fun getList(kwargs:Map<String, Any>): HashMap<String, Any> {
         servico = retrofit.create(SaplRetrofitService::class.java)
 
         val result = HashMap<String, Any>()

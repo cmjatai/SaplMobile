@@ -2,8 +2,6 @@ package br.leg.interlegis.saplmobile.sapl.json.materia
 
 import android.content.Context
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
-import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntity
-import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityCompanion
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Anexada
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
@@ -28,7 +26,11 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
     }
 
     override fun sync(kwargs:Map<String, Any>): Int {
-        val result = super.get(kwargs)
+        val result = super.getList(kwargs)
+        return syncList(result["list"], result["deleted"] as IntArray)
+    }
+
+    fun syncList(list:Any?, deleted: IntArray? = null): Int {
 
         val mapMaterias:HashMap<Int, MateriaLegislativa> = HashMap()
         val mapAnexada:HashMap<Int, Anexada> = HashMap()
@@ -44,7 +46,7 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
             mapAutoria.putAll(Autoria.importJsonArray(obj.get("autoria").asJsonArray) as HashMap<Int, Autoria>)
         }
 
-        (result["list"] as JsonArray).forEach array@{ itMat ->
+        (list as JsonArray).forEach array@{ itMat ->
 
             syncMateria(itMat.asJsonObject)
 
@@ -55,7 +57,6 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
                     itMat.asJsonObject.getAsJsonArray(it.first).forEach { itAnexadas ->
                         syncMateria(itAnexadas.asJsonObject.getAsJsonObject(it.second))
                     }
-
                 }
             }
         }
@@ -67,7 +68,6 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
         val daoAutor = db.DaoAutor()
         val daoAutoria = db.DaoAutoria()
 
-        val apagar = daoMateria.loadAllByIds(result["deleted"] as IntArray)
 
         daoMateria.insertAll(ArrayList<MateriaLegislativa>(mapMaterias.values))
         daoAnexada.insertAll(ArrayList<Anexada>(mapAnexada.values))
@@ -75,7 +75,9 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
         daoAutor.insertAll(ArrayList<Autor>(mapAutores.values))
         daoAutoria.insertAll(ArrayList<Autoria>(mapAutoria.values))
 
-        daoMateria.delete(apagar)
+        if (deleted != null) {
+            daoMateria.delete( daoMateria.loadAllByIds(deleted))
+        }
 
         doAsync {
             mapAutores.forEach {

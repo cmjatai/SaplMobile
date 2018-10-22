@@ -8,6 +8,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.TimeRefresh
 import br.leg.interlegis.saplmobile.sapl.json.base.JsonApiAutorParlamentar
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.TimeRefreshRetrofitService
+import br.leg.interlegis.saplmobile.sapl.json.materia.JsonApiAutoria
 import br.leg.interlegis.saplmobile.sapl.json.materia.JsonApiMateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.sessao.JsonApiSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
@@ -29,10 +30,11 @@ class JsonApi(_context: Context) {
             .build()
 
     val modules = arrayListOf(
-            JsonApiMateriaLegislativa.chave to arrayListOf(JsonApiMateriaLegislativa(context, retrofit) as JsonApiInterface),
-            JsonApiSessaoPlenaria.chave to arrayListOf(JsonApiSessaoPlenaria(context, retrofit) as JsonApiInterface),
-            JsonApiAutorParlamentar.chave to arrayListOf(JsonApiAutorParlamentar(context, retrofit) as JsonApiInterface)
-    )
+            JsonApiMateriaLegislativa.chave to arrayListOf(JsonApiMateriaLegislativa(context, retrofit) as JsonApiInterface to arrayOf<String>()),
+            JsonApiSessaoPlenaria.chave to arrayListOf(JsonApiSessaoPlenaria(context, retrofit) as JsonApiInterface to arrayOf<String>()),
+            JsonApiAutorParlamentar.chave to arrayListOf(JsonApiAutorParlamentar(context, retrofit) as JsonApiInterface to arrayOf<String>()),
+            JsonApiAutoria.chave to arrayListOf(JsonApiAutoria(context, retrofit) as JsonApiInterface to arrayOf("sync"))
+            )
 
     var maximoGlobal: TimeRefresh? = null
 
@@ -100,7 +102,7 @@ class JsonApi(_context: Context) {
 
     }
 
-    fun get_sessao_sessao_plenaria(dataInicio:Date? = null, dataFim: Date? = null, tipoUpdate:String = "get"){
+    fun get_sessao_sessao_plenaria(dataInicio:Date? = null, dataFim: Date? = null, tipoUpdate:String = "getList"){
         val kwargs = HashMap<String, Any>()
         kwargs["tipo_update"] = tipoUpdate
         if (dataInicio != null)
@@ -112,7 +114,7 @@ class JsonApi(_context: Context) {
         modules.forEach {
             if (it.first == JsonApiSessaoPlenaria.chave)
                 it.second.forEach {itApi ->
-                    itApi.sync(kwargs)
+                    itApi.first.sync(kwargs)
                 }
         }
 
@@ -120,11 +122,18 @@ class JsonApi(_context: Context) {
 
     fun sync(sync_modules:  ArrayList<Pair<String, HashMap<String, Any>>> ) {
         for (module in sync_modules) {
+
             modules.forEach {
-                if (it.first == module.first)
+                if (it.first.equals(module.first)) {
                     it.second.forEach{itApi ->
-                        itApi.sync(module.second)
+
+                        if (itApi.second.isEmpty() || module.second["tipo_update"] in itApi.second) {
+                            itApi.first.sync(module.second)
+                            Log.d("SAPL", String.format("Sincronizando: %s", module.first))
+
+                        }
                     }
+                }
             }
         }
     }

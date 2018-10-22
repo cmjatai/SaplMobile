@@ -55,12 +55,12 @@ class Utils {
                         var cal = Calendar.getInstance()
                         cal.timeInMillis = file.lastModified() - tzLocal.rawOffset
                         if (data.before(cal.time)) {
-                            Log.d("SAPL", "Não precisa baixar")
+                            //Log.d("SAPL", "Não precisa baixar")
                             return
                         }
                     }
                     else {
-                        Log.d("SAPL", "Precisa baixar")
+                        //Log.d("SAPL", "Precisa baixar")
                     }
                 }
 
