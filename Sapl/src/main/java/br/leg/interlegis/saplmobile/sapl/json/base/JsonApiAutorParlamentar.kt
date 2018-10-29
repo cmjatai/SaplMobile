@@ -31,6 +31,8 @@ class JsonApiAutorParlamentar(context:Context, retrofit: Retrofit): JsonApiBaseA
         val dao = AppDataBase.getInstance(context).DaoAutor()
         val apagar = dao.loadAllByIds(result["deleted"] as IntArray)
         dao.insertAll(listAutor)
+
+        Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("fotografia"))
         dao.delete(apagar)
 
         doAsync {

@@ -42,7 +42,6 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
             val mat = MateriaLegislativa.importJsonObject(obj)
             mapMaterias[mat.uid] = mat
 
-
             mapAutores.putAll(Autor.importJsonArray(obj.get("autoria").asJsonArray, foreignKey = "autor") as HashMap<Int, Autor>)
             mapAutoria.putAll(Autoria.importJsonArray(obj.get("autoria").asJsonArray) as HashMap<Int, Autoria>)
         }
@@ -68,7 +67,6 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
         val daoAnexada = db.DaoAnexada()
         val daoAutor = db.DaoAutor()
         val daoAutoria = db.DaoAutoria()
-
 
         daoMateria.insertAll(ArrayList<MateriaLegislativa>(mapMaterias.values))
         daoAnexada.insertAll(ArrayList<Anexada>(mapAnexada.values))
