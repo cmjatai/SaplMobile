@@ -36,7 +36,7 @@ class JsonApiAutorParlamentar(context:Context, retrofit: Retrofit): JsonApiBaseA
         doAsync {
             listAutor.forEach {
                 if (it.fotografia.isNotEmpty())
-                    Utils.DownloadAndWriteFiles.run(context, servico, it.fotografia, it.file_date_updated)
+                    Utils.ManageFiles.download(context, servico, it.fotografia, it.file_date_updated)
             }
         }
 

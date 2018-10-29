@@ -5,11 +5,9 @@ import android.database.sqlite.SQLiteConstraintException
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
-import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.support.Utils
 import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
@@ -40,7 +38,7 @@ class JsonApiAutoria(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(c
         doAsync {
             mapAutores.forEach {entry ->
                 if (entry.value.fotografia.isNotEmpty())
-                    Utils.DownloadAndWriteFiles.run(context, servico, entry.value.fotografia, entry.value.file_date_updated)
+                    Utils.ManageFiles.download(context, servico, entry.value.fotografia, entry.value.file_date_updated)
             }
         }
 

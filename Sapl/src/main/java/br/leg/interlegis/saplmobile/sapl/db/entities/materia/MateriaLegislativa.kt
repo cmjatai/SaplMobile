@@ -1,10 +1,13 @@
 package br.leg.interlegis.saplmobile.sapl.db.entities.materia
 
 import android.arch.persistence.room.*
+import android.content.Context
 import br.leg.interlegis.saplmobile.sapl.db.Converters
 import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntity
 import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityCompanion
+import br.leg.interlegis.saplmobile.sapl.support.Utils
 import com.google.gson.JsonObject
+import java.io.File
 import java.io.Serializable
 import java.util.*
 
@@ -54,6 +57,8 @@ class MateriaLegislativa constructor(uid: Int,
                 texto_original = it.get("texto_original").asString,
                 file_date_updated = if (it.get("file_date_updated").isJsonNull) null else Converters.dtf.parse(it.get("file_date_updated").asString)
         )
+
     }
+
 }
 

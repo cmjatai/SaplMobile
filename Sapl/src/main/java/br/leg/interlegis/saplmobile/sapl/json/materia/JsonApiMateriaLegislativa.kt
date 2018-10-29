@@ -42,6 +42,7 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
             val mat = MateriaLegislativa.importJsonObject(obj)
             mapMaterias[mat.uid] = mat
 
+
             mapAutores.putAll(Autor.importJsonArray(obj.get("autoria").asJsonArray, foreignKey = "autor") as HashMap<Int, Autor>)
             mapAutoria.putAll(Autoria.importJsonArray(obj.get("autoria").asJsonArray) as HashMap<Int, Autoria>)
         }
@@ -75,19 +76,21 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
         daoAutor.insertAll(ArrayList<Autor>(mapAutores.values))
         daoAutoria.insertAll(ArrayList<Autoria>(mapAutoria.values))
 
-        if (deleted != null) {
-            daoMateria.delete( daoMateria.loadAllByIds(deleted) )
+        if (deleted != null && deleted.isNotEmpty()) {
+            val apagar = daoMateria.loadAllByIds(deleted)
+            Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("texto_original"))
+            daoMateria.delete( apagar )
         }
 
         doAsync {
             mapAutores.forEach {
                 if (it.value.fotografia.isNotEmpty())
-                    Utils.DownloadAndWriteFiles.run(context, servico, it.value.fotografia, it.value.file_date_updated)
+                    Utils.ManageFiles.download(context, servico, it.value.fotografia, it.value.file_date_updated)
             }
 
             mapMaterias.forEach {
                 if (it.value.texto_original.isNotEmpty())
-                    Utils.DownloadAndWriteFiles.run(context, servico, it.value.texto_original, it.value.file_date_updated)
+                    Utils.ManageFiles.download(context, servico, it.value.texto_original, it.value.file_date_updated)
             }
         }
 

@@ -3,6 +3,7 @@ package br.leg.interlegis.saplmobile.sapl.support
 import android.content.Context
 import android.os.Environment
 import android.os.Environment.MEDIA_MOUNTED
+import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntity
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
 import okhttp3.ResponseBody
 import org.jetbrains.anko.doAsync
@@ -12,6 +13,8 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.reflect.full.declaredMemberProperties
 
 
 class Utils {
@@ -27,11 +30,48 @@ class Utils {
     }
 
 
-    class DownloadAndWriteFiles {
+    class ManageFiles {
 
         companion object {
 
-            fun run(context: Context?, servico: SaplRetrofitService?, relativeUrl: String, data:Date?, async: Boolean = false) {
+            fun deleteFile(context: Context, entities: List<SaplEntity>, attrs: ArrayList<String>) {
+                val fileDir = context?.filesDir
+
+                entities.forEach {
+
+                    val clazz = it.javaClass.kotlin
+                    clazz.declaredMemberProperties.forEach { itAttr ->
+
+                        attrs.forEach {attr ->
+                            if (itAttr.name.equals(attr)) {
+                                val pathname =  Utils.pathname(fileDir!!.absolutePath, itAttr.get(it).toString())
+                                val fileBase = File(pathname)
+
+                                fun delete(file: File) {
+                                    val fileDir = file.parentFile
+                                    file.delete()
+
+                                    val lista = fileDir.listFiles()
+
+                                    if (lista.isEmpty())
+                                        delete(fileDir)
+                                }
+
+                                if (fileBase.exists()) {
+                                    delete(fileBase)
+                                }
+
+                            }
+
+                        }
+                    }
+
+
+                }
+
+            }
+
+            fun download(context: Context?, servico: SaplRetrofitService?, relativeUrl: String, data:Date?, async: Boolean = false) {
 
                 if (!async)
                     _run(context, servico, relativeUrl, data)
