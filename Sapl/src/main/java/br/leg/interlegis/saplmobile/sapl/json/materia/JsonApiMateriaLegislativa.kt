@@ -76,7 +76,7 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
         daoAutoria.insertAll(ArrayList<Autoria>(mapAutoria.values))
 
         if (deleted != null) {
-            daoMateria.delete( daoMateria.loadAllByIds(deleted))
+            daoMateria.delete( daoMateria.loadAllByIds(deleted) )
         }
 
         doAsync {

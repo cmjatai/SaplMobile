@@ -43,20 +43,24 @@ class JsonApiAutoria(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(c
                     Utils.DownloadAndWriteFiles.run(context, servico, entry.value.fotografia, entry.value.file_date_updated)
             }
         }
+
+
         try {
             daoAutoria.insertAll(ArrayList<Autoria>(mapAutoria.values))
         }
         catch (e: SQLiteConstraintException) {
-
             val lista = JsonArray()
-
             val jsonApiMateriaLegislativa = JsonApiMateriaLegislativa(context, retrofit)
-            mapAutoria.forEach {
-                lista.add(jsonApiMateriaLegislativa.getObject(it.value.materia))
+            mapAutoria.values.forEach {
+                try {
+                    daoAutoria.insert(it)
+                }
+                catch (e: SQLiteConstraintException) {
+                    lista.add(jsonApiMateriaLegislativa.getObject(it.materia))
+                }
             }
             jsonApiMateriaLegislativa.syncList(lista)
-
-
+            daoAutoria.insertAll(ArrayList<Autoria>(mapAutoria.values))
         }
         return mapAutoria.size
     }
