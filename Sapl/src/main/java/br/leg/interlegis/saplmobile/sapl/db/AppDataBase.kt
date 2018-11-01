@@ -9,16 +9,10 @@ import br.leg.interlegis.saplmobile.sapl.db.daos.base.DaoAutor
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoChaveValor
 import br.leg.interlegis.saplmobile.sapl.db.daos.sessao.DaoSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoTimeRefresh
-import br.leg.interlegis.saplmobile.sapl.db.daos.materia.DaoAnexada
-import br.leg.interlegis.saplmobile.sapl.db.daos.materia.DaoAutoria
-import br.leg.interlegis.saplmobile.sapl.db.daos.materia.DaoDocumentoAcessorio
-import br.leg.interlegis.saplmobile.sapl.db.daos.materia.DaoMateriaLegislativa
+import br.leg.interlegis.saplmobile.sapl.db.daos.materia.*
 import br.leg.interlegis.saplmobile.sapl.db.entities.*
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
-import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Anexada
-import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
-import br.leg.interlegis.saplmobile.sapl.db.entities.materia.DocumentoAcessorio
-import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
+import br.leg.interlegis.saplmobile.sapl.db.entities.materia.*
 import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 
 @Database(entities = [
@@ -29,7 +23,8 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
     (MateriaLegislativa::class),
     (Anexada::class),
     (Autoria::class),
-    (DocumentoAcessorio::class)
+    (DocumentoAcessorio::class),
+    (Tramitacao::class)
 ], version = 63, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
@@ -42,6 +37,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun DaoTimeRefresh(): DaoTimeRefresh
     abstract fun DaoMateriaLegislativa(): DaoMateriaLegislativa
     abstract fun DaoDocumentoAcessorio(): DaoDocumentoAcessorio
+    abstract fun DaoTramitacao(): DaoTramitacao
 
     companion object {
         private var sInstance: AppDataBase? = null
