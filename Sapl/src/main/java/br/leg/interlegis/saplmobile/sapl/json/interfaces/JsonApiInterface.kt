@@ -11,4 +11,5 @@ interface JsonApiInterface{
     fun getObject(uid: Int): JsonObject
     fun getList(kwargs:Map<String, Any>): HashMap<String, Any>
     fun sync(kwargs:Map<String, Any>): Int
+    fun syncList(list:Any?, deleted: IntArray? = null): Int
 }

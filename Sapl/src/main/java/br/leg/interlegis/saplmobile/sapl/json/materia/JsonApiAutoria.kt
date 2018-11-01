@@ -21,16 +21,15 @@ class JsonApiAutoria(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(c
     }
 
 
-    override fun sync(kwargs:Map<String, Any>): Int {
-        val result = super.getList(kwargs)
+    override fun syncList(list:Any?, deleted: IntArray?): Int {
 
-        val mapAutores = Autor.importJsonArray(result["list"] as JsonArray, foreignKey = "autor") as HashMap<Int, Autor>
+        val mapAutores = Autor.importJsonArray(list as JsonArray, foreignKey = "autor") as HashMap<Int, Autor>
 
-        val mapAutoria = Autoria.importJsonArray(result["list"] as JsonArray) as Map<Int, Autoria>
+        val mapAutoria = Autoria.importJsonArray(list) as Map<Int, Autoria>
 
         val daoAutor = AppDataBase.getInstance(context).DaoAutor()
         val daoAutoria = AppDataBase.getInstance(context).DaoAutoria()
-        val apagar = daoAutoria.loadAllByIds(result["deleted"] as IntArray)
+        val apagar = daoAutoria.loadAllByIds(deleted as IntArray)
 
         daoAutor.insertAll(ArrayList<Autor>(mapAutores.values))
         daoAutoria.delete(apagar)

@@ -29,8 +29,8 @@ class DocumentoAcessorio constructor(uid: Int,
                                      arquivo: String,
                                      autor: String,
                                      ementa: String,
-                                     indexacao: String): Serializable, SaplEntity {
-
+                                     indexacao: String,
+                                     file_date_updated: Date? = null): Serializable, SaplEntity {
 
     @PrimaryKey
     var uid: Int = uid
@@ -42,6 +42,7 @@ class DocumentoAcessorio constructor(uid: Int,
     var autor: String = autor
     var ementa: String = ementa
     var indexacao: String  = indexacao
+    var file_date_updated: Date? = file_date_updated
 
     companion object: SaplEntityCompanion() {
 
@@ -60,9 +61,10 @@ class DocumentoAcessorio constructor(uid: Int,
                 arquivo = it.get("arquivo").asString,
                 autor = it.get("autor").asString,
                 ementa = it.get("ementa").asString,
-                indexacao = it.get("indexacao").asString
+                indexacao = it.get("indexacao").asString,
+                file_date_updated = if (it.get("file_date_updated").isJsonNull) null else Converters.dtf.parse(it.get("file_date_updated").asString)
         )
-
+/*
         fun importDeJsonArray(jsonArray: JsonArray): Map<Int, SaplEntity> {
             val mapItens:HashMap<Int, SaplEntity> = HashMap()
             jsonArray.forEach {
@@ -76,11 +78,12 @@ class DocumentoAcessorio constructor(uid: Int,
                         arquivo = i.get("arquivo").asString,
                         autor = i.get("autor").asString,
                         ementa = i.get("ementa").asString,
-                        indexacao = i.get("indexacao").asString)
-
+                        indexacao = i.get("indexacao").asString,
+                        file_date_updated = if (it.get("file_date_updated").isJsonNull) null else Converters.dtf.parse(it.get("file_date_updated").asString)
+                )
             }
             return mapItens
-        }
+        }*/
 
     }
 }

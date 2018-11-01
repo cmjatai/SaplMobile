@@ -142,7 +142,7 @@ class Utils {
 
                             fileSizeDownloaded += read.toLong()
 
-                            Log.d("SAPL", "file download: $fileSizeDownloaded of $fileSize")
+                            //Log.d("SAPL", "file download: $fileSizeDownloaded of $fileSize")
                         }
 
                         outputStream!!.flush()

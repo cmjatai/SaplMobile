@@ -24,15 +24,14 @@ class JsonApiAnexada(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(c
     }
 
 
-    override fun sync(kwargs:Map<String, Any>): Int {
-        val result = super.getList(kwargs)
+    override fun syncList(list: Any?, deleted: IntArray?): Int {
 
         val listaMaterias = JsonArray()
 
-        val mapAnexada = Anexada.importJsonArray(result["list"] as JsonArray) as Map<Int, Anexada>
+        val mapAnexada = Anexada.importJsonArray(list as JsonArray) as Map<Int, Anexada>
 
         val daoAnexada = AppDataBase.getInstance(context).DaoAnexada()
-        val apagar = daoAnexada.loadAllByIds(result["deleted"] as IntArray)
+        val apagar = daoAnexada.loadAllByIds(deleted as IntArray)
 
         daoAnexada.delete(apagar)
 

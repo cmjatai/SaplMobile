@@ -9,6 +9,8 @@ import retrofit2.Retrofit
 import kotlin.collections.ArrayList
 
 class JsonApiSessaoPlenaria(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
+
+
     override val url = String.format("api/mobile/%s/%s/", SessaoPlenaria.APP_LABEL, SessaoPlenaria.TABLE_NAME)
 
     companion object {
@@ -17,17 +19,15 @@ class JsonApiSessaoPlenaria(context:Context, retrofit: Retrofit): JsonApiBaseAbs
     }
 
 
-    override fun sync(kwargs:Map<String, Any>): Int {
-        val result = super.getList(kwargs)
-
+    override fun syncList(list: Any?, deleted: IntArray?): Int {
         val listaSessao = ArrayList<SessaoPlenaria>()
 
-        (result["list"] as JsonArray).forEach {
+        (list as JsonArray).forEach {
             listaSessao.add(SessaoPlenaria.importJsonObject(it.asJsonObject))
         }
 
         val dao = AppDataBase.getInstance(context).DaoSessaoPlenaria()
-        val apagar = dao.loadAllByIds(result["deleted"] as IntArray)
+        val apagar = dao.loadAllByIds(deleted as IntArray)
         dao.insertAll(listaSessao)
         dao.delete(apagar)
 

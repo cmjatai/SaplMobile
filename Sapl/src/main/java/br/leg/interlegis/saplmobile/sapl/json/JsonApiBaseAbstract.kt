@@ -25,6 +25,7 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApi
     var retrofit: Retrofit = retrofit
     var servico: SaplRetrofitService? = null
 
+
     fun call(old_response: SaplApiRestResponse?, kwargs:Map<String, Any>): SaplApiRestResponse {
 
         var dmin = if (kwargs["data_inicio"] is Date) Converters.dtf.format(kwargs["data_inicio"] as Date) else null
@@ -63,11 +64,17 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApi
         return response
     }
 
+    override fun sync(kwargs:Map<String, Any>): Int {
+        val result = getList(kwargs)
+        return syncList(result["list"], result["deleted"] as IntArray)
+    }
+
 
     override fun getObject(uid: Int): JsonObject {
         servico = retrofit.create(SaplRetrofitService::class.java)
         return callUid(uid) as JsonObject
     }
+
     override fun getList(kwargs:Map<String, Any>): HashMap<String, Any> {
         servico = retrofit.create(SaplRetrofitService::class.java)
 

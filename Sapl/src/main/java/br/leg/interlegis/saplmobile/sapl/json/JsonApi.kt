@@ -10,6 +10,7 @@ import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.TimeRefreshRetrofitService
 import br.leg.interlegis.saplmobile.sapl.json.materia.JsonApiAnexada
 import br.leg.interlegis.saplmobile.sapl.json.materia.JsonApiAutoria
+import br.leg.interlegis.saplmobile.sapl.json.materia.JsonApiDocumentoAcessorio
 import br.leg.interlegis.saplmobile.sapl.json.materia.JsonApiMateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.sessao.JsonApiSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
@@ -35,7 +36,8 @@ class JsonApi(_context: Context) {
             JsonApiSessaoPlenaria.chave to arrayListOf(JsonApiSessaoPlenaria(context, retrofit) as JsonApiInterface to arrayOf<String>()),
             JsonApiAutorParlamentar.chave to arrayListOf(JsonApiAutorParlamentar(context, retrofit) as JsonApiInterface to arrayOf<String>()),
             JsonApiAutoria.chave to arrayListOf(JsonApiAutoria(context, retrofit) as JsonApiInterface to arrayOf("sync")),
-            JsonApiAnexada.chave to arrayListOf(JsonApiAnexada(context, retrofit) as JsonApiInterface to arrayOf("sync"))
+            JsonApiAnexada.chave to arrayListOf(JsonApiAnexada(context, retrofit) as JsonApiInterface to arrayOf("sync")),
+            JsonApiDocumentoAcessorio.chave to arrayListOf(JsonApiDocumentoAcessorio(context, retrofit) as JsonApiInterface to arrayOf("sync"))
             )
 
     var maximoGlobal: TimeRefresh? = null

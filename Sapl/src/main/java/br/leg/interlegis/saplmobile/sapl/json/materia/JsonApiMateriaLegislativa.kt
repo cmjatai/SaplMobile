@@ -5,6 +5,7 @@ import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Anexada
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
+import br.leg.interlegis.saplmobile.sapl.db.entities.materia.DocumentoAcessorio
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.support.Utils
@@ -18,25 +19,28 @@ import org.jetbrains.anko.doAsync
 
 class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
 
-    override val url = String.format("api/mobile/%s/%s/", MateriaLegislativa.APP_LABEL, MateriaLegislativa.TABLE_NAME)
+    val db = AppDataBase.getInstance(context)
 
+    val daoMateria = db.DaoMateriaLegislativa()
+    val daoAnexada = db.DaoAnexada()
+    val daoAutor = db.DaoAutor()
+    val daoAutoria = db.DaoAutoria()
+    val daoDoc = db.DaoDocumentoAcessorio()
+
+    override val url = String.format("api/mobile/%s/%s/", MateriaLegislativa.APP_LABEL, MateriaLegislativa.TABLE_NAME)
 
     companion object {
         val chave = String.format("%s:%s", MateriaLegislativa.APP_LABEL, MateriaLegislativa.TABLE_NAME)
     }
 
-    override fun sync(kwargs:Map<String, Any>): Int {
-        val result = super.getList(kwargs)
-        return syncList(result["list"], result["deleted"] as IntArray)
-    }
-
-    fun syncList(list:Any?, deleted: IntArray? = null): Int {
+    override fun syncList(list:Any?, deleted: IntArray?): Int {
 
         val mapMaterias:HashMap<Int, MateriaLegislativa> = HashMap()
         val mapAnexada:HashMap<Int, Anexada> = HashMap()
 
         val mapAutores:HashMap<Int, Autor> = HashMap()
         val mapAutoria:HashMap<Int, Autoria> = HashMap()
+        val mapDocs:HashMap<Int, DocumentoAcessorio> = HashMap()
 
         fun syncMateria(obj: JsonObject) {
             val mat = MateriaLegislativa.importJsonObject(obj)
@@ -44,6 +48,7 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
 
             mapAutores.putAll(Autor.importJsonArray(obj.get("autoria").asJsonArray, foreignKey = "autor") as HashMap<Int, Autor>)
             mapAutoria.putAll(Autoria.importJsonArray(obj.get("autoria").asJsonArray) as HashMap<Int, Autoria>)
+            mapDocs.putAll(DocumentoAcessorio.importJsonArray(obj.get("documentos_acessorios").asJsonArray) as HashMap<Int, DocumentoAcessorio>)
         }
 
         (list as JsonArray).forEach array@{ itMat ->
@@ -61,18 +66,13 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
             }
         }
 
-        val db = AppDataBase.getInstance(context)
-
-        val daoMateria = db.DaoMateriaLegislativa()
-        val daoAnexada = db.DaoAnexada()
-        val daoAutor = db.DaoAutor()
-        val daoAutoria = db.DaoAutoria()
-
         daoMateria.insertAll(ArrayList<MateriaLegislativa>(mapMaterias.values))
         daoAnexada.insertAll(ArrayList<Anexada>(mapAnexada.values))
 
         daoAutor.insertAll(ArrayList<Autor>(mapAutores.values))
         daoAutoria.insertAll(ArrayList<Autoria>(mapAutoria.values))
+
+        daoDoc.insertAll(ArrayList<DocumentoAcessorio>(mapDocs.values))
 
         if (deleted != null && deleted.isNotEmpty()) {
             val apagar = daoMateria.loadAllByIds(deleted)
@@ -89,6 +89,11 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
             mapMaterias.forEach {
                 if (it.value.texto_original.isNotEmpty())
                     Utils.ManageFiles.download(context, servico, it.value.texto_original, it.value.file_date_updated)
+            }
+
+            mapDocs.forEach {
+                if (it.value.arquivo.isNotEmpty())
+                    Utils.ManageFiles.download(context, servico, it.value.arquivo, it.value.file_date_updated)
             }
         }
 

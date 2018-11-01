@@ -6,6 +6,7 @@ import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Anexada
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
+import br.leg.interlegis.saplmobile.sapl.db.entities.materia.DocumentoAcessorio
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.support.Utils
@@ -15,44 +16,51 @@ import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
 
-class JsonApiAnexada(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
+class JsonApiDocumentoAcessorio(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
 
-    override val url = String.format("api/mobile/%s/%s/", Anexada.APP_LABEL, Anexada.TABLE_NAME)
+    override val url = String.format("api/mobile/%s/%s/", DocumentoAcessorio.APP_LABEL, DocumentoAcessorio.TABLE_NAME)
 
     companion object {
-        val chave = "materia:anexada"
+        val chave = "materia:documentoacessorio"
     }
 
 
-    override fun sync(kwargs:Map<String, Any>): Int {
-        val result = super.getList(kwargs)
+    override fun syncList(list:Any?, deleted: IntArray?): Int {
 
         val listaMaterias = JsonArray()
 
-        val mapAnexada = Anexada.importJsonArray(result["list"] as JsonArray) as Map<Int, Anexada>
+        val mapDocumentoAcessorio = DocumentoAcessorio.importJsonArray(
+                list as JsonArray) as Map<Int, DocumentoAcessorio>
 
-        val daoAnexada = AppDataBase.getInstance(context).DaoAnexada()
-        val apagar = daoAnexada.loadAllByIds(result["deleted"] as IntArray)
+        val daoDoc = AppDataBase.getInstance(context).DaoDocumentoAcessorio()
+        val apagar = daoDoc.loadAllByIds(deleted as IntArray)
 
-        daoAnexada.delete(apagar)
+        daoDoc.delete(apagar)
+        Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("arquivo"))
 
         try {
-            daoAnexada.insertAll(ArrayList<Anexada>(mapAnexada.values))
+            daoDoc.insertAll(ArrayList<DocumentoAcessorio>(mapDocumentoAcessorio.values))
         }
         catch (e: SQLiteConstraintException) {
 
             val jsonApiMateriaLegislativa = JsonApiMateriaLegislativa(context, retrofit)
-            mapAnexada.values.forEach {
+            mapDocumentoAcessorio.values.forEach {
 
                 try {
-                    daoAnexada.insert(it)
+                    daoDoc.insert(it)
                 }
                 catch (e: SQLiteConstraintException) {
-                    listaMaterias.add(jsonApiMateriaLegislativa.getObject(it.materia_principal))
+                    listaMaterias.add(jsonApiMateriaLegislativa.getObject(it.materia))
                 }
             }
             jsonApiMateriaLegislativa.syncList(listaMaterias)
         }
-        return mapAnexada.size
+
+        mapDocumentoAcessorio.forEach {
+            if (it.value.arquivo.isNotEmpty())
+                Utils.ManageFiles.download(context, servico, it.value.arquivo, it.value.file_date_updated)
+        }
+
+        return mapDocumentoAcessorio.size
     }
 }
