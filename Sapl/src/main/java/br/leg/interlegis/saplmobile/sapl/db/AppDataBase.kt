@@ -12,11 +12,17 @@ import br.leg.interlegis.saplmobile.sapl.db.daos.DaoTimeRefresh
 import br.leg.interlegis.saplmobile.sapl.db.daos.materia.*
 import br.leg.interlegis.saplmobile.sapl.db.daos.norma.DaoLegislacaoCitada
 import br.leg.interlegis.saplmobile.sapl.db.daos.norma.DaoNormaJuridica
+import br.leg.interlegis.saplmobile.sapl.db.daos.od.DaoExpedienteMateria
+import br.leg.interlegis.saplmobile.sapl.db.daos.od.DaoOrdemDia
+import br.leg.interlegis.saplmobile.sapl.db.daos.od.DaoRegistroVotacao
 import br.leg.interlegis.saplmobile.sapl.db.entities.*
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.*
 import br.leg.interlegis.saplmobile.sapl.db.entities.norma.LegislacaoCitada
 import br.leg.interlegis.saplmobile.sapl.db.entities.norma.NormaJuridica
+import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.ExpedienteMateria
+import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.OrdemDia
+import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.RegistroVotacao
 import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 
 @Database(entities = [
@@ -30,8 +36,11 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
     (DocumentoAcessorio::class),
     (Tramitacao::class),
     (NormaJuridica::class),
-    (LegislacaoCitada::class)
-], version = 65, exportSchema = false)
+    (LegislacaoCitada::class),
+    (ExpedienteMateria::class),
+    (OrdemDia::class),
+    (RegistroVotacao::class)
+], version = 66, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
 
@@ -46,6 +55,9 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun DaoTramitacao(): DaoTramitacao
     abstract fun DaoNormaJuridica(): DaoNormaJuridica
     abstract fun DaoLegislacaoCitada(): DaoLegislacaoCitada
+    abstract fun DaoExpedienteMateria(): DaoExpedienteMateria
+    abstract fun DaoOrdemDia(): DaoOrdemDia
+    abstract fun DaoRegistroVotacao(): DaoRegistroVotacao
 
     companion object {
         private var sInstance: AppDataBase? = null
