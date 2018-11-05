@@ -19,6 +19,6 @@ interface DaoLegislacaoCitada: DaoBase<LegislacaoCitada> {
     fun loadAllByIds(lcIds: IntArray): List<LegislacaoCitada>
 
     @Query("SELECT * FROM "+ LegislacaoCitada.TABLE_NAME+" WHERE uid = :lcId")
-    fun getLDlc(lcId: Int): LiveData<LegislacaoCitada>
+    fun getLDLegislacaoCitada(lcId: Int): LiveData<LegislacaoCitada>
 
 }

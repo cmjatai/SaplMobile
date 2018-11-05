@@ -18,6 +18,6 @@ interface DaoNormaJuridica: DaoBase<NormaJuridica> {
     fun loadAllByIds(njIds: IntArray): List<NormaJuridica>
 
     @Query("SELECT * FROM "+ NormaJuridica.TABLE_NAME+" WHERE uid = :njId")
-    fun getLDnj(njId: Int): LiveData<NormaJuridica>
+    fun getLDNormaJuridica(njId: Int): LiveData<NormaJuridica>
 
 }
