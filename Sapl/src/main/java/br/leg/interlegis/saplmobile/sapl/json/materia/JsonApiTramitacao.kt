@@ -18,7 +18,7 @@ class JsonApiTramitacao(context:Context, retrofit: Retrofit): JsonApiBaseAbstrac
     override val url = String.format("api/mobile/%s/%s/", Tramitacao.APP_LABEL, Tramitacao.TABLE_NAME)
 
     companion object {
-        val chave = "materia:tramitacao"
+        val chave = String.format("%s:%s", Tramitacao.APP_LABEL, Tramitacao.TABLE_NAME)
     }
 
 

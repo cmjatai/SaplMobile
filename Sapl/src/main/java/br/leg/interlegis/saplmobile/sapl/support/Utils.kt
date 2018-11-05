@@ -110,7 +110,7 @@ class Utils {
 
                     writeResponseBodyToDisk(response, pathname)
 
-                    Log.d("SAPL", "Baixou...")
+                    Log.d("SAPL", "Baixou... " + relativeUrl)
                 }
                 catch (e: Exception) {
                     Log.d("SAPL", e.stackTrace.contentToString())

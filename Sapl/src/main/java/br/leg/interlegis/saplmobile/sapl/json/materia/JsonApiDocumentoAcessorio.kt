@@ -21,7 +21,7 @@ class JsonApiDocumentoAcessorio(context:Context, retrofit: Retrofit): JsonApiBas
     override val url = String.format("api/mobile/%s/%s/", DocumentoAcessorio.APP_LABEL, DocumentoAcessorio.TABLE_NAME)
 
     companion object {
-        val chave = "materia:documentoacessorio"
+        val chave = String.format("%s:%s", DocumentoAcessorio.APP_LABEL, DocumentoAcessorio.TABLE_NAME)
     }
 
 

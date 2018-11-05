@@ -17,7 +17,7 @@ class JsonApiAutoria(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(c
     override val url = String.format("api/mobile/%s/%s/", Autoria.APP_LABEL, Autoria.TABLE_NAME)
 
     companion object {
-        val chave = "materia:autoria"
+        val chave = String.format("%s:%s", Autoria.APP_LABEL, Autoria.TABLE_NAME)
     }
 
 

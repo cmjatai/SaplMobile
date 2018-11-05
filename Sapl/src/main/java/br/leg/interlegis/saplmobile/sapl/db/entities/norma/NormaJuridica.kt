@@ -12,7 +12,6 @@ import java.util.*
 
 @Entity(tableName = NormaJuridica.TABLE_NAME,
         indices = arrayOf(
-            Index(value= arrayOf("materia")),
             Index(value= arrayOf("data"))
         )
 )

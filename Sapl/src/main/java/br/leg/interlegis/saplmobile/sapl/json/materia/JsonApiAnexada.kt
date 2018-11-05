@@ -6,6 +6,7 @@ import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Anexada
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
+import br.leg.interlegis.saplmobile.sapl.db.entities.materia.DocumentoAcessorio
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
 import br.leg.interlegis.saplmobile.sapl.support.Utils
@@ -20,7 +21,7 @@ class JsonApiAnexada(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(c
     override val url = String.format("api/mobile/%s/%s/", Anexada.APP_LABEL, Anexada.TABLE_NAME)
 
     companion object {
-        val chave = "materia:anexada"
+        val chave = String.format("%s:%s", Anexada.APP_LABEL, Anexada.TABLE_NAME)
     }
 
 
