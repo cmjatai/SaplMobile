@@ -43,9 +43,10 @@ class SaplApplication : Application() {
 
             if (DEBUG) {
                 db.DaoAutor().delete(db.DaoAutor().all_direct) // Apaga Autoria em Cascata
-                db.DaoMateriaLegislativa().delete(db.DaoMateriaLegislativa().all_direct) // Apaga Anexada, DocAcessorios e Tramitacao em Cascata
+                db.DaoMateriaLegislativa().delete(db.DaoMateriaLegislativa().all_direct) // Apaga Anexada, DocAcessorios, LegislacaoCitada e Tramitacao em Cascata
+                db.DaoNormaJuridica().delete(db.DaoNormaJuridica().all_direct) // Apaga LegislacaoCitada em cascata
+
                 db.DaoSessaoPlenaria().delete(db.DaoSessaoPlenaria().all_direct)
-                db.DaoNormaJuridica().delete(db.DaoNormaJuridica().all_direct)
                 db.DaoTimeRefresh().delete(db.DaoTimeRefresh().all)
             }
 
