@@ -10,9 +10,11 @@ import br.leg.interlegis.saplmobile.sapl.db.daos.DaoChaveValor
 import br.leg.interlegis.saplmobile.sapl.db.daos.sessao.DaoSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.db.daos.DaoTimeRefresh
 import br.leg.interlegis.saplmobile.sapl.db.daos.materia.*
+import br.leg.interlegis.saplmobile.sapl.db.daos.norma.DaoNormaJuridica
 import br.leg.interlegis.saplmobile.sapl.db.entities.*
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.*
+import br.leg.interlegis.saplmobile.sapl.db.entities.norma.NormaJuridica
 import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 
 @Database(entities = [
@@ -24,8 +26,9 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
     (Anexada::class),
     (Autoria::class),
     (DocumentoAcessorio::class),
-    (Tramitacao::class)
-], version = 63, exportSchema = false)
+    (Tramitacao::class),
+    (NormaJuridica::class)
+], version = 65, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
 
@@ -38,6 +41,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun DaoMateriaLegislativa(): DaoMateriaLegislativa
     abstract fun DaoDocumentoAcessorio(): DaoDocumentoAcessorio
     abstract fun DaoTramitacao(): DaoTramitacao
+    abstract fun DaoNormaJuridica(): DaoNormaJuridica
 
     companion object {
         private var sInstance: AppDataBase? = null

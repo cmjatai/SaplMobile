@@ -29,9 +29,9 @@ class JsonApi(_context: Context) {
             .build()
 
     val modules = arrayListOf(
-            JsonApiMateriaLegislativa.chave to arrayListOf(JsonApiMateriaLegislativa(context, retrofit) as JsonApiInterface to arrayOf<String>()),
             JsonApiSessaoPlenaria.chave to arrayListOf(JsonApiSessaoPlenaria(context, retrofit) as JsonApiInterface to arrayOf<String>()),
-            JsonApiAutorParlamentar.chave to arrayListOf(JsonApiAutorParlamentar(context, retrofit) as JsonApiInterface to arrayOf<String>()),
+            JsonApiAutorParlamentar.chave to arrayListOf(JsonApiAutorParlamentar(context, retrofit) as JsonApiInterface to arrayOf("sync")),
+            JsonApiMateriaLegislativa.chave to arrayListOf(JsonApiMateriaLegislativa(context, retrofit) as JsonApiInterface to arrayOf("sync")),
             JsonApiAutoria.chave to arrayListOf(JsonApiAutoria(context, retrofit) as JsonApiInterface to arrayOf("sync")),
             JsonApiAnexada.chave to arrayListOf(JsonApiAnexada(context, retrofit) as JsonApiInterface to arrayOf("sync")),
             JsonApiDocumentoAcessorio.chave to arrayListOf(JsonApiDocumentoAcessorio(context, retrofit) as JsonApiInterface to arrayOf("sync")),
