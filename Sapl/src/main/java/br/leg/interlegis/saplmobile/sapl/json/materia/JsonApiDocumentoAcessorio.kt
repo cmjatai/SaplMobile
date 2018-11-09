@@ -27,16 +27,20 @@ class JsonApiDocumentoAcessorio(context:Context, retrofit: Retrofit): JsonApiBas
 
     override fun syncList(list:Any?, deleted: IntArray?): Int {
 
+        val daoDoc = AppDataBase.getInstance(context).DaoDocumentoAcessorio()
+
+        if (deleted != null && deleted.isNotEmpty()) {
+            val apagar = daoDoc.loadAllByIds(deleted)
+            Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("arquivo"))
+            daoDoc.delete(apagar)
+        }
+
+        if ((list as JsonArray).size() == 0)
+            return 0
+
         val listaMaterias = JsonArray()
 
-        val mapDocumentoAcessorio = DocumentoAcessorio.importJsonArray(
-                list as JsonArray) as Map<Int, DocumentoAcessorio>
-
-        val daoDoc = AppDataBase.getInstance(context).DaoDocumentoAcessorio()
-        val apagar = daoDoc.loadAllByIds(deleted as IntArray)
-
-        daoDoc.delete(apagar)
-        Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("arquivo"))
+        val mapDocumentoAcessorio = DocumentoAcessorio.importJsonArray(list) as Map<Int, DocumentoAcessorio>
 
         try {
             daoDoc.insertAll(ArrayList<DocumentoAcessorio>(mapDocumentoAcessorio.values))

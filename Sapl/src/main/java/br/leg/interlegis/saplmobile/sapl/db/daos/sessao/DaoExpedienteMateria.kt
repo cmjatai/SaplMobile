@@ -21,4 +21,7 @@ interface DaoExpedienteMateria: DaoBase<ExpedienteMateria> {
     @Query("SELECT * FROM "+ ExpedienteMateria.TABLE_NAME+" WHERE uid = :ExpMatId")
     fun getLDOrdemDia(ExpMatId: Int): LiveData<ExpedienteMateria>
 
+    @Query("SELECT 1 FROM "+ ExpedienteMateria.TABLE_NAME+" WHERE uid = :ExpMatId")
+    fun exists(ExpMatId: Int): Boolean
+
 }

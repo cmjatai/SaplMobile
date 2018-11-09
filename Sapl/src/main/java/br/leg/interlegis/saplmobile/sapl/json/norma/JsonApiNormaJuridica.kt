@@ -22,15 +22,18 @@ class JsonApiNormaJuridica(context:Context, retrofit: Retrofit): JsonApiBaseAbst
 
     override fun syncList(list:Any?, deleted: IntArray?): Int {
 
-        val mapNj = NormaJuridica.importJsonArray(
-                list as JsonArray) as Map<Int, NormaJuridica>
-
         val daoNj = AppDataBase.getInstance(context).DaoNormaJuridica()
-        val apagar = daoNj.loadAllByIds(deleted as IntArray)
 
-        daoNj.delete(apagar)
+        if (deleted != null && deleted.isNotEmpty()) {
+            val apagar = daoNj.loadAllByIds(deleted)
+            daoNj.delete(apagar)
+        }
+
+        if ((list as JsonArray).size() == 0)
+            return 0
+
+        val mapNj = NormaJuridica.importJsonArray(list) as Map<Int, NormaJuridica>
         daoNj.insertAll(ArrayList<NormaJuridica>(mapNj.values))
-
         return mapNj.size
     }
 }

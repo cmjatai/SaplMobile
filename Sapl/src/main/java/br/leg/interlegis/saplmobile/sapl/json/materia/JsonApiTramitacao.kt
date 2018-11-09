@@ -24,12 +24,18 @@ class JsonApiTramitacao(context:Context, retrofit: Retrofit): JsonApiBaseAbstrac
 
     override fun syncList(list:Any?, deleted: IntArray?): Int {
 
-        val mapTramitacao = Tramitacao.importJsonArray(list as JsonArray) as Map<Int, Tramitacao>
-
         val daoTramitacao = AppDataBase.getInstance(context).DaoTramitacao()
-        val apagar = daoTramitacao.loadAllByIds(deleted as IntArray)
 
-        daoTramitacao.delete(apagar)
+        if (deleted != null && deleted.isNotEmpty()) {
+            val apagar = daoTramitacao.loadAllByIds(deleted)
+            daoTramitacao.delete(apagar)
+        }
+
+        if ((list as JsonArray).size() == 0)
+            return 0
+
+        val mapTramitacao = Tramitacao.importJsonArray(list) as Map<Int, Tramitacao>
+
 
         try {
             daoTramitacao.insertAll(ArrayList<Tramitacao>(mapTramitacao.values))

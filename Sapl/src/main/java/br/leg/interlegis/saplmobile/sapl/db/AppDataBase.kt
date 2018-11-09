@@ -40,7 +40,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
     (ExpedienteMateria::class),
     (OrdemDia::class),
     (RegistroVotacao::class)
-], version = 66, exportSchema = false)
+], version = 67, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase() {
 

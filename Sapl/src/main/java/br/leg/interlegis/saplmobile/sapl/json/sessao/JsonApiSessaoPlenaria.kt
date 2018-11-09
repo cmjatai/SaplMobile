@@ -20,17 +20,24 @@ class JsonApiSessaoPlenaria(context:Context, retrofit: Retrofit): JsonApiBaseAbs
 
 
     override fun syncList(list: Any?, deleted: IntArray?): Int {
+
+        val dao = AppDataBase.getInstance(context).DaoSessaoPlenaria()
+
+        if (deleted != null && deleted.isNotEmpty()) {
+            val apagar = dao.loadAllByIds(deleted)
+            dao.delete(apagar)
+        }
+
+        if ((list as JsonArray).size() == 0)
+            return 0
+
         val listaSessao = ArrayList<SessaoPlenaria>()
 
-        (list as JsonArray).forEach {
+        list.forEach {
             listaSessao.add(SessaoPlenaria.importJsonObject(it.asJsonObject))
         }
 
-        val dao = AppDataBase.getInstance(context).DaoSessaoPlenaria()
-        val apagar = dao.loadAllByIds(deleted as IntArray)
         dao.insertAll(listaSessao)
-        dao.delete(apagar)
-
         return listaSessao.size
     }
 }

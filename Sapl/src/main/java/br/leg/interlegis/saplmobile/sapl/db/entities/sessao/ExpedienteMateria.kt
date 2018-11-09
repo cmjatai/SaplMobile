@@ -55,7 +55,7 @@ class ExpedienteMateria constructor(uid: Int,
         @Ignore
         const val TABLE_NAME: String = "expedientemateria"
 
-        override fun importJsonObject(it: JsonObject): OrdemDia = OrdemDia(
+        override fun importJsonObject(it: JsonObject): ExpedienteMateria = ExpedienteMateria(
                 uid = it.get("id").asInt,
                 materia = it.get("materia").asInt,
                 observacao =  it.get("observacao").asString,

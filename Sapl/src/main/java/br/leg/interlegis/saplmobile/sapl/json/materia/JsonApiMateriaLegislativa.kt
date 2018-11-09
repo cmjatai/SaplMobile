@@ -35,6 +35,15 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
 
     override fun syncList(list:Any?, deleted: IntArray?): Int {
 
+        if (deleted != null && deleted.isNotEmpty()) {
+            val apagar = daoMateria.loadAllByIds(deleted)
+            Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("texto_original"))
+            daoMateria.delete( apagar )
+        }
+
+        if ((list as JsonArray).size() == 0)
+            return 0
+
         val mapMaterias:HashMap<Int, MateriaLegislativa> = HashMap()
         val mapAnexada:HashMap<Int, Anexada> = HashMap()
 
@@ -74,11 +83,6 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBas
 
         daoDoc.insertAll(ArrayList<DocumentoAcessorio>(mapDocs.values))
 
-        if (deleted != null && deleted.isNotEmpty()) {
-            val apagar = daoMateria.loadAllByIds(deleted)
-            Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("texto_original"))
-            daoMateria.delete( apagar )
-        }
 
         doAsync {
             mapAutores.forEach {

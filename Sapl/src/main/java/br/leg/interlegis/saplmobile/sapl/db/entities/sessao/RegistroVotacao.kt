@@ -42,8 +42,8 @@ class RegistroVotacao constructor(uid: Int,
                                   observacao: String,
                                   tipo_resultado_votacao: String,
                                   materia: Int,
-                                  ordem: Int,
-                                  expediente: Int): Serializable, SaplEntity {
+                                  ordem: Int?,
+                                  expediente: Int?): Serializable, SaplEntity {
 
 
     @PrimaryKey
@@ -72,8 +72,8 @@ class RegistroVotacao constructor(uid: Int,
             observacao =  it.get("observacao").asString,
             tipo_resultado_votacao =  it.get("tipo_resultado_votacao").asString,
             materia = it.get("materia").asInt,
-            ordem = it.get("ordem").asInt,
-            expediente = it.get("expediente").asInt
+            ordem = if (it.get("ordem").isJsonNull) null else it.get("ordem").asInt,
+            expediente =  if (it.get("expediente").isJsonNull) null else it.get("expediente").asInt
         )
     }
 }

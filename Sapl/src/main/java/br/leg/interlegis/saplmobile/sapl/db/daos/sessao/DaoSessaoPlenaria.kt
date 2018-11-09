@@ -17,6 +17,9 @@ interface DaoSessaoPlenaria: DaoBase<SessaoPlenaria> {
     @Query("SELECT * FROM "+ SessaoPlenaria.TABLE_NAME+" WHERE uid IN (:sessaoIds)")
     fun loadAllByIds(sessaoIds: IntArray): List<SessaoPlenaria>
 
+    @Query("SELECT 1 FROM "+ SessaoPlenaria.TABLE_NAME+" WHERE uid = :sessaoId")
+    fun exists(sessaoId: Int): Boolean
+
     @Query("SELECT * FROM "+ SessaoPlenaria.TABLE_NAME+" WHERE uid = :sessaoId")
     fun getLDSessao(sessaoId: Int): LiveData<SessaoPlenaria>
 

@@ -20,18 +20,24 @@ class JsonApiAutorParlamentar(context:Context, retrofit: Retrofit): JsonApiBaseA
 
     override fun syncList(list: Any?, deleted: IntArray?): Int {
 
+        val dao = AppDataBase.getInstance(context).DaoAutor()
+
+        if (deleted != null && deleted.isNotEmpty()) {
+            val apagar = dao.loadAllByIds(deleted as IntArray)
+            Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("fotografia"))
+            dao.delete(apagar)
+        }
+
+        if ((list as JsonArray).size() == 0)
+            return 0
+
         val listAutor = ArrayList<Autor>()
 
-        (list as JsonArray).forEach {
+        (list).forEach {
             listAutor.add(Autor.importJsonObject(it.asJsonObject))
         }
 
-        val dao = AppDataBase.getInstance(context).DaoAutor()
-        val apagar = dao.loadAllByIds(deleted as IntArray)
         dao.insertAll(listAutor)
-
-        Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("fotografia"))
-        dao.delete(apagar)
 
         doAsync {
             listAutor.forEach {

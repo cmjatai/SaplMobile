@@ -11,6 +11,9 @@ import br.leg.interlegis.saplmobile.sapl.json.interfaces.TimeRefreshRetrofitServ
 import br.leg.interlegis.saplmobile.sapl.json.materia.*
 import br.leg.interlegis.saplmobile.sapl.json.norma.JsonApiLegislacaoCitada
 import br.leg.interlegis.saplmobile.sapl.json.norma.JsonApiNormaJuridica
+import br.leg.interlegis.saplmobile.sapl.json.sessao.JsonApiExpedienteMateria
+import br.leg.interlegis.saplmobile.sapl.json.sessao.JsonApiOrdemDia
+import br.leg.interlegis.saplmobile.sapl.json.sessao.JsonApiRegistroVotacao
 import br.leg.interlegis.saplmobile.sapl.json.sessao.JsonApiSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import br.leg.interlegis.saplmobile.sapl.support.Log
@@ -30,6 +33,7 @@ class JsonApi(_context: Context) {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+    // Nao mudar arrayList para outro formato como hashset ou hashmap... a sequencia de sync dos modulos faz parte da lógica
     val modules = arrayListOf(
             JsonApiSessaoPlenaria.chave to arrayListOf(JsonApiSessaoPlenaria(context, retrofit) as JsonApiInterface to arrayOf<String>()),
             JsonApiAutorParlamentar.chave to arrayListOf(JsonApiAutorParlamentar(context, retrofit) as JsonApiInterface to arrayOf("sync")),
@@ -39,7 +43,10 @@ class JsonApi(_context: Context) {
             JsonApiDocumentoAcessorio.chave to arrayListOf(JsonApiDocumentoAcessorio(context, retrofit) as JsonApiInterface to arrayOf("sync")),
             JsonApiTramitacao.chave to arrayListOf(JsonApiTramitacao(context, retrofit) as JsonApiInterface to arrayOf("sync")),
             JsonApiNormaJuridica.chave to arrayListOf(JsonApiNormaJuridica(context, retrofit) as JsonApiInterface to arrayOf("sync")),
-            JsonApiLegislacaoCitada.chave to arrayListOf(JsonApiLegislacaoCitada(context, retrofit) as JsonApiInterface to arrayOf("sync"))
+            JsonApiLegislacaoCitada.chave to arrayListOf(JsonApiLegislacaoCitada(context, retrofit) as JsonApiInterface to arrayOf("sync")),
+            JsonApiExpedienteMateria.chave to arrayListOf(JsonApiExpedienteMateria(context, retrofit) as JsonApiInterface to arrayOf("sync")),
+            JsonApiOrdemDia.chave to arrayListOf(JsonApiOrdemDia(context, retrofit) as JsonApiInterface to arrayOf("sync")),
+            JsonApiRegistroVotacao.chave to arrayListOf(JsonApiRegistroVotacao(context, retrofit) as JsonApiInterface to arrayOf("sync"))
             )
 
     var maximoGlobal: TimeRefresh? = null

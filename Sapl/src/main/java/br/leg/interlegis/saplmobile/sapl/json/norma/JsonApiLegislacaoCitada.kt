@@ -23,16 +23,20 @@ class JsonApiLegislacaoCitada(context:Context, retrofit: Retrofit): JsonApiBaseA
 
     override fun syncList(list:Any?, deleted: IntArray?): Int {
 
+        val daoLC = AppDataBase.getInstance(context).DaoLegislacaoCitada()
+
+        if (deleted != null && deleted.isNotEmpty()) {
+            val apagar = daoLC.loadAllByIds(deleted)
+            daoLC.delete(apagar)
+        }
+
+        if ((list as JsonArray).size() == 0)
+            return 0
+
         val listaMaterias = JsonArray()
         val listaNormas = JsonArray()
 
-        val mapLC = LegislacaoCitada.importJsonArray(
-                list as JsonArray) as Map<Int, LegislacaoCitada>
-
-        val daoLC = AppDataBase.getInstance(context).DaoLegislacaoCitada()
-        val apagar = daoLC.loadAllByIds(deleted as IntArray)
-
-        daoLC.delete(apagar)
+        val mapLC = LegislacaoCitada.importJsonArray(list) as Map<Int, LegislacaoCitada>
 
         try {
             daoLC.insertAll(ArrayList<LegislacaoCitada>(mapLC.values))

@@ -20,4 +20,7 @@ interface DaoOrdemDia: DaoBase<OrdemDia> {
     @Query("SELECT * FROM "+ OrdemDia.TABLE_NAME+" WHERE uid = :odId")
     fun getLDOrdemDia(odId: Int): LiveData<OrdemDia>
 
+    @Query("SELECT 1 FROM "+ OrdemDia.TABLE_NAME+" WHERE uid = :odId")
+    fun exists(odId: Int): Boolean
+
 }

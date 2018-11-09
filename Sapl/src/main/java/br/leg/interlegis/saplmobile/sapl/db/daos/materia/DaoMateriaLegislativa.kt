@@ -23,4 +23,7 @@ interface DaoMateriaLegislativa: DaoBase<MateriaLegislativa> {
     @Query("SELECT * FROM "+ MateriaLegislativa.TABLE_NAME+" WHERE uid = :materiaId")
     fun getMateria(materiaId: Int): MateriaLegislativa
 
+    @Query("SELECT 1 FROM "+ MateriaLegislativa.TABLE_NAME+" WHERE uid = :matId")
+    fun exists(matId: Int): Boolean
+
 }
