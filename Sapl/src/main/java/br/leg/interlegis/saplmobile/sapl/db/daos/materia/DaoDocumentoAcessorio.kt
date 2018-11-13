@@ -11,7 +11,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 interface DaoDocumentoAcessorio: DaoBase<DocumentoAcessorio> {
 
     @get:Query("SELECT * FROM "+ DocumentoAcessorio.TABLE_NAME+" order by data asc")
-    val all: LiveData<List<DocumentoAcessorio>>
+    override val all: LiveData<List<DocumentoAcessorio>>
 
     @get:Query("SELECT * FROM "+ DocumentoAcessorio.TABLE_NAME+" order by data asc")
     val all_direct: List<DocumentoAcessorio>

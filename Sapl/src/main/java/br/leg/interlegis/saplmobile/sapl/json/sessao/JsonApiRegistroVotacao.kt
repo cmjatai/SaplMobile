@@ -12,7 +12,7 @@ import com.google.gson.JsonArray
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
 
-class JsonApiRegistroVotacao(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
+class JsonApiRegistroVotacao(context:Context, retrofit: Retrofit?): JsonApiBaseAbstract(context, retrofit) {
 
 
     override val url = String.format("api/mobile/%s/%s/", RegistroVotacao.APP_LABEL, RegistroVotacao.TABLE_NAME)

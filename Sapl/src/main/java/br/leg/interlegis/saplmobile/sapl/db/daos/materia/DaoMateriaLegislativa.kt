@@ -9,7 +9,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 interface DaoMateriaLegislativa: DaoBase<MateriaLegislativa> {
 
     @get:Query("SELECT * FROM "+ MateriaLegislativa.TABLE_NAME+" order by data_apresentacao desc")
-    val all: LiveData<List<MateriaLegislativa>>
+    override val all: LiveData<List<MateriaLegislativa>>
 
     @get:Query("SELECT * FROM "+ MateriaLegislativa.TABLE_NAME+" order by data_apresentacao desc")
     val all_direct: List<MateriaLegislativa>

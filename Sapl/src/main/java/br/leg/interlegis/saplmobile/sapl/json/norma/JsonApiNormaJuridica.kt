@@ -11,7 +11,7 @@ import com.google.gson.JsonArray
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
 
-class JsonApiNormaJuridica(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
+class JsonApiNormaJuridica(context:Context, retrofit: Retrofit?): JsonApiBaseAbstract(context, retrofit) {
 
     override val url = String.format("api/mobile/%s/%s/", NormaJuridica.APP_LABEL, NormaJuridica.TABLE_NAME)
 

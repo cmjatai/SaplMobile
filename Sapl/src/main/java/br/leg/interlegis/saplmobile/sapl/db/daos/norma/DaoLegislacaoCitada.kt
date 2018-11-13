@@ -10,7 +10,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.norma.NormaJuridica
 interface DaoLegislacaoCitada: DaoBase<LegislacaoCitada> {
 
     @get:Query("SELECT * FROM "+ LegislacaoCitada.TABLE_NAME+" order by norma asc")
-    val all: LiveData<List<LegislacaoCitada>>
+    override val all: LiveData<List<LegislacaoCitada>>
 
     @get:Query("SELECT * FROM "+ LegislacaoCitada.TABLE_NAME+" order by norma asc")
     val all_direct: List<LegislacaoCitada>

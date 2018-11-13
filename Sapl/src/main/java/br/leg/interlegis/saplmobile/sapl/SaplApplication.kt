@@ -15,6 +15,8 @@ class SaplApplication : Application() {
     companion object {
         val DEBUG = true
 
+        var instance: SaplApplication? = null
+
         var sessoesPlenarias: LiveData<List<SessaoPlenaria>>? = null
         var daoSessaoPlenaria: DaoSessaoPlenaria? = null
 
@@ -36,6 +38,7 @@ class SaplApplication : Application() {
 
 
     override fun onCreate() {
+        instance = this
         super.onCreate()
 
         doAsync {

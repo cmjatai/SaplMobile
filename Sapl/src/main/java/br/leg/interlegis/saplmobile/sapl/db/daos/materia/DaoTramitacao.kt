@@ -11,7 +11,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Tramitacao
 interface DaoTramitacao: DaoBase<Tramitacao> {
 
     @get:Query("SELECT * FROM "+ Tramitacao.TABLE_NAME+" order by data_tramitacao asc")
-    val all: LiveData<List<Tramitacao>>
+    override val all: LiveData<List<Tramitacao>>
 
     @get:Query("SELECT * FROM "+ Tramitacao.TABLE_NAME+" order by data_tramitacao asc")
     val all_direct: List<Tramitacao>

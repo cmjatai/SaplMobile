@@ -21,6 +21,8 @@ interface SaplRetrofitService {
             @Query("format") format: String,
             @Query("page") page: Int,
             @Query("tipo_update") tipo_update: String,
+            @Query("fk_name") fk_name: String?,
+            @Query("fk_pk") fk_pk: Int?,
             @Query("data_min") data_min: String?,
             @Query("data_max") data_max: String?) : Call<SaplApiRestResponse>
     @GET

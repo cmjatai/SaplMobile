@@ -29,10 +29,11 @@ class SaplActivity : SaplBaseActivity(), NavigationView.OnNavigationItemSelected
         setContentView(R.layout.activity_sapl)
         setSupportActionBar(toolbar)
 
+        /*FloatingActionButton
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
-        }
+        }*/
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -40,6 +41,8 @@ class SaplActivity : SaplBaseActivity(), NavigationView.OnNavigationItemSelected
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        val text = SettingsActivity.getStringPreference(this, "domain_casa_legislativa")
 
         if (!SaplService.isInstanceCreated()) {
             val intent = Intent(this, SaplService::class.java)

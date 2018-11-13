@@ -16,7 +16,7 @@ import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
 
-class JsonApiAnexada(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
+class JsonApiAnexada(context:Context, retrofit: Retrofit?): JsonApiBaseAbstract(context, retrofit) {
 
     override val url = String.format("api/mobile/%s/%s/", Anexada.APP_LABEL, Anexada.TABLE_NAME)
 

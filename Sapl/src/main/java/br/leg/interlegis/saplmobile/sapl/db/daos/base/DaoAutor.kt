@@ -9,7 +9,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 interface DaoAutor: DaoBase<Autor> {
 
     @get:Query("SELECT * FROM "+ Autor.TABLE_NAME+" order by nome")
-    val all: LiveData<List<Autor>>
+    override val all: LiveData<List<Autor>>
 
     @get:Query("SELECT * FROM "+ Autor.TABLE_NAME+" order by nome")
     val all_direct: List<Autor>

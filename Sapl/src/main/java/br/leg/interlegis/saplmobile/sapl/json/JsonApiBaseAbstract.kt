@@ -8,28 +8,47 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityCompanion
 import br.leg.interlegis.saplmobile.sapl.db.entities.SaplEntityInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.JsonApiInterface
 import br.leg.interlegis.saplmobile.sapl.json.interfaces.SaplRetrofitService
+import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApiInterface{
+abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit?): JsonApiInterface{
 
     abstract val url: String
 
     var context: Context = context
-    var retrofit: Retrofit = retrofit
+    var retrofit: Retrofit? = retrofit
     var servico: SaplRetrofitService? = null
 
+    init {
+        if (this.retrofit == null) {
+            this.retrofit = Retrofit.Builder()
+                    .baseUrl(SettingsActivity.getStringPreference(context, "domain_casa_legislativa"))
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+        }
+    }
 
     fun call(old_response: SaplApiRestResponse?, kwargs:Map<String, Any>): SaplApiRestResponse {
 
         var dmin = if (kwargs["data_inicio"] is Date) Converters.dtf.format(kwargs["data_inicio"] as Date) else null
         var dmax = if (kwargs["data_fim"] is Date) Converters.dtf.format(kwargs["data_fim"] as Date) else null
+
+
+        var fk_name:String = ""
+        var fk_pk:Int = 0
+
+        if (kwargs.containsKey("fk_name")) {
+            fk_name = kwargs["fk_name"] as String
+            fk_pk = kwargs["fk_pk"] as Int
+        }
 
         var tipo_update = "sync"
         if (kwargs.get("tipo_update") is String) {
@@ -46,6 +65,8 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApi
                 // Tipo last_items = uma pagina só com os ultimos dados da listagem
                 // Tipo first_items = uma página só com os primeiros dados da listagem
                 // Tipo get_initial = uma página com os últimos dados do servidor
+                fk_name = fk_name,
+                fk_pk = fk_pk,
                 data_min = dmin,
                 data_max = dmax
         )
@@ -71,12 +92,12 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApi
 
 
     override fun getObject(uid: Int): JsonObject {
-        servico = retrofit.create(SaplRetrofitService::class.java)
+        servico = retrofit!!.create(SaplRetrofitService::class.java)
         return callUid(uid) as JsonObject
     }
 
     override fun getList(kwargs:Map<String, Any>): HashMap<String, Any> {
-        servico = retrofit.create(SaplRetrofitService::class.java)
+        servico = retrofit!!.create(SaplRetrofitService::class.java)
 
         val result = HashMap<String, Any>()
         val list = JsonArray()
@@ -96,8 +117,6 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit): JsonApi
         }
         result["list"] = list
         return result
-
-
     }
 
 }

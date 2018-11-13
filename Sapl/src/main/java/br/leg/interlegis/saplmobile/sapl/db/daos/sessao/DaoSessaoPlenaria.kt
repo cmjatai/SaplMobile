@@ -9,7 +9,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 interface DaoSessaoPlenaria: DaoBase<SessaoPlenaria> {
 
     @get:Query("SELECT * FROM "+ SessaoPlenaria.TABLE_NAME+" order by data_inicio desc, hora_inicio desc")
-    val all: LiveData<List<SessaoPlenaria>>
+    override val all: LiveData<List<SessaoPlenaria>>
 
     @get:Query("SELECT * FROM "+ SessaoPlenaria.TABLE_NAME+" order by data_inicio desc, hora_inicio desc")
     val all_direct: List<SessaoPlenaria>

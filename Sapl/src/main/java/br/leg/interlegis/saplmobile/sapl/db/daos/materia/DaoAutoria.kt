@@ -10,7 +10,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
 interface DaoAutoria: DaoBase<Autoria> {
 
     @get:Query("SELECT autoria.uid as uid, autor, materia, primeiro_autor FROM "+ Autoria.TABLE_NAME+" inner join autor on autoria.autor = autor.uid order by autor.nome asc")
-    val all: LiveData<List<Autoria>>
+    override val all: LiveData<List<Autoria>>
 
     @get:Query("SELECT autoria.uid as uid, autor, materia, primeiro_autor FROM "+ Autoria.TABLE_NAME+" inner join autor on autoria.autor = autor.uid order by autor.nome asc")
     val all_direct: List<Autoria>

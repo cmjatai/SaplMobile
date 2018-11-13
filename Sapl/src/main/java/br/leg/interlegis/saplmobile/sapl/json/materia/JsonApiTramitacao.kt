@@ -13,7 +13,7 @@ import org.jetbrains.anko.doAsync
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
 
-class JsonApiTramitacao(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
+class JsonApiTramitacao(context:Context, retrofit: Retrofit?): JsonApiBaseAbstract(context, retrofit) {
 
     override val url = String.format("api/mobile/%s/%s/", Tramitacao.APP_LABEL, Tramitacao.TABLE_NAME)
 

@@ -17,7 +17,7 @@ import kotlin.collections.HashMap
 import org.jetbrains.anko.doAsync
 
 
-class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
+class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit?): JsonApiBaseAbstract(context, retrofit) {
 
     val db = AppDataBase.getInstance(context)
 

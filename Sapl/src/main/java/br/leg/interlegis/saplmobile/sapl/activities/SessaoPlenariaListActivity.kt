@@ -9,40 +9,25 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.PixelCopy
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.AutoCompleteTextView
-import android.widget.TextView
 
 import br.leg.interlegis.saplmobile.sapl.R
-import br.leg.interlegis.saplmobile.sapl.SaplApplication
 import br.leg.interlegis.saplmobile.sapl.SaplBaseActivity
-import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.json.JsonApi
-import br.leg.interlegis.saplmobile.sapl.json.sessao.JsonApiSessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import br.leg.interlegis.saplmobile.sapl.support.Log
 import br.leg.interlegis.saplmobile.sapl.views.SessaoPlenariaListViewModel
-import kotlinx.android.synthetic.*
+import br.leg.interlegis.saplmobile.sapl.views.SessaoPlenariaViewModel
 import kotlinx.android.synthetic.main.activity_sessao_plenaria_list.*
-import kotlinx.android.synthetic.main.fragment_sessao_plenaria.*
 import kotlinx.android.synthetic.main.fragment_sessao_plenaria.view.*
 import kotlinx.android.synthetic.main.item_sessao_plenaria_list.view.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.support.v4.dimen
-import org.jetbrains.anko.support.v4.find
-import org.jetbrains.anko.support.v4.onPageChangeListener
 import java.util.*
-import java.util.concurrent.ConcurrentSkipListMap
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -58,7 +43,6 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
         grid.clear()
         elements.forEach value@{ sessao ->
 
-            Log.d("SAPL", "13. chegou aqui...")
             var flagInsert = false
             grid.forEach grid@{
 
@@ -89,7 +73,6 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                         return@grid
                     }
                 }
-
             }
             if (!flagInsert) {
                 var lista = ArrayList<SessaoPlenaria>()
@@ -100,17 +83,10 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
         if (elements.isNotEmpty() && grid.size <= 1) {
             doAsync {
-
-                Log.d("SAPL", "14. chegou aqui...")
                 val json = JsonApi(this@SessaoPlenariaListActivity)
                 json.get_sessao_sessao_plenaria()
-
-                Log.d("SAPL", "15. chegou aqui...")
             }
         }
-
-        Log.d("SAPL", "13. Saiu")
-
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -134,7 +110,7 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
         container.adapter = mSectionsPagerAdapter
         container.setPageTransformer(true, ZoomOutPageTransformer())
 
-        container.postDelayed( { container.setCurrentItem(currentPosition) }, 1)
+        container.postDelayed( { container.setCurrentItem(currentPosition) }, 100)
         container.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixel: Int) {}
@@ -159,7 +135,6 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
         if (savedInstanceState != null) {
             doAsync {
-
                 this@SessaoPlenariaListActivity.grid.clear()
                 mSectionsPagerAdapter!!.notifyDataSetChanged()
                 sessaoModel.sessoes?.observe(this@SessaoPlenariaListActivity,
@@ -170,8 +145,6 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                         }
                     })
             }
-
-
         }
         else {
             sessaoModel.sessoes?.observe(this@SessaoPlenariaListActivity,
@@ -182,15 +155,8 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                     }
                 })
         }
-
-
-
-
-
-            Log.d("SAPL", "12. chegou aqui...")
-
-
     }
+
     class ZoomOutPageTransformer : ViewPager.PageTransformer {
 
         private val MIN_SCALE = 0.5f
@@ -291,10 +257,10 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
 
         override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                                   savedInstanceState: Bundle?): View? {
+
             super.onCreateView(inflater, container, savedInstanceState)
 
             rootView = inflater.inflate(R.layout.fragment_sessao_plenaria, container, false)
-
 
             viewAdapter = SessaoPlenariaAdapter(sessoes)
             recyclerView = rootView!!.findViewById(R.id.view_lista_sessoes)
@@ -370,9 +336,10 @@ class SessaoPlenariaListActivity : SaplBaseActivity() {
                         intent.putExtra("uid", sessao!!.uid)
                         it.context.startActivity(intent)
                         Log.d("SAPL", String.format("Click: Clicou na sessão: %d - hora_inicio:%s",
-                                sessao!!.uid,
-                                sessao!!.hora_inicio
-                                ))
+                            sessao!!.uid,
+                            sessao!!.hora_inicio
+                            )
+                        )
                     }
                 }
             }

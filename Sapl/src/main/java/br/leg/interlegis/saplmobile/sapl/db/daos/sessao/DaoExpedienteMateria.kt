@@ -10,10 +10,13 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.OrdemDia
 interface DaoExpedienteMateria: DaoBase<ExpedienteMateria> {
 
     @get:Query("SELECT * FROM "+ ExpedienteMateria.TABLE_NAME+" order by sessao_plenaria desc, numero_ordem asc")
-    val all: LiveData<List<ExpedienteMateria>>
+    override val all: LiveData<List<ExpedienteMateria>>
 
     @get:Query("SELECT * FROM "+ ExpedienteMateria.TABLE_NAME+" order by sessao_plenaria desc, numero_ordem asc")
     val all_direct: List<ExpedienteMateria>
+
+    @Query("SELECT * FROM "+ ExpedienteMateria.TABLE_NAME+" where sessao_plenaria = :sessaoId order by sessao_plenaria desc, numero_ordem asc")
+    fun all_by_sessao(sessaoId: Int): LiveData<List<ExpedienteMateria>>
 
     @Query("SELECT * FROM "+ ExpedienteMateria.TABLE_NAME+" WHERE uid IN (:ExpMatIds)")
     fun loadAllByIds(ExpMatIds: IntArray): List<ExpedienteMateria>

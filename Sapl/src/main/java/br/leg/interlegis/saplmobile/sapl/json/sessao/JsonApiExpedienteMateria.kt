@@ -11,8 +11,7 @@ import com.google.gson.JsonArray
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
 
-class JsonApiExpedienteMateria(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
-
+class JsonApiExpedienteMateria(context:Context, retrofit: Retrofit?): JsonApiBaseAbstract(context, retrofit) {
 
     override val url = String.format("api/mobile/%s/%s/", ExpedienteMateria.APP_LABEL, ExpedienteMateria.TABLE_NAME)
 
@@ -20,7 +19,6 @@ class JsonApiExpedienteMateria(context:Context, retrofit: Retrofit): JsonApiBase
 
         val chave = String.format("%s:%s", ExpedienteMateria.APP_LABEL, ExpedienteMateria.TABLE_NAME)
     }
-
 
     override fun syncList(list: Any?, deleted: IntArray?): Int {
 
@@ -80,5 +78,14 @@ class JsonApiExpedienteMateria(context:Context, retrofit: Retrofit): JsonApiBase
         }
 
         return listaExpedienteMateria.size
+    }
+
+
+    fun allBySessao(sessaoId:Int) {
+        val kwargs = HashMap<String, Any>()
+        kwargs["tipo_update"] = "get"
+        kwargs["fk_name"] = "sessao_plenaria"
+        kwargs["fk_pk"] = sessaoId
+        sync(kwargs)
     }
 }

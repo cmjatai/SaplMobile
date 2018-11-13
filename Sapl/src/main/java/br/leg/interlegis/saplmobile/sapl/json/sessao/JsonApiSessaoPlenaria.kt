@@ -4,11 +4,13 @@ import android.content.Context
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.SessaoPlenaria
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
+import br.leg.interlegis.saplmobile.sapl.settings.SettingsActivity
 import com.google.gson.JsonArray
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.collections.ArrayList
 
-class JsonApiSessaoPlenaria(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
+class JsonApiSessaoPlenaria(context:Context, retrofit: Retrofit?): JsonApiBaseAbstract(context, retrofit) {
 
 
     override val url = String.format("api/mobile/%s/%s/", SessaoPlenaria.APP_LABEL, SessaoPlenaria.TABLE_NAME)
@@ -40,4 +42,5 @@ class JsonApiSessaoPlenaria(context:Context, retrofit: Retrofit): JsonApiBaseAbs
         dao.insertAll(listaSessao)
         return listaSessao.size
     }
+
 }

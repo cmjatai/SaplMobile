@@ -82,7 +82,7 @@ class JsonApi(_context: Context) {
             val time = dao.loadValue(item.key)
             if (time == null) {
                 c.time = ultimaAtualizacao
-                c.add(Calendar.DAY_OF_MONTH, retroagir )
+                c.add(Calendar.DAY_OF_MONTH, retroagir)
 
                 var map = HashMap<String, Any>()
                 //map.put("data_inicio", c.time)
@@ -92,7 +92,6 @@ class JsonApi(_context: Context) {
                 syncResult.add(Pair(item.key, map))
                 val tr = TimeRefresh(item.key, ultimaAtualizacao)
                 dao.insert(tr)
-
             }
             else {
                 if (ultimaAtualizacao > time.data) {
@@ -130,20 +129,17 @@ class JsonApi(_context: Context) {
                     itApi.first.sync(kwargs)
                 }
         }
-
     }
+
 
     fun sync(sync_modules:  ArrayList<Pair<String, HashMap<String, Any>>> ) {
         for (module in sync_modules) {
-
             modules.forEach {
                 if (it.first.equals(module.first)) {
                     it.second.forEach{itApi ->
-
                         if (itApi.second.isEmpty() || module.second["tipo_update"] in itApi.second) {
                             itApi.first.sync(module.second)
                             Log.d("SAPL", String.format("Sincronizando: %s", module.first))
-
                         }
                     }
                 }

@@ -18,7 +18,7 @@
     <string name="pref_cl_name_default">Câmara Municipal de</string>
 
     <string name="pref_cl_domain_title">Endereço do SAPL a consultar</string>
-    <string name="pref_cl_domain_default">https://www.jatai.go.leg.br</string>
+    <string name="pref_cl_domain_default">https://sapl.jatai.go.leg.br</string>
 
     <string name="pref_sync_offline_title">Disponibilizar Arquivos Off-Line</string>
     <string name="pref_sync_offline_summary">O SaplMobile fará download de todos os arquivos constantes de uma lista de documentos sempre que tal lista for aberta no dispositivo.</string>
@@ -34,7 +34,7 @@
 
     <!-- Usado para Sessões Plenárias-->
 
-    <string name="pref_sync_roteiro_title">Mostrar roteiro da Sessão Plenária</string>
+    <string name="pref_sync_roteiro_title">Mostrar observações dos itens da Sessão Plenária</string>
     <string name="pref_sync_roteiro_summary">Descrição detalhada de cada item presente na Sessão.</string>
     <string name="pref_divisao_quinzenal_title">Incluir quinzena nos títulos das sessões</string>
     <string name="pref_divisao_quinzenal">Ative essa opção se sua casa usa as expressões \'1ª Quinzena\' e \'2ª Quinzena\' nos títulos das Sessões</string>

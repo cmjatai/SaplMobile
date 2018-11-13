@@ -9,7 +9,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.sessao.RegistroVotacao
 interface DaoRegistroVotacao: DaoBase<RegistroVotacao> {
 
     @get:Query("SELECT * FROM "+ RegistroVotacao.TABLE_NAME+" order by materia asc")
-    val all: LiveData<List<RegistroVotacao>>
+    override val all: LiveData<List<RegistroVotacao>>
 
     @get:Query("SELECT * FROM "+ RegistroVotacao.TABLE_NAME+" order by materia asc")
     val all_direct: List<RegistroVotacao>

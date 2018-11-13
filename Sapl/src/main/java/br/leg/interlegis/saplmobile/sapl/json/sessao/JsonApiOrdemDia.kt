@@ -12,7 +12,7 @@ import com.google.gson.JsonArray
 import retrofit2.Retrofit
 import kotlin.collections.ArrayList
 
-class JsonApiOrdemDia(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(context, retrofit) {
+class JsonApiOrdemDia(context:Context, retrofit: Retrofit?): JsonApiBaseAbstract(context, retrofit) {
 
 
     override val url = String.format("api/mobile/%s/%s/", OrdemDia.APP_LABEL, OrdemDia.TABLE_NAME)
@@ -79,5 +79,13 @@ class JsonApiOrdemDia(context:Context, retrofit: Retrofit): JsonApiBaseAbstract(
             daoRegistroVotacao.insertAll(ArrayList(mapVotacao.values))
         }
         return listaOrdemDia.size
+    }
+
+    fun allBySessao(sessaoId:Int) {
+        val kwargs = HashMap<String, Any>()
+        kwargs["tipo_update"] = "get"
+        kwargs["fk_name"] = "sessao_plenaria"
+        kwargs["fk_pk"] = sessaoId
+        sync(kwargs)
     }
 }
