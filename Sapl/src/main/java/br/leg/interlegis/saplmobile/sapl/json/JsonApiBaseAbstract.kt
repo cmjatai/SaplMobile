@@ -34,6 +34,8 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit?): JsonAp
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
         }
+
+        servico = this.retrofit!!.create(SaplRetrofitService::class.java)
     }
 
     fun call(old_response: SaplApiRestResponse?, kwargs:Map<String, Any>): SaplApiRestResponse {
@@ -60,8 +62,8 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit?): JsonAp
                 format = "json",
                 page = if (old_response == null) 1 else old_response.pagination!!.next_page!!,
                 tipo_update = tipo_update,
-                // Tipo sync = filtro com base nas datas de alteração
-                // Tipo getList = filtro com base nas datas da sessão plenária
+                // Tipo sync = filtra e se baseia nas alterações registradas após data_min
+                // Tipo get = pega todos os dados e caso tenha filtros abaixo, filtra
                 // Tipo last_items = uma pagina só com os ultimos dados da listagem
                 // Tipo first_items = uma página só com os primeiros dados da listagem
                 // Tipo get_initial = uma página com os últimos dados do servidor
@@ -92,13 +94,10 @@ abstract class JsonApiBaseAbstract(context:Context, retrofit: Retrofit?): JsonAp
 
 
     override fun getObject(uid: Int): JsonObject {
-        servico = retrofit!!.create(SaplRetrofitService::class.java)
         return callUid(uid) as JsonObject
     }
 
     override fun getList(kwargs:Map<String, Any>): HashMap<String, Any> {
-        servico = retrofit!!.create(SaplRetrofitService::class.java)
-
         val result = HashMap<String, Any>()
         val list = JsonArray()
 

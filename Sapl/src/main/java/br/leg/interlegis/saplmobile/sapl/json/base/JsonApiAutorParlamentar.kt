@@ -4,6 +4,7 @@ import android.content.Context
 import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
+import br.leg.interlegis.saplmobile.sapl.services.SaplService
 import br.leg.interlegis.saplmobile.sapl.support.Utils
 import com.google.gson.JsonArray
 import org.jetbrains.anko.doAsync
@@ -24,7 +25,7 @@ class JsonApiAutorParlamentar(context:Context, retrofit: Retrofit?): JsonApiBase
 
         if (deleted != null && deleted.isNotEmpty()) {
             val apagar = dao.loadAllByIds(deleted as IntArray)
-            Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("fotografia"))
+            SaplService.ManagerDownloadFiles.deleteFile(context, apagar, arrayListOf("fotografia"))
             dao.delete(apagar)
         }
 
@@ -39,11 +40,9 @@ class JsonApiAutorParlamentar(context:Context, retrofit: Retrofit?): JsonApiBase
 
         dao.insertAll(listAutor)
 
-        doAsync {
-            listAutor.forEach {
-                if (it.fotografia.isNotEmpty())
-                    Utils.ManageFiles.download(context, servico, it.fotografia, it.file_date_updated)
-            }
+        listAutor.forEach {
+            if (it.fotografia.isNotEmpty())
+                SaplService.downloadFileLazy(it.fotografia, it.file_date_updated)
         }
 
         return listAutor.size

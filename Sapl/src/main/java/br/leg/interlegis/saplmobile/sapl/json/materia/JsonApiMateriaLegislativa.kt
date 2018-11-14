@@ -8,6 +8,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.DocumentoAcessorio
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
+import br.leg.interlegis.saplmobile.sapl.services.SaplService
 import br.leg.interlegis.saplmobile.sapl.support.Utils
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -37,7 +38,7 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit?): JsonApiBa
 
         if (deleted != null && deleted.isNotEmpty()) {
             val apagar = daoMateria.loadAllByIds(deleted)
-            Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("texto_original"))
+            SaplService.ManagerDownloadFiles.deleteFile(context, apagar, arrayListOf("texto_original"))
             daoMateria.delete( apagar )
         }
 
@@ -84,21 +85,19 @@ class JsonApiMateriaLegislativa(context:Context, retrofit: Retrofit?): JsonApiBa
         daoDoc.insertAll(ArrayList<DocumentoAcessorio>(mapDocs.values))
 
 
-        doAsync {
-            mapAutores.forEach {
-                if (it.value.fotografia.isNotEmpty())
-                    Utils.ManageFiles.download(context, servico, it.value.fotografia, it.value.file_date_updated)
-            }
+        mapAutores.forEach {
+            if (it.value.fotografia.isNotEmpty())
+                SaplService.downloadFileLazy(it.value.fotografia, it.value.file_date_updated)
+        }
 
-            mapMaterias.forEach {
-                if (it.value.texto_original.isNotEmpty())
-                    Utils.ManageFiles.download(context, servico, it.value.texto_original, it.value.file_date_updated)
-            }
+        mapMaterias.forEach {
+            if (it.value.texto_original.isNotEmpty())
+                SaplService.downloadFileLazy(it.value.texto_original, it.value.file_date_updated)
+        }
 
-            mapDocs.forEach {
-                if (it.value.arquivo.isNotEmpty())
-                    Utils.ManageFiles.download(context, servico, it.value.arquivo, it.value.file_date_updated)
-            }
+        mapDocs.forEach {
+            if (it.value.arquivo.isNotEmpty())
+                SaplService.downloadFileLazy(it.value.arquivo, it.value.file_date_updated)
         }
 
         return mapMaterias.size

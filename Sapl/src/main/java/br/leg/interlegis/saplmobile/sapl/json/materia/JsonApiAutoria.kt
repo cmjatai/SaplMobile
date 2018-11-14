@@ -6,6 +6,7 @@ import br.leg.interlegis.saplmobile.sapl.db.AppDataBase
 import br.leg.interlegis.saplmobile.sapl.db.entities.base.Autor
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
+import br.leg.interlegis.saplmobile.sapl.services.SaplService
 import br.leg.interlegis.saplmobile.sapl.support.Utils
 import com.google.gson.JsonArray
 import org.jetbrains.anko.doAsync
@@ -39,11 +40,9 @@ class JsonApiAutoria(context:Context, retrofit: Retrofit?): JsonApiBaseAbstract(
         val daoAutor = AppDataBase.getInstance(context).DaoAutor()
         daoAutor.insertAll(ArrayList<Autor>(mapAutores.values))
 
-        doAsync {
-            mapAutores.forEach {entry ->
-                if (entry.value.fotografia.isNotEmpty())
-                    Utils.ManageFiles.download(context, servico, entry.value.fotografia, entry.value.file_date_updated)
-            }
+        mapAutores.forEach {entry ->
+            if (entry.value.fotografia.isNotEmpty())
+                SaplService.downloadFileLazy(entry.value.fotografia, entry.value.file_date_updated)
         }
 
         try {

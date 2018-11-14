@@ -9,6 +9,7 @@ import br.leg.interlegis.saplmobile.sapl.db.entities.materia.Autoria
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.DocumentoAcessorio
 import br.leg.interlegis.saplmobile.sapl.db.entities.materia.MateriaLegislativa
 import br.leg.interlegis.saplmobile.sapl.json.JsonApiBaseAbstract
+import br.leg.interlegis.saplmobile.sapl.services.SaplService
 import br.leg.interlegis.saplmobile.sapl.support.Utils
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -31,7 +32,7 @@ class JsonApiDocumentoAcessorio(context:Context, retrofit: Retrofit?): JsonApiBa
 
         if (deleted != null && deleted.isNotEmpty()) {
             val apagar = daoDoc.loadAllByIds(deleted)
-            Utils.ManageFiles.deleteFile(context, apagar, arrayListOf("arquivo"))
+            SaplService.ManagerDownloadFiles.deleteFile(context, apagar, arrayListOf("arquivo"))
             daoDoc.delete(apagar)
         }
 
@@ -62,7 +63,7 @@ class JsonApiDocumentoAcessorio(context:Context, retrofit: Retrofit?): JsonApiBa
 
         mapDocumentoAcessorio.forEach {
             if (it.value.arquivo.isNotEmpty())
-                Utils.ManageFiles.download(context, servico, it.value.arquivo, it.value.file_date_updated)
+                SaplService.downloadFileLazy(it.value.arquivo, it.value.file_date_updated)
         }
 
         return mapDocumentoAcessorio.size
